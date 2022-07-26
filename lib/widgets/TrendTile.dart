@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'Glaph.dart';
 import '../data/TrendData.dart';
 
-class TrendTile extends Card {
+class TrendTile extends StatelessWidget {
   final TrendData _data;
 
   TrendTile(this._data) : super();
@@ -10,10 +10,23 @@ class TrendTile extends Card {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(5.0),
+      height: 200,
+      decoration: BoxDecoration(
+        color: Theme.of(context).canvasColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Column(
         children: <Widget>[
           Glaph(_data),
-          Text(_data.getName()),
+          Text(
+            _data.getName(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
         ],
       ),
     );
