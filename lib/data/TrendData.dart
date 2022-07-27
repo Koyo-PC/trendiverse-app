@@ -15,4 +15,8 @@ class TrendData {
   List<TrendSnapshot> getHistoryData() {
     return _historyData;
   }
+  TrendData addHistoryData(TrendSnapshot snapshot) {
+    _historyData.add(snapshot);
+    return this;
+  }
 }

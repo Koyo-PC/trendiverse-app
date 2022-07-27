@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Glaph.dart';
+import 'Graph.dart';
 import '../data/TrendData.dart';
 
 class TrendTile extends StatelessWidget {
@@ -18,7 +18,7 @@ class TrendTile extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          Glaph(_data),
+          Graph(_data),
           Text(
             _data.getName(),
             style: TextStyle(

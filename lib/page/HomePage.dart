@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/TrendData.dart';
+import '../data/TrendSnapshot.dart';
+import '../data/source/TwitterSource.dart';
 import '../widgets/TrendTile.dart';
 
 class HomePage extends StatelessWidget {
@@ -46,15 +48,27 @@ class HomePage extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Container(
-          padding: const EdgeInsets.all(5.0),
           decoration: BoxDecoration(
             color: Theme.of(context).backgroundColor,
           ),
           child: GridView.count(
+            padding: const EdgeInsets.all(5.0),
             scrollDirection: Axis.vertical,
             crossAxisCount: 2,
             children: [
-              TrendTile(TrendData("VRChat")),
+              TrendTile(
+                TrendData("VRChat")
+                    .addHistoryData(TrendSnapshot(TwitterSource(),
+                        DateTime.now().subtract(const Duration(hours: 2)), 0.3))
+                    .addHistoryData(TrendSnapshot(TwitterSource(),
+                        DateTime.now().subtract(const Duration(hours: 1)), 0.5))
+                    .addHistoryData(
+                        TrendSnapshot(TwitterSource(), DateTime.now(), 0.2))
+                    .addHistoryData(TrendSnapshot(TwitterSource(),
+                        DateTime.now().add(const Duration(hours: 1)), 0.5))
+                    .addHistoryData(TrendSnapshot(TwitterSource(),
+                        DateTime.now().add(const Duration(hours: 2)), 0.5)),
+              ),
               TrendTile(TrendData("あおぎり高校")),
               TrendTile(TrendData("改造クライアント")),
               TrendTile(TrendData("大阪王将")),
