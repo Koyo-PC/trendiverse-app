@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Graph.dart';
 import '../data/TrendData.dart';
+import '../page/TrendPage.dart';
 
 class TrendTile extends StatelessWidget {
   final TrendData _data;
@@ -9,25 +10,34 @@ class TrendTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5.0),
-      height: 200,
-      decoration: BoxDecoration(
-        color: Theme.of(context).canvasColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: <Widget>[
-          Graph(_data),
-          Text(
-            _data.getName(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Theme.of(context).primaryColor,
-            ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>TrendPage(_data),
           ),
-        ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).canvasColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: <Widget>[
+            Graph(_data),
+            Text(
+              _data.getName(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

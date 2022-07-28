@@ -10,12 +10,14 @@ import '../data/source/TwitterSource.dart';
 class Graph extends StatelessWidget {
   final TrendData _data;
 
-  Graph(this._data) : super();
+  final double height;
+
+  Graph(this._data, {this.height = 150}) : super();
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: height,
       child: charts.TimeSeriesChart(
         [
           charts.Series<TrendSnapshot, DateTime>(
@@ -45,6 +47,7 @@ class Graph extends StatelessWidget {
                 .toList(),
           ),
         ],
+        defaultInteractions: false,
         dateTimeFactory: const charts.LocalDateTimeFactory(),
         domainAxis: const charts.DateTimeAxisSpec(
             tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
