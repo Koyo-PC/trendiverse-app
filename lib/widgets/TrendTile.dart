@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'Graph.dart';
 import '../data/TrendData.dart';
 import '../page/TrendPage.dart';
@@ -6,7 +7,7 @@ import '../page/TrendPage.dart';
 class TrendTile extends StatelessWidget {
   final TrendData _data;
 
-  TrendTile(this._data) : super();
+  const TrendTile(this._data, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

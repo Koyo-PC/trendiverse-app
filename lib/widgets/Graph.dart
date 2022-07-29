@@ -9,10 +9,9 @@ import '../data/source/TwitterSource.dart';
 
 class Graph extends StatelessWidget {
   final TrendData _data;
-
   final double height;
 
-  Graph(this._data, {Key? key, this.height = 150}) : super(key: key);
+  const Graph(this._data, {Key? key, this.height = 150}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,8 @@ class Graph extends StatelessWidget {
             data: _data
                 .getHistoryData()
                 .where((element) => element.getSource() is TwitterSource)
-                .toList(),
+                .toList()
+              ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),
           charts.Series<TrendSnapshot, DateTime>(
             id: 'Google',
@@ -44,10 +44,12 @@ class Graph extends StatelessWidget {
             data: _data
                 .getHistoryData()
                 .where((element) => element.getSource() is GoogleSource)
-                .toList(),
+                .toList()
+              ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),
         ],
         defaultInteractions: false,
+        animate: false,
         dateTimeFactory: const charts.LocalDateTimeFactory(),
         domainAxis: const charts.DateTimeAxisSpec(
             tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(

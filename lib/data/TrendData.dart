@@ -13,7 +13,7 @@ class TrendData {
 
   TrendData(this._name, {String? category, List<String>? related}) : _category = category, _related = related ?? [];
 
-  List<TrendSnapshot> _historyData = [];
+  final List<TrendSnapshot> _historyData = [];
 
   String getName() {
     return _name;
@@ -21,6 +21,11 @@ class TrendData {
 
   List<TrendSnapshot> getHistoryData() {
     return _historyData;
+  }
+
+  void clearHistoryData() {
+    _historyData.clear();
+    return;
   }
 
   void addHistoryData(TrendSnapshot snapshot) {

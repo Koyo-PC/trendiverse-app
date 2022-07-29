@@ -66,25 +66,25 @@ class HomePage extends StatelessWidget {
           TrendTile(
             TrendLibrary().getTrendData("VRChat")
               ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().subtract(const Duration(hours: 2)), 0.3))
+                  DateTime.now().subtract(const Duration(minutes: 2)), 0.3))
               ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().subtract(const Duration(hours: 1)), 0.5))
+                  DateTime.now().subtract(const Duration(minutes: 1)), 0.5))
               ..addHistoryData(
                   TrendSnapshot(TwitterSource(), DateTime.now(), 0.2))
               ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().add(const Duration(hours: 1)), 0.5))
+                  DateTime.now().add(const Duration(minutes: 1)), 0.5))
               ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().add(const Duration(hours: 2)), 0.5))
+                  DateTime.now().add(const Duration(minutes: 2)), 0.5))
               ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().subtract(const Duration(hours: 2)), 0.2))
+                  DateTime.now().subtract(const Duration(minutes: 2)), 0.2))
               ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().subtract(const Duration(hours: 1)), 0.8))
+                  DateTime.now().subtract(const Duration(minutes: 1)), 0.8))
               ..addHistoryData(
                   TrendSnapshot(GoogleSource(), DateTime.now(), 0.1))
               ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().add(const Duration(hours: 1)), 0.4))
+                  DateTime.now().add(const Duration(minutes: 1)), 0.4))
               ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().add(const Duration(hours: 2)), 0.3)),
+                  DateTime.now().add(const Duration(minutes: 2)), 0.3)),
           ),
           TrendTile(TrendLibrary().getTrendData("あおぎり高校")),
           TrendTile(TrendLibrary().getTrendData("改造クライアント")),
