@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:trendiverse/widgets/Tag.dart';
+
+import '../TrendLibrary.dart';
 import '../data/TrendData.dart';
+import '../widgets/Tag.dart';
 import '../widgets/Graph.dart';
+import '../widgets/TrendTile.dart';
 
 class TrendPage extends StatelessWidget {
   final TrendData _data;
@@ -12,7 +15,7 @@ class TrendPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trend'),
+        title: Text("トレンド詳細"),
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -88,6 +91,23 @@ class TrendPage extends StatelessWidget {
                         ],
                       ),
                     ],
+                  ),
+                  Text(
+                    "関連トレンド",
+                    style: TextStyle(
+                      height: 3,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Theme.of(context).canvasColor,
+                    ),
+                  ),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(5.0),
+                    scrollDirection: Axis.vertical,
+                    crossAxisCount: 2,
+                    children: _data.getRelated().map((name) => TrendTile(TrendLibrary().getTrendData(name))).toList(),
                   ),
                 ],
               ),

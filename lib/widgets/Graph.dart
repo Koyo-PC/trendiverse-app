@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:trendiverse/data/source/GoogleSource.dart';
 
 import '../data/TrendData.dart';
 import '../data/TrendSnapshot.dart';
+import '../data/source/GoogleSource.dart';
 import '../data/source/TwitterSource.dart';
 
 class Graph extends StatelessWidget {
@@ -12,7 +12,7 @@ class Graph extends StatelessWidget {
 
   final double height;
 
-  Graph(this._data, {this.height = 150}) : super();
+  Graph(this._data, {Key? key, this.height = 150}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

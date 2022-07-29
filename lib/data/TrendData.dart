@@ -1,17 +1,17 @@
 import 'dart:core';
-
 import 'package:flutter/material.dart';
-import 'package:trendiverse/data/source/GoogleSource.dart';
-import 'package:trendiverse/data/source/TwitterSource.dart';
 
 import '../widgets/Tag.dart';
 import '../data/TrendSnapshot.dart';
+import '../data/source/GoogleSource.dart';
+import '../data/source/TwitterSource.dart';
 
 class TrendData {
   final String _name;
   final String? _category;
+  final List<String> _related;
 
-  TrendData(this._name, {String? category}) : _category = category;
+  TrendData(this._name, {String? category, List<String>? related}) : _category = category, _related = related ?? [];
 
   List<TrendSnapshot> _historyData = [];
 
@@ -23,25 +23,35 @@ class TrendData {
     return _historyData;
   }
 
-  TrendData addHistoryData(TrendSnapshot snapshot) {
+  void addHistoryData(TrendSnapshot snapshot) {
     _historyData.add(snapshot);
-    return this;
+    return;
   }
 
   List<Tag> getTags() {
+    bool hasGoogleSource = _historyData.any((element) => element.getSource() is GoogleSource);
+    bool hasTwitterSource = _historyData.any((element) => element.getSource() is TwitterSource);
     return [
-      if (_historyData.any((element) => element.getSource() is GoogleSource))
+      if (hasGoogleSource)
         Tag(
           "Google",
-          Color.fromRGBO(15, 157, 88, 1),
+          const Color.fromRGBO(15, 157, 88, 1),
           Colors.white,
           30,
           margin: const EdgeInsets.all(5),
         ),
-      if (_historyData.any((element) => element.getSource() is TwitterSource))
+      if (hasTwitterSource)
         Tag(
           "Twitter",
-          Color.fromRGBO(29, 161, 242, 1),
+          const Color.fromRGBO(29, 161, 242, 1),
+          Colors.white,
+          30,
+          margin: const EdgeInsets.all(5),
+        ),
+      if(!hasTwitterSource && !hasGoogleSource)
+        Tag(
+          "エラー: データが存在しません",
+          const Color.fromRGBO(255, 0, 0, 1),
           Colors.white,
           30,
           margin: const EdgeInsets.all(5),
@@ -52,5 +62,9 @@ class TrendData {
   String? getCategory() {
     // TODO カテゴリの色
     return _category;
+  }
+
+  List<String> getRelated() {
+    return _related;
   }
 }

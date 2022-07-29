@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:trendiverse/data/source/GoogleSource.dart';
-import '../data/TrendData.dart';
+
+import 'SettingPage.dart';
+import '../TrendLibrary.dart';
 import '../data/TrendSnapshot.dart';
+import '../data/source/GoogleSource.dart';
 import '../data/source/TwitterSource.dart';
 import '../widgets/TrendTile.dart';
 
@@ -41,8 +43,15 @@ class HomePage extends StatelessWidget {
           Container(
               padding: const EdgeInsets.all(10),
               child: IconButton(
-                  onPressed: () =>
-                      {FocusScope.of(context).requestFocus(FocusNode())},
+                  onPressed: () => {
+                        FocusScope.of(context).requestFocus(FocusNode()),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingPage(),
+                          ),
+                        )
+                      },
                   // 仮、TextFieldのフォーカスを外す
                   icon: const Icon(Icons.settings))),
         ],
@@ -55,39 +64,39 @@ class HomePage extends StatelessWidget {
         crossAxisCount: 2,
         children: [
           TrendTile(
-            TrendData("VRChat")
-                .addHistoryData(TrendSnapshot(TwitterSource(),
-                    DateTime.now().subtract(const Duration(hours: 2)), 0.3))
-                .addHistoryData(TrendSnapshot(TwitterSource(),
-                    DateTime.now().subtract(const Duration(hours: 1)), 0.5))
-                .addHistoryData(
-                    TrendSnapshot(TwitterSource(), DateTime.now(), 0.2))
-                .addHistoryData(TrendSnapshot(TwitterSource(),
-                    DateTime.now().add(const Duration(hours: 1)), 0.5))
-                .addHistoryData(TrendSnapshot(TwitterSource(),
-                    DateTime.now().add(const Duration(hours: 2)), 0.5))
-                .addHistoryData(TrendSnapshot(GoogleSource(),
-                    DateTime.now().subtract(const Duration(hours: 2)), 0.2))
-                .addHistoryData(TrendSnapshot(GoogleSource(),
-                    DateTime.now().subtract(const Duration(hours: 1)), 0.8))
-                .addHistoryData(
-                    TrendSnapshot(GoogleSource(), DateTime.now(), 0.1))
-                .addHistoryData(TrendSnapshot(GoogleSource(),
-                    DateTime.now().add(const Duration(hours: 1)), 0.4))
-                .addHistoryData(TrendSnapshot(GoogleSource(),
-                    DateTime.now().add(const Duration(hours: 2)), 0.3)),
+            TrendLibrary().getTrendData("VRChat")
+              ..addHistoryData(TrendSnapshot(TwitterSource(),
+                  DateTime.now().subtract(const Duration(hours: 2)), 0.3))
+              ..addHistoryData(TrendSnapshot(TwitterSource(),
+                  DateTime.now().subtract(const Duration(hours: 1)), 0.5))
+              ..addHistoryData(
+                  TrendSnapshot(TwitterSource(), DateTime.now(), 0.2))
+              ..addHistoryData(TrendSnapshot(TwitterSource(),
+                  DateTime.now().add(const Duration(hours: 1)), 0.5))
+              ..addHistoryData(TrendSnapshot(TwitterSource(),
+                  DateTime.now().add(const Duration(hours: 2)), 0.5))
+              ..addHistoryData(TrendSnapshot(GoogleSource(),
+                  DateTime.now().subtract(const Duration(hours: 2)), 0.2))
+              ..addHistoryData(TrendSnapshot(GoogleSource(),
+                  DateTime.now().subtract(const Duration(hours: 1)), 0.8))
+              ..addHistoryData(
+                  TrendSnapshot(GoogleSource(), DateTime.now(), 0.1))
+              ..addHistoryData(TrendSnapshot(GoogleSource(),
+                  DateTime.now().add(const Duration(hours: 1)), 0.4))
+              ..addHistoryData(TrendSnapshot(GoogleSource(),
+                  DateTime.now().add(const Duration(hours: 2)), 0.3)),
           ),
-          TrendTile(TrendData("あおぎり高校")),
-          TrendTile(TrendData("改造クライアント")),
-          TrendTile(TrendData("大阪王将")),
-          TrendTile(TrendData("東方LostWord")),
-          TrendTile(TrendData("マイナビオールスターゲーム2022")),
-          TrendTile(TrendData("さんま御殿")),
-          TrendTile(TrendData("あなたの霊感レべル")),
-          TrendTile(TrendData("うたコン")),
-          TrendTile(TrendData("a")),
-          TrendTile(TrendData("a")),
-          TrendTile(TrendData("a"))
+          TrendTile(TrendLibrary().getTrendData("あおぎり高校")),
+          TrendTile(TrendLibrary().getTrendData("改造クライアント")),
+          TrendTile(TrendLibrary().getTrendData("大阪王将")),
+          TrendTile(TrendLibrary().getTrendData("東方LostWord")),
+          TrendTile(TrendLibrary().getTrendData("マイナビオールスターゲーム2022")),
+          TrendTile(TrendLibrary().getTrendData("さんま御殿")),
+          TrendTile(TrendLibrary().getTrendData("あなたの霊感レべル")),
+          TrendTile(TrendLibrary().getTrendData("うたコン")),
+          TrendTile(TrendLibrary().getTrendData("a")),
+          TrendTile(TrendLibrary().getTrendData("a")),
+          TrendTile(TrendLibrary().getTrendData("a"))
         ],
       ),
     );
