@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SettingWidget {
-  final Widget Function(BuildContext) buildFn;
+import 'SettingWidgetContent.dart';
 
-  SettingWidget(this.buildFn);
+class SettingWidget {
+  final SettingWidgetContent content;
+
+  SettingWidget(this.content);
 
   Widget build(BuildContext context) {
     return DefaultTextStyle(
@@ -14,7 +16,7 @@ class SettingWidget {
       ),
       child: Container(
         padding: const EdgeInsets.all(15),
-        child: buildFn(context),
+        child: content.build(context),
       ),
     );
   }

@@ -6,6 +6,7 @@ import '../data/TrendSnapshot.dart';
 import '../data/source/GoogleSource.dart';
 import '../data/source/TwitterSource.dart';
 import '../widgets/TrendTile.dart';
+import 'template/SubPage.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SettingPage(),
+                            builder: (context) => SubPage(SettingPage()),
                           ),
                         )
                       },

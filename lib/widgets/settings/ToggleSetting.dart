@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'SettingWidget.dart';
 
-class ToggleSetting extends SettingWidget {
+import 'template/SettingWidgetContent.dart';
+
+class ToggleSetting extends SettingWidgetContent {
   final String text;
 
-  ToggleSetting(this.text) : super((_) => Text(text));
+  ToggleSetting(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text);
+  }
 }

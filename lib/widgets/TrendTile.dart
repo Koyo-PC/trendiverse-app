@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trendiverse/page/template/SubPage.dart';
 
 import 'Graph.dart';
 import '../data/TrendData.dart';
@@ -16,7 +17,7 @@ class TrendTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>TrendPage(_data),
+            builder: (context) => SubPage(TrendPage(_data)),
           ),
         );
       },
