@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import '../template/SubPageContent.dart';
 
-class TwitterSettingPage extends StatelessWidget {
-  const TwitterSettingPage({Key? key}) : super(key: key);
+class TwitterSettingPage extends SubPageContent {
+  @override
+  String getTitle() {
+    return "Twitterトレンド設定";
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    // TODO
+    return const Text("あとでつくる");
   }
 }

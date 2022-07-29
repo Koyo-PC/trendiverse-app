@@ -1,11 +1,18 @@
 import 'package:flutter/cupertino.dart';
 
-class ThemeSettingPage extends StatelessWidget {
-  const ThemeSettingPage({Key? key}) : super(key: key);
+import '../template/SubPageContent.dart';
+
+// 不必要?
+class ThemeSettingPage extends SubPageContent {
+  @override
+  String getTitle() {
+    return "テーマ";
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    // TODO
+    return const Text("あとでつくる");
   }
+
 }

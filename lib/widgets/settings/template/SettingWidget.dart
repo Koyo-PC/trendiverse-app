@@ -14,9 +14,14 @@ class SettingWidget {
         fontSize: 20,
         color: Colors.white,
       ),
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        child: content.build(context),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => content.onTap(context),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(15),
+          child: content.build(context),
+        ),
       ),
     );
   }

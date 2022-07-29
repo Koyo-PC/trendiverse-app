@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trendiverse/page/template/SubPage.dart';
 
 import '../widgets/settings/LinkSetting.dart';
 import '../widgets/settings/template/SettingWidget.dart';
@@ -11,14 +12,14 @@ import 'template/SubPageContent.dart';
 
 class SettingPage extends SubPageContent {
   final List<SettingWidget> settings = [
-    SettingWidget(LinkSetting("カテゴリをフォロー", const CategoryFollowPage())),
-    SettingWidget(LinkSetting("Twitterトレンド設定", const TwitterSettingPage())),
-    SettingWidget(LinkSetting("Googleトレンド設定", const GoogleSettingPage())),
-    SettingWidget(LinkSetting("テーマ", const ThemeSettingPage())),
-    SettingWidget(SimpleLinkSetting("このアプリについて", "")),
+    SettingWidget(LinkSetting("カテゴリをフォロー", SubPage(CategoryFollowPage()))),
+    SettingWidget(LinkSetting("Twitterトレンド設定", SubPage(TwitterSettingPage()))),
+    SettingWidget(LinkSetting("Googleトレンド設定", SubPage(GoogleSettingPage()))),
+    SettingWidget(LinkSetting("テーマ", SubPage(ThemeSettingPage()))), // Select?
+    SettingWidget(SimpleLinkSetting("このアプリについて", "")), // Markdown?
     SettingWidget(SimpleLinkSetting("利用規約", "")),
     SettingWidget(SimpleLinkSetting("プライバシーポリシー", "")),
-    SettingWidget(SimpleLinkSetting("バージョン情報", "")),
+    SettingWidget(SimpleLinkSetting("バージョン情報", "")), // Key-Value?
   ];
 
   @override

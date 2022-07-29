@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 
-class GoogleSettingPage extends StatelessWidget {
-  const GoogleSettingPage({Key? key}) : super(key: key);
+import '../template/SubPageContent.dart';
+
+class GoogleSettingPage extends SubPageContent {
+  @override
+  String getTitle() {
+    return "Googleトレンド設定";
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    // TODO
+    return const Text("あとでつくる");
   }
 }

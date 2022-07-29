@@ -9,17 +9,18 @@ class LinkSetting extends SettingWidgetContent {
   LinkSetting(this.title, this.page);
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Text(title),
-      onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => page,
-          ),
-        ),
-      },
+  void onTap(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
     );
+    return;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(title);
   }
 }

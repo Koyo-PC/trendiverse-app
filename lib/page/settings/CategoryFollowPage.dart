@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:trendiverse/page/template/SubPageContent.dart';
 
-class CategoryFollowPage extends StatelessWidget {
-  const CategoryFollowPage({Key? key}) : super(key: key);
+class CategoryFollowPage extends SubPageContent {
+  @override
+  String getTitle() {
+    return "カテゴリをフォロー";
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Text("あとでつくる");
+    // TODO
+    return const Text("あとでつくる");
   }
 }
