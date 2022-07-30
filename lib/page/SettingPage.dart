@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:trendiverse/widgets/settings/MdLinkSetting.dart';
 
 import '../widgets/settings/ConsumerInfoSetting.dart';
 import '../widgets/settings/LinkSetting.dart';
@@ -26,7 +27,7 @@ class SettingPage extends SubPageContent {
     SettingWidget(LinkSetting("Googleトレンド設定", SubPage(GoogleSettingPage()))),
     SettingWidget(LinkSetting("テーマ", SubPage(ThemeSettingPage()))),
     // Select?
-    SettingWidget(SimpleLinkSetting("このアプリについて", "")),
+    SettingWidget(MdLinkSetting("このアプリについて", "test01.md")),
     // Markdown?
     SettingWidget(SimpleLinkSetting("利用規約", "")),
     SettingWidget(SimpleLinkSetting("プライバシーポリシー", "")),

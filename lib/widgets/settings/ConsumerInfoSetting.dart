@@ -22,8 +22,8 @@ class ConsumerInfoSetting extends InfoSetting {
       children: <Widget>[
         Text(text),
         Consumer(
-          builder: (context, watch, child) {
-            return Text(builder(context, watch, child));
+          builder: (context, ref, child) {
+            return Text(builder(context, ref, child));
           },
         ),
       ],
