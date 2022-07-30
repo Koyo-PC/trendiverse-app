@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:trendiverse/widgets/settings/MdLinkSetting.dart';
 
+import '../main.dart';
+import '../widgets/settings/ConsumerDropdownSetting.dart';
 import '../widgets/settings/ConsumerInfoSetting.dart';
 import '../widgets/settings/LinkSetting.dart';
+import '../widgets/settings/MdLinkSetting.dart';
 import '../widgets/settings/SimpleLinkSetting.dart';
 import '../widgets/settings/template/SettingWidget.dart';
 import 'settings/CategoryFollowPage.dart';
 import 'settings/GoogleSettingPage.dart';
 import 'settings/TwitterSettingPage.dart';
-import 'settings/ThemeSettingPage.dart';
 import 'template/SubPage.dart';
 import 'template/SubPageContent.dart';
 
@@ -25,7 +26,30 @@ class SettingPage extends SubPageContent {
     SettingWidget(LinkSetting("カテゴリをフォロー", SubPage(CategoryFollowPage()))),
     SettingWidget(LinkSetting("Twitterトレンド設定", SubPage(TwitterSettingPage()))),
     SettingWidget(LinkSetting("Googleトレンド設定", SubPage(GoogleSettingPage()))),
-    SettingWidget(LinkSetting("テーマ", SubPage(ThemeSettingPage()))),
+    SettingWidget(
+      ConsumerDropdownSetting(
+        "テーマ",
+        ["Light", "Dark"],
+        (value, context, ref, child) => {
+          if (value == "Light")
+            {
+              ref.read(TrenDiverseApp.contentProvider.notifier).state =
+                  Brightness.light,
+            }
+          else if (value == "Dark")
+            {
+              ref.read(TrenDiverseApp.contentProvider.notifier).state =
+                  Brightness.dark,
+            }
+        },
+        (context, ref, child) =>
+            ref.read(TrenDiverseApp.contentProvider) == Brightness.light
+                ? "Light"
+                : (ref.read(TrenDiverseApp.contentProvider) == Brightness.dark
+                    ? "Dark"
+                    : "ERROR"),
+      ),
+    ),
     // Select?
     SettingWidget(MdLinkSetting("このアプリについて", "test01.md")),
     // Markdown?
