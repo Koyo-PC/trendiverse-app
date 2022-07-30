@@ -14,7 +14,6 @@ class TrenDiverseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(Theme.of(context).backgroundColor.blue);
     return MaterialApp(
       title: 'TrenDiverse',
       theme: ThemeData(
