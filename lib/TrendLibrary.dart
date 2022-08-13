@@ -1,4 +1,4 @@
-import 'package:trendiverse/TrendiverseAPI.dart';
+import 'package:trendiverse/TrenDiverseAPI.dart';
 import 'package:trendiverse/data/source/GoogleSource.dart';
 
 import '../data/TrendData.dart';
@@ -20,7 +20,7 @@ class TrendLibrary {
     if (cache.containsKey(name)) {
       return cache[name]!;
     }
-    final APITrendInfo info = await TrendiverseAPI().getInfo(name);
+    final APITrendInfo info = await TrenDiverseAPI().getInfo(name);
     var category = info.category;
     var related = info.related;
     var data = TrendData(name, category: category, related: related);

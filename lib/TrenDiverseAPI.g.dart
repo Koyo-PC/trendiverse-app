@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'TrendiverseAPI.dart';
+part of 'TrenDiverseAPI.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

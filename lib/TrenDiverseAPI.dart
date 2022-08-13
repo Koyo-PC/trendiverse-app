@@ -6,14 +6,14 @@ import 'package:intl/intl.dart';
 
 import 'AppConfig.dart';
 
-part 'TrendiverseAPI.g.dart';
+part 'TrenDiverseAPI.g.dart';
 
-class TrendiverseAPI {
-  static final TrendiverseAPI _instance = TrendiverseAPI._internal();
+class TrenDiverseAPI {
+  static final TrenDiverseAPI _instance = TrenDiverseAPI._internal();
 
-  TrendiverseAPI._internal();
+  TrenDiverseAPI._internal();
 
-  factory TrendiverseAPI() {
+  factory TrenDiverseAPI() {
     return _instance;
   }
 
@@ -57,7 +57,8 @@ class TrendiverseAPI {
   }
 }
 
-// flutter packages pub run build_runner build
+// when you change this file, run this command to regenerate the code:
+// `$ flutter packages pub run build_runner build`
 
 @JsonSerializable()
 class TrendList {

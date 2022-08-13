@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trendiverse/TrendiverseAPI.dart';
+import 'package:trendiverse/TrenDiverseAPI.dart';
 
 import 'SettingPage.dart';
 import '../TrendLibrary.dart';
-import '../data/TrendSnapshot.dart';
-import '../data/source/GoogleSource.dart';
-import '../data/source/TwitterSource.dart';
 import '../widgets/TrendTile.dart';
 import 'template/SubPage.dart';
 
@@ -68,7 +65,7 @@ class HomePage extends StatelessWidget {
           .of(context)
           .backgroundColor,
       body: FutureBuilder<TrendList>(
-        future: TrendiverseAPI().getList(),
+        future: TrenDiverseAPI().getList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final List<String> trends = [];
@@ -81,42 +78,6 @@ class HomePage extends StatelessWidget {
                 children: trends.map((trend) {
                   return TrendTile(TrendLibrary().getTrendData(trend));
                 }).toList(),
-                /*[
-          TrendTile(
-            TrendLibrary().getTrendData("VRChat")
-              ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().subtract(const Duration(minutes: 2)), 0.3))
-              ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().subtract(const Duration(minutes: 1)), 0.5))
-              ..addHistoryData(
-                  TrendSnapshot(TwitterSource(), DateTime.now(), 0.2))
-              ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().add(const Duration(minutes: 1)), 0.5))
-              ..addHistoryData(TrendSnapshot(TwitterSource(),
-                  DateTime.now().add(const Duration(minutes: 2)), 0.5))
-              ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().subtract(const Duration(minutes: 2)), 0.2))
-              ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().subtract(const Duration(minutes: 1)), 0.8))
-              ..addHistoryData(
-                  TrendSnapshot(GoogleSource(), DateTime.now(), 0.1))
-              ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().add(const Duration(minutes: 1)), 0.4))
-              ..addHistoryData(TrendSnapshot(GoogleSource(),
-                  DateTime.now().add(const Duration(minutes: 2)), 0.3)),
-          ),
-          TrendTile(TrendLibrary().getTrendData("あおぎり高校")),
-          TrendTile(TrendLibrary().getTrendData("改造クライアント")),
-          TrendTile(TrendLibrary().getTrendData("大阪王将")),
-          TrendTile(TrendLibrary().getTrendData("東方LostWord")),
-          TrendTile(TrendLibrary().getTrendData("マイナビオールスターゲーム2022")),
-          TrendTile(TrendLibrary().getTrendData("さんま御殿")),
-          TrendTile(TrendLibrary().getTrendData("あなたの霊感レべル")),
-          TrendTile(TrendLibrary().getTrendData("うたコン")),
-          TrendTile(TrendLibrary().getTrendData("a")),
-          TrendTile(TrendLibrary().getTrendData("a")),
-          TrendTile(TrendLibrary().getTrendData("a"))
-        ]*/
             );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
