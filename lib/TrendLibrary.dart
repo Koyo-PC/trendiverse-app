@@ -16,14 +16,14 @@ class TrendLibrary {
 
   Map<String, TrendData> cache = {};
 
-  Future<TrendData> getTrendData(String name) async {
-    if (cache.containsKey(name)) {
-      return cache[name]!;
+  Future<TrendData> getTrendData(int id) async {
+    if (cache.containsKey(id.toString())) {
+      return cache[id.toString()]!;
     }
-    final APITrendInfo info = await TrenDiverseAPI().getInfo(name);
+    final APITrendInfo info = await TrenDiverseAPI().getData(id);
     var category = info.category;
     var related = info.related;
-    var data = TrendData(name, category: category, related: related);
+    var data = TrendData(id.toString(), category: category, related: related);
     info.data.twitter.forEach((part) =>
         data.addHistoryData(
             TrendSnapshot(TwitterSource(), part.date, part.hotness))
@@ -32,7 +32,7 @@ class TrendLibrary {
         data.addHistoryData(
             TrendSnapshot(GoogleSource(), part.date, part.hotness))
     );
-    cache[name] = data;
+    cache[id.toString()] = data;
     return data;
   }
 }

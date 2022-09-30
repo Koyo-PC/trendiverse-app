@@ -64,23 +64,21 @@ class HomePage extends StatelessWidget {
       backgroundColor: Theme
           .of(context)
           .backgroundColor,
-      body: FutureBuilder<TrendList>(
+      body: FutureBuilder<List<CurrentTrendData>>(
         future: TrenDiverseAPI().getList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final List<String> trends = [];
-            trends.addAll(snapshot.data!.twitter);
-            trends.addAll(snapshot.data!.google.where((element) => !trends.contains(element)));
+            final List<CurrentTrendData> trends = snapshot.data!;
             return GridView.count(
                 padding: const EdgeInsets.all(5.0),
                 scrollDirection: Axis.vertical,
                 crossAxisCount: 2,
                 children: trends.map((trend) {
-                  return TrendTile(TrendLibrary().getTrendData(trend));
+                  return TrendTile(TrendLibrary().getTrendData(trend.id));
                 }).toList(),
             );
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text("ERROR: ${snapshot.error}");
           } else {
             return const Center(
               child: CircularProgressIndicator(),

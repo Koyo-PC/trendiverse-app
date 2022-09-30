@@ -9,9 +9,9 @@ import '../data/source/TwitterSource.dart';
 class TrendData {
   final String _name;
   final String? _category;
-  final List<String> _related;
+  final List<int> _related;
 
-  TrendData(this._name, {String? category, List<String>? related}) : _category = category, _related = related ?? [];
+  TrendData(this._name, {String? category, List<int>? related}) : _category = category, _related = related ?? [];
 
   final List<TrendSnapshot> _historyData = [];
 
@@ -69,7 +69,7 @@ class TrendData {
     return _category;
   }
 
-  List<String> getRelated() {
+  List<int> getRelated() {
     return _related;
   }
 }

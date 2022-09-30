@@ -110,8 +110,8 @@ class TrendPage extends SubPageContent {
                         crossAxisCount: 2,
                         children: data
                             .getRelated()
-                            .map((name) =>
-                            TrendTile(TrendLibrary().getTrendData(name)))
+                            .map((id) =>
+                            TrendTile(TrendLibrary().getTrendData(id)))
                             .toList(),
                       ),
                     ],

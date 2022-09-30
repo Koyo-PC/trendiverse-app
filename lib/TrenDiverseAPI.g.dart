@@ -6,19 +6,23 @@ part of 'TrenDiverseAPI.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TrendList _$TrendListFromJson(Map<String, dynamic> json) => TrendList(
-      (json['google'] as List<dynamic>).map((e) => e as String).toList(),
-      (json['twitter'] as List<dynamic>).map((e) => e as String).toList(),
+CurrentTrendData _$CurrentTrendDataFromJson(Map<String, dynamic> json) =>
+    CurrentTrendData(
+      json['id'] as int,
+      json['hotness'] as int,
+      json['name'] as String,
     );
 
-Map<String, dynamic> _$TrendListToJson(TrendList instance) => <String, dynamic>{
-      'google': instance.google,
-      'twitter': instance.twitter,
+Map<String, dynamic> _$CurrentTrendDataToJson(CurrentTrendData instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'hotness': instance.hotness,
+      'name': instance.name,
     };
 
 APITrendInfo _$APITrendInfoFromJson(Map<String, dynamic> json) => APITrendInfo(
       json['category'] as String,
-      (json['related'] as List<dynamic>).map((e) => e as String).toList(),
+      (json['related'] as List<dynamic>).map((e) => e as int).toList(),
       APITrendData.fromJson(json['data'] as Map<String, dynamic>),
     );
 

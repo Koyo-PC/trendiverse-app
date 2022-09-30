@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:trendiverse/data/TrendData.dart';
 
 import 'AppConfig.dart';
 
@@ -18,41 +20,35 @@ class TrenDiverseAPI {
   }
 
   // Load config from shared preferences
-  final Map<String, DateTime> _lastRequest = {
-    "/list": DateTime.fromMillisecondsSinceEpoch(0),
-    "/data": DateTime.fromMillisecondsSinceEpoch(0),
-    "/info": DateTime.fromMillisecondsSinceEpoch(0),
-  };
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd-HH-mm-ss');
 
-  Future<Map<String, dynamic>> _requestAPI(String location,
+  Future<Map<String, dynamic>> _requestAPI(int port, String location,
       {Map<String, dynamic>? query}) async {
     final SharedPreferences config = await AppConfig().getConfig();
     var response = await http.get(
       Uri.http(
-        '${config.getString('server_ip')}:${config.getInt('server_port')}',
+        '${config.getString('server_ip')}:$port',
         location,
-        {
-          "last_request": _dateFormat.format(_lastRequest[location]!),
-        }..addAll(query ?? {}),
+        query ?? {},
       ),
     );
-    _lastRequest[location] = DateTime.now();
     return json.decode(response.body);
   }
 
   // list of current trends
-  Future<TrendList> getList() async {
-    Map<String, dynamic> result = await _requestAPI("/list");
-    TrendList data = TrendList.fromJson(result);
-    return data;
+  Future<List<CurrentTrendData>> getList() async {
+    Map<String, dynamic> result = await _requestAPI(8081, "/showTrend");
+    // debugPrint('${result["list"] as List<Map<String, dynamic>>}');
+    // List<CurrentTrendData> data = (result["list"] as List<Map<String, dynamic>>).map((element) {CurrentTrendData.fromJson(element)}).toList();
+    // return data;
+    return (result["list"] as List)/*.cast<Map<String, dynamic>>()*/.map((element) {return CurrentTrendData.fromJson(element);}).toList();
   }
 
   // hotness history of specific trend
-  Future<APITrendInfo> getInfo(String name) async {
+  Future<APITrendInfo> getData(int id) async {
     Map<String, dynamic> result =
-        await _requestAPI("/info", query: {"name": name});
-    APITrendInfo data = APITrendInfo.fromJson(result);
+        await _requestAPI(8081, "/getDataById", query: {"id": id});
+    APITrendInfo data = APITrendInfo.fromJson(result["list"]);
     return data;
   }
 }
@@ -61,23 +57,38 @@ class TrenDiverseAPI {
 // `$ flutter packages pub run build_runner build`
 
 @JsonSerializable()
-class TrendList {
-  TrendList(this.google, this.twitter);
+class CurrentTrendData {
+  CurrentTrendData(this.id, this.hotness, this.name);
 
-  List<String> google;
-  List<String> twitter;
+  int id;
+  int hotness;
+  String name;
 
-  factory TrendList.fromJson(Map<String, dynamic> json) =>
-      _$TrendListFromJson(json);
+  factory CurrentTrendData.fromJson(Map<String, dynamic> json) =>
+      _$CurrentTrendDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TrendListToJson(this);
+  Map<String, dynamic> toJson() => _$CurrentTrendDataToJson(this);
 }
+
+// @JsonSerializable()
+// class TrendList {
+//   TrendList(this.google, this.twitter);
+//
+//   int id;
+//   int hotness;
+//   String name;
+//
+//   factory TrendList.fromJson(Map<String, dynamic> json) =>
+//       _$TrendListFromJson(json);
+//
+//   Map<String, dynamic> toJson() => _$TrendListToJson(this);
+// }
 
 @JsonSerializable()
 class APITrendInfo {
 
   String category;
-  List<String> related;
+  List<int> related;
   APITrendData data;
 
   APITrendInfo(this.category, this.related, this.data);
