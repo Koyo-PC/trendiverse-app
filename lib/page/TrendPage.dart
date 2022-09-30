@@ -44,83 +44,83 @@ class TrendPage extends SubPageContent {
                           color: Theme.of(context).canvasColor,
                         ),
                       ),
-                      Table(
-                        columnWidths: const {
-                          0: IntrinsicColumnWidth(),
-                          1: IntrinsicColumnWidth(),
-                        },
-                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                        children: [
-                          TableRow(
-                            children: [
-                              Text(
-                                "カテゴリ : ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Theme.of(context).canvasColor,
-                                ),
-                              ),
-                              // TODO 仮
-                              Row(
-                                children: [
-                                  Tag(
-                                    data.getCategory() ?? "未分類",
-                                    const Color.fromRGBO(128, 128, 128, 1),
-                                    Colors.white,
-                                    30,
-                                    margin: const EdgeInsets.all(5),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: <Widget>[
-                              Text(
-                                "ソース : ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Theme.of(context).canvasColor,
-                                ),
-                              ),
-                              // TODO 仮
-                              Row(
-                                children: data.getTags(),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "関連トレンド",
-                        style: TextStyle(
-                          height: 3,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          color: Theme.of(context).canvasColor,
-                        ),
-                      ),
-                      GridView.count(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.all(5.0),
-                        scrollDirection: Axis.vertical,
-                        crossAxisCount: 2,
-                        children: data
-                            .getRelated()
-                            .map((id) =>
-                            TrendTile(TrendLibrary().getTrendData(id)))
-                            .toList(),
-                      ),
+                      // Table(
+                      //   columnWidths: const {
+                      //     0: IntrinsicColumnWidth(),
+                      //     1: IntrinsicColumnWidth(),
+                      //   },
+                      //   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                      //   children: [
+                      //     TableRow(
+                      //       children: [
+                      //         Text(
+                      //           "カテゴリ : ",
+                      //           style: TextStyle(
+                      //             fontWeight: FontWeight.bold,
+                      //             fontSize: 20,
+                      //             color: Theme.of(context).canvasColor,
+                      //           ),
+                      //         ),
+                      //         // TODO 仮
+                      //         Row(
+                      //           children: [
+                      //             Tag(
+                      //               data.getCategory() ?? "未分類",
+                      //               const Color.fromRGBO(128, 128, 128, 1),
+                      //               Colors.white,
+                      //               30,
+                      //               margin: const EdgeInsets.all(5),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     TableRow(
+                      //       children: <Widget>[
+                      //         Text(
+                      //           "ソース : ",
+                      //           style: TextStyle(
+                      //             fontWeight: FontWeight.bold,
+                      //             fontSize: 20,
+                      //             color: Theme.of(context).canvasColor,
+                      //           ),
+                      //         ),
+                      //         // TODO 仮
+                      //         Row(
+                      //           children: data.getTags(),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+                      // Text(
+                      //   "関連トレンド",
+                      //   style: TextStyle(
+                      //     height: 3,
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 25,
+                      //     color: Theme.of(context).canvasColor,
+                      //   ),
+                      // ),
+                      // GridView.count(
+                      //   shrinkWrap: true,
+                      //   physics: NeverScrollableScrollPhysics(),
+                      //   padding: const EdgeInsets.all(5.0),
+                      //   scrollDirection: Axis.vertical,
+                      //   crossAxisCount: 2,
+                      //   children: data
+                      //       .getRelated()
+                      //       .map((id) =>
+                      //       TrendTile(TrendLibrary().getTrendData(id)))
+                      //       .toList(),
+                      // ),
                     ],
                   ),
                 ),
               ],
             );
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text("${snapshot.error}\n${snapshot.stackTrace}");
           }
           return CircularProgressIndicator();
         },

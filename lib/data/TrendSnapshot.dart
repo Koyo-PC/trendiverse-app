@@ -1,19 +1,15 @@
 import '../data/TrendSource.dart';
 
 class TrendSnapshot {
-  final TrendSource _source;
   final DateTime _time;
-  final double _hotness;
+  final int _hotness;
 
-  TrendSnapshot(this._source, this._time, this._hotness);
+  TrendSnapshot(this._time, this._hotness);
 
-  TrendSource getSource() {
-    return _source;
-  }
   DateTime getTime() {
     return _time;
   }
-  double getHotness() {
+  int getHotness() {
     return _hotness;
   }
 }

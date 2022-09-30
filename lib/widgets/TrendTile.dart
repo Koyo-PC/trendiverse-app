@@ -46,7 +46,7 @@ class TrendTile extends StatelessWidget {
                 ],
               );
             } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
+              return Text("${snapshot.error}\n${snapshot.stackTrace}");
             }
             return CircularProgressIndicator();
           },

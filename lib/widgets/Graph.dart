@@ -29,24 +29,24 @@ class Graph extends StatelessWidget {
             // TODO 線を越えないようにする
             data: _data
                 .getHistoryData()
-                .where((element) => element.getSource() is TwitterSource)
+                // .where((element) => element.getSource() is TwitterSource)
                 .toList()
               ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),
-          charts.Series<TrendSnapshot, DateTime>(
-            id: 'Google',
-            colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-            domainFn: (TrendSnapshot snapshot, _) => snapshot.getTime(),
-            measureFn: (TrendSnapshot snapshot, _) => snapshot.getHotness(),
-            dashPatternFn: (TrendSnapshot snapshot, _) =>
-                snapshot.getTime().isBefore(DateTime.now()) ? null : [2, 2],
-            // TODO 線を越えないようにする
-            data: _data
-                .getHistoryData()
-                .where((element) => element.getSource() is GoogleSource)
-                .toList()
-              ..sort((a, b) => a.getTime().compareTo(b.getTime())),
-          ),
+          // charts.Series<TrendSnapshot, DateTime>(
+          //   id: 'Google',
+          //   colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+          //   domainFn: (TrendSnapshot snapshot, _) => snapshot.getTime(),
+          //   measureFn: (TrendSnapshot snapshot, _) => snapshot.getHotness(),
+          //   dashPatternFn: (TrendSnapshot snapshot, _) =>
+          //       snapshot.getTime().isBefore(DateTime.now()) ? null : [2, 2],
+          //   // TODO 線を越えないようにする
+          //   data: _data
+          //       .getHistoryData()
+          //       // .where((element) => element.getSource() is GoogleSource)
+          //       .toList()
+          //     ..sort((a, b) => a.getTime().compareTo(b.getTime())),
+          // ),
         ],
         defaultInteractions: false,
         animate: false,
