@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:trendiverse/data/TrendData.dart';
@@ -22,7 +20,7 @@ class TrenDiverseAPI {
   // final DateFormat _dateFormat = DateFormat('yyyy-MM-ddTHH:mm:ss');
   final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'zz");
 
-  Future<Map<String, dynamic>> _requestAPI(int port, String location,
+  Future<String> _requestAPIStr(int port, String location,
       {Map<String, dynamic>? query}) async {
     final SharedPreferences config = await AppConfig().getConfig();
     var response = await http.get(
@@ -32,7 +30,11 @@ class TrenDiverseAPI {
         query ?? {},
       ),
     );
-    return json.decode(response.body);
+    return response.body;
+  }
+  Future<Map<String, dynamic>> _requestAPI(int port, String location,
+      {Map<String, dynamic>? query}) async {
+    return json.decode(await _requestAPIStr(port, location, query: query));
   }
 
   // list of current trends
@@ -41,7 +43,9 @@ class TrenDiverseAPI {
     // debugPrint('${result["list"] as List<Map<String, dynamic>>}');
     // List<CurrentTrendData> data = (result["list"] as List<Map<String, dynamic>>).map((element) {CurrentTrendData.fromJson(element)}).toList();
     // return data;
-    return (result["list"] as List).map((element) {return element["id"] as int;}).toList();
+    List trendList = result["list"];
+    trendList.sort((a, b) {return (b["hotness"] as int).compareTo(a["hotness"] as int);});
+    return trendList.map((element) {return element["id"] as int;}).toList();
   }
 
   // hotness history of specific trend
@@ -49,7 +53,14 @@ class TrenDiverseAPI {
     Map<String, dynamic> result =
         await _requestAPI(8081, "/getDataById", query: {"id": id.toString()});
     List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();
-    return TrendData(id.toString(), snapshots);
+    return TrendData(id, await getName(id), snapshots);
+  }
+
+  Future<String> getName(int id) async {
+    String result =
+    await _requestAPIStr(8081, "/getNameById", query: {"id": id.toString()});
+    // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();
+    return result.substring(1,result.length - 1);
   }
 }
 

@@ -1,17 +1,18 @@
 import 'dart:core';
-import 'package:flutter/material.dart';
 
-import '../widgets/Tag.dart';
 import '../data/TrendSnapshot.dart';
-import '../data/source/GoogleSource.dart';
-import '../data/source/TwitterSource.dart';
 
 class TrendData {
+  final int _id;
   final String _name;
   final List<TrendSnapshot> _historyData;
 
-  TrendData(this._name, this._historyData);
+  TrendData(this._id, this._name, this._historyData);
 
+
+  String getId() {
+    return _name;
+  }
 
   String getName() {
     return _name;
