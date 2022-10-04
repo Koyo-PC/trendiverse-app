@@ -35,7 +35,7 @@ class TrenDiverseApp extends HookConsumerWidget {
       supportedLocales: const [
         locale,
       ],
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trendiverse/TrenDiverseAPI.dart';
 import 'package:trendiverse/page/template/SubPage.dart';
 
 import 'Graph.dart';
@@ -6,9 +7,14 @@ import '../data/TrendData.dart';
 import '../page/TrendPage.dart';
 
 class TrendTile extends StatelessWidget {
+  final int _id;
   final Future<TrendData> _data;
 
-  const TrendTile(this._data, {Key? key}) : super(key: key);
+  const TrendTile(this._id, this._data, {Key? key}) : super(key: key);
+
+  int getId() {
+    return _id;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +23,7 @@ class TrendTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SubPage(TrendPage(_data)),
+            builder: (context) => SubPage(TrendPage(TrenDiverseAPI().getCachedData(_id))),
           ),
         );
       },

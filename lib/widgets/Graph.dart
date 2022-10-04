@@ -4,7 +4,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 
 import '../data/TrendData.dart';
 import '../data/TrendSnapshot.dart';
-import '../data/source/GoogleSource.dart';
+import '../data/source/AISource.dart';
 import '../data/source/TwitterSource.dart';
 
 class Graph extends StatelessWidget {
@@ -29,24 +29,24 @@ class Graph extends StatelessWidget {
             // TODO 線を越えないようにする
             data: _data
                 .getHistoryData()
-                // .where((element) => element.getSource() is TwitterSource)
+                .where((element) => element.getSource() is TwitterSource)
                 .toList()
               ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),
-          // charts.Series<TrendSnapshot, DateTime>(
-          //   id: 'Google',
-          //   colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-          //   domainFn: (TrendSnapshot snapshot, _) => snapshot.getTime(),
-          //   measureFn: (TrendSnapshot snapshot, _) => snapshot.getHotness(),
-          //   dashPatternFn: (TrendSnapshot snapshot, _) =>
-          //       snapshot.getTime().isBefore(DateTime.now()) ? null : [2, 2],
-          //   // TODO 線を越えないようにする
-          //   data: _data
-          //       .getHistoryData()
-          //       // .where((element) => element.getSource() is GoogleSource)
-          //       .toList()
-          //     ..sort((a, b) => a.getTime().compareTo(b.getTime())),
-          // ),
+          charts.Series<TrendSnapshot, DateTime>(
+            id: 'AI',
+            colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+            domainFn: (TrendSnapshot snapshot, _) => snapshot.getTime(),
+            measureFn: (TrendSnapshot snapshot, _) => snapshot.getHotness(),
+            dashPatternFn: (TrendSnapshot snapshot, _) =>
+                snapshot.getTime().isBefore(DateTime.now()) ? null : [2, 2],
+            // TODO 線を越えないようにする
+            data: _data
+                .getHistoryData()
+                .where((element) => element.getSource() is AISource)
+                .toList()
+              ..sort((a, b) => a.getTime().compareTo(b.getTime())),
+          ),
         ],
         defaultInteractions: false,
         animate: false,

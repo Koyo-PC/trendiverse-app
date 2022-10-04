@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:trendiverse/data/TrendData.dart';
 import 'package:trendiverse/data/TrendSnapshot.dart';
+import 'package:trendiverse/data/source/AISource.dart';
+import 'package:trendiverse/data/source/TwitterSource.dart';
 
 import 'AppConfig.dart';
 
@@ -32,6 +34,7 @@ class TrenDiverseAPI {
     );
     return response.body;
   }
+
   Future<Map<String, dynamic>> _requestAPI(int port, String location,
       {Map<String, dynamic>? query}) async {
     return json.decode(await _requestAPIStr(port, location, query: query));
@@ -44,23 +47,50 @@ class TrenDiverseAPI {
     // List<CurrentTrendData> data = (result["list"] as List<Map<String, dynamic>>).map((element) {CurrentTrendData.fromJson(element)}).toList();
     // return data;
     List trendList = result["list"];
-    trendList.sort((a, b) {return (b["hotness"] as int).compareTo(a["hotness"] as int);});
-    return trendList.map((element) {return element["id"] as int;}).toList();
+    trendList.sort((a, b) {
+      return (b["hotness"] as int).compareTo(a["hotness"] as int);
+    });
+    return trendList.map((element) {
+      return element["id"] as int;
+    }).toList();
   }
+
+  static Map<int, TrendData> cachedData = {};
 
   // hotness history of specific trend
   Future<TrendData> getData(int id) async {
+    if (cachedData.containsKey(id)) return cachedData[id]!;
     Map<String, dynamic> result =
         await _requestAPI(8081, "/getDataById", query: {"id": id.toString()});
-    List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();
-    return TrendData(id, await getName(id), snapshots);
+    List<TrendSnapshot> snapshots = (result["list"] as List).map((e) {
+      return TrendSnapshot(
+          _dateFormat.parse(e["date"]), e["hotness"], TwitterSource());
+    }).toList();
+    snapshots.addAll(await getPredictData(id));
+    TrendData data = TrendData(id, await getName(id), snapshots);
+    cachedData[id] = data;
+    return data;
+  }
+
+  TrendData? getCachedData(int id) {
+    return cachedData[id];
   }
 
   Future<String> getName(int id) async {
-    String result =
-    await _requestAPIStr(8081, "/getNameById", query: {"id": id.toString()});
+    String result = await _requestAPIStr(8081, "/getNameById",
+        query: {"id": id.toString()});
     // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();
-    return result.substring(1,result.length - 1);
+    return result.substring(1, result.length - 1);
+  }
+
+  Future<List<TrendSnapshot>> getPredictData(int id) async {
+    String result =
+        await _requestAPIStr(8800, "/", query: {"id": id.toString()});
+    DateFormat format = DateFormat("yyyy-MM-dd hh:mm:ss");
+    return ((jsonDecode(result) as Map)["data"] as List)
+        .map((e) => TrendSnapshot(format.parse(e["date"]),
+            e["hotness"].toInt(), AISource()))
+        .toList();
   }
 }
 
