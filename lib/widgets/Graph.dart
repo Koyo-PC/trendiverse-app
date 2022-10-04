@@ -24,12 +24,13 @@ class Graph extends StatelessWidget {
             colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
             domainFn: (TrendSnapshot snapshot, _) => snapshot.getTime(),
             measureFn: (TrendSnapshot snapshot, _) => snapshot.getHotness(),
-            dashPatternFn: (TrendSnapshot snapshot, _) =>
-                snapshot.getTime().isBefore(DateTime.now()) ? null : [2, 2],
             // TODO 線を越えないようにする
             data: _data
                 .getHistoryData()
                 .where((element) => element.getSource() is TwitterSource)
+                .where((element) =>
+                    element.getTime().millisecondsSinceEpoch <
+                    DateTime.now().millisecondsSinceEpoch)
                 .toList()
               ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),
@@ -38,12 +39,13 @@ class Graph extends StatelessWidget {
             colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
             domainFn: (TrendSnapshot snapshot, _) => snapshot.getTime(),
             measureFn: (TrendSnapshot snapshot, _) => snapshot.getHotness(),
-            dashPatternFn: (TrendSnapshot snapshot, _) =>
-                snapshot.getTime().isBefore(DateTime.now()) ? null : [2, 2],
             // TODO 線を越えないようにする
             data: _data
                 .getHistoryData()
                 .where((element) => element.getSource() is AISource)
+                .where((element) =>
+                    element.getTime().millisecondsSinceEpoch >
+                    DateTime.now().millisecondsSinceEpoch)
                 .toList()
               ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),

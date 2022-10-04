@@ -88,7 +88,7 @@ class TrenDiverseAPI {
         await _requestAPIStr(8800, "/", query: {"id": id.toString()});
     DateFormat format = DateFormat("yyyy-MM-dd hh:mm:ss");
     return ((jsonDecode(result) as Map)["data"] as List)
-        .map((e) => TrendSnapshot(format.parse(e["date"]),
+        .map((e) => TrendSnapshot(format.parse(e["date"]).subtract(const Duration(hours: 9)),
             e["hotness"].toInt(), AISource()))
         .toList();
   }
