@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -55,6 +56,22 @@ class TrenDiverseAPI {
     }).toList();
   }
 
+  Future<List<Map<String, dynamic>>> getAllData() async {
+    Map<String, dynamic> result = await _requestAPI(8081, "/getList");
+    // debugPrint('${result["list"] as List<Map<String, dynamic>>}');
+    // List<CurrentTrendData> data = (result["list"] as List<Map<String, dynamic>>).map((element) {CurrentTrendData.fromJson(element)}).toList();
+    // return data;
+    var data = <Map<String, dynamic>>[];
+    for(int i = 0; i < (result["list"] as List).length; i++) {
+      data.add(result["list"][i]);
+    }
+    // for (var element in (result["list"] as List<Map<String, String>>)) {
+    //   data.add(element);
+    // }
+    data.sort((a,b) => b["id"].compareTo(a["id"]));
+    return data;
+  }
+
   static Map<int, TrendData> cachedData = {};
 
   // hotness history of specific trend
@@ -88,8 +105,10 @@ class TrenDiverseAPI {
         await _requestAPIStr(8800, "/", query: {"id": id.toString()});
     DateFormat format = DateFormat("yyyy-MM-dd hh:mm:ss");
     return ((jsonDecode(result) as Map)["data"] as List)
-        .map((e) => TrendSnapshot(format.parse(e["date"]).subtract(const Duration(hours: 9)),
-            e["hotness"].toInt(), AISource()))
+        .map((e) => TrendSnapshot(
+            format.parse(e["date"]).subtract(const Duration(hours: 9)),
+            e["hotness"].toInt(),
+            AISource()))
         .toList();
   }
 }

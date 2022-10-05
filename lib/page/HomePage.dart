@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:trendiverse/TrenDiverseAPI.dart';
+import 'package:trendiverse/page/TrendPage.dart';
 
 import 'SettingPage.dart';
 import '../TrendLibrary.dart';
@@ -16,33 +18,48 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchQueryController = ref.read(searchQueryProvider.notifier);
-    final searchQuery = ref.watch(searchQueryProvider);
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
           height: 38,
-          child: TextFormField(
-            style: const TextStyle(fontSize: 15.0, color: Colors.black),
-            cursorHeight: 20,
-            maxLines: 1,
-            onFieldSubmitted: (s) => {searchQueryController.state = s},
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(19),
+          child: TypeAheadField(
+            textFieldConfiguration: const TextFieldConfiguration(
+              autofocus: true,
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.white,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(19),
-                borderSide: const BorderSide(
-                  color: Colors.transparent,
-                ),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
               ),
-              filled: true,
-              hintStyle: TextStyle(color: Colors.grey[800]),
-              hintText: "search...",
-              fillColor: Theme.of(context).unselectedWidgetColor,
-              contentPadding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
             ),
+            suggestionsCallback: (pattern) async {
+              var data = await TrenDiverseAPI().getAllData();
+              final result = <Map<String, dynamic>>[];
+              await Future.forEach(data, (Map<String, dynamic> item) async {
+                if ((item["name"] as String)
+                    .toLowerCase()
+                    .contains(pattern.toLowerCase())) {
+                  result.add(item);
+                }
+              });
+              return result;
+            },
+            itemBuilder: (context, suggestion) {
+              return ListTile(
+                leading: const Icon(Icons.auto_graph),
+                title: Text((suggestion as Map)['name']),
+              );
+            },
+            onSuggestionSelected: (suggestion) {
+              TrenDiverseAPI().getData((suggestion as Map)['id']).then(
+                    (data) => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SubPage(TrendPage(data)),
+                      ),
+                    ),
+                  );
+            },
           ),
         ),
         centerTitle: true,
@@ -76,9 +93,6 @@ class HomePage extends ConsumerWidget {
               crossAxisCount: 2,
               children: trends.map((id) {
                 return TrendTile(id, TrenDiverseAPI().getData(id));
-              }).where((tile) {
-                return searchQuery.isEmpty ||
-                    (TrenDiverseAPI().getCachedData(tile.getId())?.getName().contains(searchQuery) ?? true);
               }).toList(),
             );
           } else if (snapshot.hasError) {
