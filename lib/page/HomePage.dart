@@ -11,12 +11,14 @@ import 'template/SubPage.dart';
 class HomePage extends ConsumerWidget {
   HomePage({Key? key}) : super(key: key);
 
-  final searchQueryProvider = StateProvider((ref) {
-    return "";
+  final trendListProvider = StateProvider((ref) {
+    return TrenDiverseAPI().getList();
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var trendListController = ref.read(trendListProvider.notifier);
+    var trendList = ref.watch(trendListProvider);
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -82,17 +84,20 @@ class HomePage extends ConsumerWidget {
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: FutureBuilder<List<int>>(
-        future: TrenDiverseAPI().getList(),
+        future: trendList,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final List<int> trends = snapshot.data!;
-            return GridView.count(
-              padding: const EdgeInsets.all(5.0),
-              scrollDirection: Axis.vertical,
-              crossAxisCount: 2,
-              children: trends.map((id) {
-                return TrendTile(id, TrenDiverseAPI().getData(id));
-              }).toList(),
+            return RefreshIndicator(
+              onRefresh: () => trendListController.state = TrenDiverseAPI().getList(),
+              child: GridView.count(
+                padding: const EdgeInsets.all(5.0),
+                scrollDirection: Axis.vertical,
+                crossAxisCount: 2,
+                children: trends.map((id) {
+                  return TrendTile(id, TrenDiverseAPI().getData(id));
+                }).toList(),
+              ),
             );
           } else if (snapshot.hasError) {
             return Text("ERROR: ${snapshot.error}");
