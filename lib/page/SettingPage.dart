@@ -23,9 +23,9 @@ class SettingPage extends SubPageContent {
   });
 
   late final List<SettingWidget> settings = [
-    SettingWidget(LinkSetting("カテゴリをフォロー", SubPage(CategoryFollowPage()))),
+    // SettingWidget(LinkSetting("カテゴリをフォロー", SubPage(CategoryFollowPage()))),
     SettingWidget(LinkSetting("Twitterトレンド設定", SubPage(TwitterSettingPage()))),
-    SettingWidget(LinkSetting("Googleトレンド設定", SubPage(GoogleSettingPage()))),
+    // SettingWidget(LinkSetting("Googleトレンド設定", SubPage(GoogleSettingPage()))),
     SettingWidget(
       ConsumerDropdownSetting(
         "テーマ",
