@@ -5,7 +5,6 @@ import 'package:trendiverse/TrenDiverseAPI.dart';
 import 'package:trendiverse/page/TrendPage.dart';
 
 import 'SettingPage.dart';
-import '../TrendLibrary.dart';
 import '../widgets/TrendTile.dart';
 import 'template/SubPage.dart';
 
@@ -24,7 +23,6 @@ class HomePage extends ConsumerWidget {
           height: 38,
           child: TypeAheadField(
             textFieldConfiguration: const TextFieldConfiguration(
-              autofocus: true,
               style: TextStyle(
                 fontSize: 18.0,
                 color: Colors.white,
@@ -47,6 +45,7 @@ class HomePage extends ConsumerWidget {
             },
             itemBuilder: (context, suggestion) {
               return ListTile(
+                tileColor: Theme.of(context).backgroundColor,
                 leading: const Icon(Icons.auto_graph),
                 title: Text((suggestion as Map)['name']),
               );
