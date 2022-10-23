@@ -4,11 +4,11 @@ import 'TrendData.dart';
 import 'Position.dart';
 
 
-class StackedTrend {
+class StockedTrend {
   final TrendData _data;
   Position position = Position(0, 0, 0);
 
-  StackedTrend(this._data);
+  StockedTrend(this._data);
 
   TrendData getData() {
     return _data;

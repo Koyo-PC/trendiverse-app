@@ -1,23 +1,16 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:indexed/indexed.dart';
-import 'package:trendiverse/TrenDiverseAPI.dart';
 import 'package:trendiverse/data/StockedTrend.dart';
 import 'package:trendiverse/page/template/SubPageContent.dart';
-import 'package:trendiverse/widgets/TrendTile.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../data/TrendData.dart';
-import '../widgets/Graph.dart';
 
 class StockPage extends SubPageContent {
-  StockPage() {}
-
   @override
   String getTitle() {
     return "ストック済トレンド";
@@ -32,57 +25,25 @@ class StockPage extends SubPageContent {
       maxScale: 5.0,
       child: Container(
         color: Colors.blue,
-        // padding: EdgeInsets.all(50),
-        child: _StockPageContent(),
+        child: const _StockPageContent(),
       ),
     );
   }
 }
 
 class _StockedListNotifier extends ChangeNotifier {
-  LinkedHashMap<String, StackedTrend> data = LinkedHashMap();
+  LinkedHashMap<String, StockedTrend> data = LinkedHashMap();
 
   _StockedListNotifier() {
-    data["aaa"] = StackedTrend(TrendData(100, "aaa", []));
-    data["bbb"] = StackedTrend(TrendData(200, "bbb", []));
+    data["aaa"] = StockedTrend(TrendData(100, "aaa", []));
+    data["bbb"] = StockedTrend(TrendData(200, "bbb", []));
   }
 
   void moveTrend(String name, Offset delta) {
     if (!data.containsKey(name)) return;
     var movedTrend = data[name]!;
-    // data.remove(name);
-
     movedTrend.position.x += delta.dx;
     movedTrend.position.y += delta.dy;
-    // movedTrend.position.z =
-    //     data.values.map((e) => e.position.z).toList().reduce(max) + 1.0;
-
-    // data[name] = movedTrend;
-    print(data);
-
-    // data = SplayTreeMap.of(data, (a, b) {
-    //   print("a: $a, b: $b");
-    //   print("az: ${data[a]!.position.z}, bz: ${data[b]!.position.z}");
-    //   int compare = data[a]!.position.z.compareTo(data[b]!.position.z);
-    //   return compare == 0 ? 1 : compare;
-    // });
-
-    notifyListeners();
-  }
-
-  void moveTrendTo(String name, Offset pos) {
-    if (!data.containsKey(name)) return;
-    var movedTrend = data[name]!;
-    data.remove(name);
-
-    movedTrend.position.x = pos.dx;
-    movedTrend.position.y = pos.dy;
-    // movedTrend.position.z =
-    //     data.values.map((e) => e.position.z).toList().reduce(max) + 1.0;
-
-    data[name] = movedTrend;
-    // print(data);
-
     notifyListeners();
   }
 }
@@ -95,12 +56,11 @@ class _StockPageTile extends ConsumerWidget implements IndexedInterface {
 
   late StateProvider indexProvider;
   int _indexcache = 0;
-  StackedTrend todo;
+  StockedTrend stockedTrend;
 
-  _StockPageTile(this.todo) {
+  _StockPageTile(this.stockedTrend) {
     var defaultIndex = ++topIndex;
     indexProvider = StateProvider((ref) => defaultIndex);
-    // return Text(index.toString());
   }
 
   // Indexで前後関係を補正しようとしたがうまく動かず現状スパゲッティになってる
@@ -114,34 +74,24 @@ class _StockPageTile extends ConsumerWidget implements IndexedInterface {
     return Indexed(
       index: index,
       child: Positioned(
-        left: todo.position.x,
-        top: todo.position.y,
+        left: stockedTrend.position.x,
+        top: stockedTrend.position.y,
         child: GestureDetector(
           behavior: HitTestBehavior.deferToChild,
           dragStartBehavior: DragStartBehavior.down,
           onPanUpdate: (details) {
-            // print(details.primaryDelta);
             if (details.localPosition.distance < 10) return;
-            // print(todo.getData().getName());
             stockedTrendsNotifier.moveTrend(
-                todo.getData().getName(), details.delta);
-            // stockedTrendsNotifier.moveTrendTo(
-            //     todo.getData().getName(), details.localPosition);
+                stockedTrend.getData().getName(), details.delta);
           },
           onPanStart: (details) {
             indexNotifier.state = topIndex++;
-            // ref.read(_StockPageContent.rebuilder.state).update((state) => topIndex);
             // TODO: 前に出してくる
           },
-          //   onLongPressMoveUpdate: (details) {
-          //     print(todo.getData().getName());
-          //     stockedTrendsNotifier.moveTrendTo(
-          //         todo.getData().getName(), details.globalPosition);
-          //   },
           child: Container(
               color: Colors.red,
               padding: const EdgeInsets.all(10),
-              child: Text(todo.getData().getName() + index.toString())),
+              child: Text(stockedTrend.getData().getName() + index.toString())),
         ),
       ),
     );
@@ -162,25 +112,12 @@ class _StockPageContent extends ConsumerWidget {
     // TODO DB?
     ref.watch(rebuilder);
     return Indexer(
-      fit: StackFit.expand,
-      children: ref
-          .read(_StockPageTile.stockedProvider)
-          .data
-          .values
-          .map(
-            (todo) => _StockPageTile(todo) as Widget,
-          )
-          .toList()
-        // ..add(
-        //   const Indexed(
-        //     child: Positioned(
-        //       child: SizedBox(
-        //         width: 500,
-        //         height: 500,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-    );
+        fit: StackFit.expand,
+        children: ref
+            .read(_StockPageTile.stockedProvider)
+            .data
+            .values
+            .map((todo) => _StockPageTile(todo))
+            .toList());
   }
 }
