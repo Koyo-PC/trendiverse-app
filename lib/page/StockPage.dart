@@ -1,14 +1,15 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:indexed/indexed.dart';
+import 'package:trendiverse/LocalStrage.dart';
+import 'package:trendiverse/data/Position.dart';
 import 'package:trendiverse/data/StockedTrend.dart';
 import 'package:trendiverse/page/template/SubPageContent.dart';
-
-import '../data/TrendData.dart';
 
 class StockPage extends SubPageContent {
   @override
@@ -35,15 +36,34 @@ class _StockedListNotifier extends ChangeNotifier {
   LinkedHashMap<String, StockedTrend> data = LinkedHashMap();
 
   _StockedListNotifier() {
-    data["aaa"] = StockedTrend(TrendData(100, "aaa", []));
-    data["bbb"] = StockedTrend(TrendData(200, "bbb", []));
+    // data["500"] = StockedTrend(500);
+    // data["700"] = StockedTrend(700);
+    updateTrends();
   }
 
-  void moveTrend(String name, Offset delta) {
-    if (!data.containsKey(name)) return;
-    var movedTrend = data[name]!;
+  void updateTrends() {
+    if (!LocalStrage().prefs!.containsKey("trends_stocked")) {
+      LocalStrage().prefs!.setString("trends_stocked", jsonEncode({}));
+    }
+
+    // print(LocalStrage().prefs!.getString("trends_stocked"));
+    Map<String, dynamic> loadedData = Map<String, dynamic>.from(
+        jsonDecode(LocalStrage().prefs!.getString("trends_stocked")!));
+    loadedData.forEach((id, pos) {
+      data[id] = StockedTrend(int.parse(id))
+        ..position = Position.fromJson(Map<String, dynamic>.from(pos));
+    });
+  }
+
+  void moveTrend(int id, Offset delta) {
+    if (!data.containsKey(id.toString())) return;
+    var movedTrend = data[id.toString()]!;
     movedTrend.position.x += delta.dx;
     movedTrend.position.y += delta.dy;
+
+    LocalStrage().prefs!.setString("trends_stocked",
+        jsonEncode(data.map((key, value) => MapEntry(key, value.position))));
+
     notifyListeners();
   }
 }
@@ -80,18 +100,27 @@ class _StockPageTile extends ConsumerWidget implements IndexedInterface {
           behavior: HitTestBehavior.deferToChild,
           dragStartBehavior: DragStartBehavior.down,
           onPanUpdate: (details) {
-            if (details.localPosition.distance < 10) return;
             stockedTrendsNotifier.moveTrend(
-                stockedTrend.getData().getName(), details.delta);
+                stockedTrend.getId(), details.delta);
           },
           onPanStart: (details) {
             indexNotifier.state = topIndex++;
             // TODO: 前に出してくる
           },
           child: Container(
-              color: Colors.red,
-              padding: const EdgeInsets.all(10),
-              child: Text(stockedTrend.getData().getName() + index.toString())),
+            color: Colors.red,
+            padding: const EdgeInsets.all(10),
+            child: FutureBuilder(
+              future: stockedTrend.getName(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.data!);
+                } else {
+                  return const Text("データ受信中");
+                }
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -109,8 +138,8 @@ class _StockPageContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO DB?
     ref.watch(rebuilder);
+    ref.read(_StockPageTile.stockedProvider).updateTrends();
     return Indexer(
         fit: StackFit.expand,
         children: ref

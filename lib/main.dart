@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'LocalStrage.dart';
 import './page/HomePage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: TrenDiverseApp()));
+  // 設定ファイルを読んでおく
+  LocalStrage();
 }
 
 class TrenDiverseApp extends HookConsumerWidget {
