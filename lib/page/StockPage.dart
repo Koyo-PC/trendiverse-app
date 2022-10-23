@@ -87,11 +87,11 @@ class _StockPageContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(rebuilder);
-    ref.read(LocalStrage.stockedProvider).updateTrends();
+    // ref.read(LocalStrage.stockedProvider).updateTrends();
     return Stack(
         fit: StackFit.expand,
         children: ref
-            .read(LocalStrage.stockedProvider)
+            .watch(LocalStrage.stockedProvider)
             .data
             .values
             .map((todo) => _StockPageTile(todo.getId().toString()))
