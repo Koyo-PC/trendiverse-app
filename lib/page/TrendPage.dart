@@ -32,27 +32,6 @@ class TrendPage extends SubPageContent {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FloatingActionButton(
-            onPressed: () {
-              if (!LocalStrage().prefs!.containsKey("trends_stocked")) {
-                LocalStrage()
-                    .prefs!
-                    .setString("trends_stocked", jsonEncode({}));
-              }
-              print(LocalStrage().prefs!.getString("trends_stocked")!);
-              Map<String, dynamic> stockedData = Map<String, dynamic>.from(
-                  json.decode(
-                      LocalStrage().prefs!.getString("trends_stocked")!
-                  )
-              );
-              print(stockedData);
-              stockedData[_data!.getId().toString()] = Position(0, 0);
-              LocalStrage().prefs!.setString("trends_stocked", jsonEncode(stockedData));
-            },
-            child: const Icon(Icons.bookmark),
-            backgroundColor: Theme.of(context).primaryColor,
-            foregroundColor: Colors.white,
-          ),
           Graph(_data!, height: 300),
           Container(
             margin: const EdgeInsets.all(15),
@@ -67,6 +46,35 @@ class TrendPage extends SubPageContent {
                     fontSize: 40,
                     color: Theme.of(context).canvasColor,
                   ),
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    if (!LocalStrage().prefs!.containsKey("trends_stocked")) {
+                      LocalStrage()
+                          .prefs!
+                          .setString("trends_stocked", jsonEncode({}));
+                    }
+                    Map<String, dynamic> stockedData =
+                        Map<String, dynamic>.from(json.decode(
+                            LocalStrage().prefs!.getString("trends_stocked")!));
+                    if (stockedData.containsKey(_data!.getId().toString())) {
+                      stockedData.remove(_data!.getId().toString());
+                    } else {
+                      stockedData[_data!.getId().toString()] = Position(0, 0);
+                    }
+                    LocalStrage()
+                        .prefs!
+                        .setString("trends_stocked", jsonEncode(stockedData));
+                  },
+                  child: Map<String, dynamic>.from(jsonDecode(LocalStrage()
+                              .prefs!
+                              .getString("trends_stocked")!))
+                          .keys
+                          .contains(_data?.getId().toString())
+                      ? const Icon(Icons.bookmark_added)
+                      : const Icon(Icons.bookmark_add_outlined),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
                 ),
                 SizedBox(
                   height: 600,

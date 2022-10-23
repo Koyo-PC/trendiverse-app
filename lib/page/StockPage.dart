@@ -9,7 +9,10 @@ import 'package:indexed/indexed.dart';
 import 'package:trendiverse/LocalStrage.dart';
 import 'package:trendiverse/data/Position.dart';
 import 'package:trendiverse/data/StockedTrend.dart';
+import 'package:trendiverse/page/template/SubPage.dart';
 import 'package:trendiverse/page/template/SubPageContent.dart';
+
+import 'TrendPage.dart';
 
 class StockPage extends SubPageContent {
   @override
@@ -42,21 +45,28 @@ class _StockedListNotifier extends ChangeNotifier {
   }
 
   void updateTrends() {
+    print("a");
     if (!LocalStrage().prefs!.containsKey("trends_stocked")) {
       LocalStrage().prefs!.setString("trends_stocked", jsonEncode({}));
     }
+    print("b");
 
     // print(LocalStrage().prefs!.getString("trends_stocked"));
     Map<String, dynamic> loadedData = Map<String, dynamic>.from(
         jsonDecode(LocalStrage().prefs!.getString("trends_stocked")!));
+    data.clear();
     loadedData.forEach((id, pos) {
       data[id] = StockedTrend(int.parse(id))
         ..position = Position.fromJson(Map<String, dynamic>.from(pos));
     });
+
+    print("c");
   }
 
   void moveTrend(int id, Offset delta) {
+    print(data.keys);
     if (!data.containsKey(id.toString())) return;
+    print("z");
     var movedTrend = data[id.toString()]!;
     movedTrend.position.x += delta.dx;
     movedTrend.position.y += delta.dy;
@@ -105,7 +115,17 @@ class _StockPageTile extends ConsumerWidget implements IndexedInterface {
           },
           onPanStart: (details) {
             indexNotifier.state = topIndex++;
+            stockedTrends.updateTrends();
             // TODO: 前に出してくる
+          },
+          onTap: () async {
+            var data = await stockedTrend.getData();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SubPage(TrendPage(data)),
+              ),
+            );
           },
           child: Container(
             color: Colors.red,
