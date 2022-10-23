@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:trendiverse/TrenDiverseAPI.dart';
+import 'package:trendiverse/page/StockPage.dart';
 import 'package:trendiverse/page/TrendPage.dart';
 
 import 'SettingPage.dart';
@@ -83,13 +84,27 @@ class HomePage extends ConsumerWidget {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SubPage(StockPage()),
+            ),
+          )
+        },
+        child: const Icon(Icons.bookmark),
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+      ),
       body: FutureBuilder<List<int>>(
         future: trendList,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final List<int> trends = snapshot.data!;
             return RefreshIndicator(
-              onRefresh: () => trendListController.state = TrenDiverseAPI().getList(),
+              onRefresh: () =>
+                  trendListController.state = TrenDiverseAPI().getList(),
               child: GridView.count(
                 padding: const EdgeInsets.all(5.0),
                 scrollDirection: Axis.vertical,

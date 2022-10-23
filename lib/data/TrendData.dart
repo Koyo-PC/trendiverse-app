@@ -10,8 +10,8 @@ class TrendData {
   TrendData(this._id, this._name, this._historyData);
 
 
-  String getId() {
-    return _name;
+  int getId() {
+    return _id;
   }
 
   String getName() {
