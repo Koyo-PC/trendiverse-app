@@ -1,4 +1,12 @@
+import 'dart:collection';
+import 'dart:convert';
+
+import 'package:flutter/widgets.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'data/Position.dart';
+import 'data/StockedTrend.dart';
 
 class LocalStrage {
   static final LocalStrage _instance = LocalStrage._internal();
@@ -9,8 +17,75 @@ class LocalStrage {
 
   LocalStrage._internal() {
     SharedPreferences.getInstance().then((value) => prefs = value);
-    print("aaasdcsdc");
   }
 
   SharedPreferences? prefs;
+
+  LinkedHashMap<String, StockedTrend> getStockedTrends() {
+    LinkedHashMap<String, StockedTrend> data = LinkedHashMap();
+
+    if (!prefs!.containsKey("trends_stocked")) {
+      prefs!.setString("trends_stocked", jsonEncode({}));
+    }
+
+    Map<String, dynamic> loadedData = Map<String, dynamic>.from(
+        jsonDecode(LocalStrage().prefs!.getString("trends_stocked")!));
+    loadedData.forEach((id, pos) {
+      data[id] = StockedTrend(id)
+        ..position = Position.fromJson(Map<String, dynamic>.from(pos));
+    });
+
+    return data;
+  }
+
+  void setStockedTrends(LinkedHashMap<String, StockedTrend> data) {
+    prefs!.setString("trends_stocked",
+        jsonEncode(data.map((key, value) => MapEntry(key, value.position))));
+  }
+
+  void toggleStockedTrend(WidgetRef ref, String id) {
+    var stockedTrends = getStockedTrends();
+    if (stockedTrends.containsKey(id)) {
+      stockedTrends.remove(id);
+    } else {
+      stockedTrends[id] = StockedTrend(id)..position = Position(0, 0);
+    }
+    setStockedTrends(stockedTrends);
+
+    ref.read(stockedProvider).update(stockedTrends);
+  }
+
+  static final stockedProvider =
+      ChangeNotifierProvider((ref) => StockedListNotifier());
+}
+
+class StockedListNotifier extends ChangeNotifier {
+  LinkedHashMap<String, StockedTrend> data = LinkedHashMap();
+
+  StockedListNotifier() {
+    updateTrends();
+  }
+
+  void updateTrends() {
+    data = LocalStrage().getStockedTrends();
+  }
+
+  void update(LinkedHashMap<String, StockedTrend> newData) {
+    data = newData;
+    notifyListeners();
+  }
+
+  void moveTrend(String id, Offset delta) {
+    updateTrends();
+
+    if (!data.containsKey(id)) return;
+
+    var movedTrend = data[id]!;
+    movedTrend.position.x += delta.dx;
+    movedTrend.position.y += delta.dy;
+
+    LocalStrage().setStockedTrends(data);
+
+    notifyListeners();
+  }
 }
