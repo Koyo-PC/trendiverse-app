@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -67,21 +66,26 @@ class TrenDiverseAPI {
     // List<CurrentTrendData> data = (result["list"] as List<Map<String, dynamic>>).map((element) {CurrentTrendData.fromJson(element)}).toList();
     // return data;
     var data = <Map<String, dynamic>>[];
-    for(int i = 0; i < (result["list"] as List).length; i++) {
+    for (int i = 0; i < (result["list"] as List).length; i++) {
       data.add(result["list"][i]);
     }
     // for (var element in (result["list"] as List<Map<String, String>>)) {
     //   data.add(element);
     // }
-    data.sort((a,b) => b["id"].compareTo(a["id"]));
+    data.sort((a, b) => b["id"].compareTo(a["id"]));
     return data;
   }
 
-  static Map<int, TrendData> cachedData = {};
+  static Map<int, MapEntry<DateTime, TrendData>> cachedData = {};
+  static const Duration cacheLife = Duration(minutes: 5);
 
   // hotness history of specific trend
   Future<TrendData> getData(int id) async {
-    if (cachedData.containsKey(id)) return cachedData[id]!;
+    if (cachedData.containsKey(id) &&
+        cachedData[id]!.key.difference(DateTime.now()).compareTo(cacheLife) >
+            0) {
+      return cachedData[id]!.value;
+    }
     Map<String, dynamic> result =
         await _requestAPI(8081, "/getDataById", query: {"id": id.toString()});
     List<TrendSnapshot> snapshots = (result["list"] as List).map((e) {
@@ -90,18 +94,14 @@ class TrenDiverseAPI {
     }).toList();
     snapshots.addAll(await getPredictData(id));
     TrendData data = TrendData(id, await getName(id), snapshots);
-    cachedData[id] = data;
+    cachedData[id] = MapEntry(DateTime.now(), data);
     return data;
-  }
-
-  TrendData? getCachedData(int id) {
-    return cachedData[id];
   }
 
   static Map<int, String> cachedName = {};
 
   Future<String> getName(int id) async {
-    if(cachedName.containsKey(id)) return Future.value(cachedName[id]);
+    if (cachedName.containsKey(id)) return Future.value(cachedName[id]);
     String result = await _requestAPIStr(8081, "/getNameById",
         query: {"id": id.toString()});
     // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:trendiverse/TrenDiverseAPI.dart';
-import 'package:trendiverse/page/StockPage.dart';
-import 'package:trendiverse/page/TrendPage.dart';
 
-import 'SettingPage.dart';
+import 'StockPage.dart';
+import 'TrendPage.dart';
+import '../TrenDiverseAPI.dart';
 import '../widgets/TrendTile.dart';
 import 'template/SubPage.dart';
 
@@ -22,8 +21,9 @@ class HomePage extends ConsumerWidget {
     var trendList = ref.watch(trendListProvider);
     return Scaffold(
       appBar: AppBar(
-        title: SizedBox(
+        title: Container(
           height: 38,
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: TypeAheadField(
             textFieldConfiguration: const TextFieldConfiguration(
               style: TextStyle(
@@ -65,22 +65,6 @@ class HomePage extends ConsumerWidget {
           ),
         ),
         centerTitle: true,
-        actions: [
-          Container(
-              padding: const EdgeInsets.all(10),
-              child: IconButton(
-                  onPressed: () => {
-                        FocusScope.of(context).requestFocus(FocusNode()),
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SubPage(SettingPage()),
-                          ),
-                        )
-                      },
-                  // 仮、TextFieldのフォーカスを外す
-                  icon: const Icon(Icons.settings))),
-        ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
       backgroundColor: Theme.of(context).backgroundColor,

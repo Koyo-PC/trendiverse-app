@@ -19,11 +19,12 @@ class TrendTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        var data = await TrenDiverseAPI().getData(_id);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SubPage(TrendPage(TrenDiverseAPI().getCachedData(_id))),
+            builder: (context) => SubPage(TrendPage(data)),
           ),
         );
       },
