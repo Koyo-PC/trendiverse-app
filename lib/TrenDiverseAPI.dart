@@ -23,6 +23,8 @@ class TrenDiverseAPI {
   // final DateFormat _dateFormat = DateFormat('yyyy-MM-ddTHH:mm:ss');
   final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'zz");
 
+  static int count = 0;
+
   Future<String> _requestAPIStr(int port, String location,
       {Map<String, dynamic>? query}) async {
     final SharedPreferences config = await AppConfig().getConfig();
@@ -33,6 +35,7 @@ class TrenDiverseAPI {
         query ?? {},
       ),
     );
+    print(count++);
     return response.body;
   }
 

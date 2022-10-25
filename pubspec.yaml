@@ -44,6 +44,7 @@ dependencies:
   json_annotation: ^4.6.0
   webview_flutter: ^3.0.4
   flutter_typeahead: ^4.1.1
+  flutter_launcher_icons: ^0.10.0
 
 dev_dependencies:
   flutter_test:
@@ -100,3 +101,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_icons:
+  android: true
+  adaptive_icon_foreground: "assets/icon/icon.png"
+  adaptive_icon_background: "#ed1e79"
+  image_path: "assets/icon/icon.png"
