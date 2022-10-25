@@ -45,7 +45,7 @@ class TrendPage extends SubPageContent {
                 Consumer(
                   builder: (context, ref, child) {
                     var stockedTrends = ref.watch(LocalStrage.stockedProvider).data;
-                    return FloatingActionButton(
+                    return ElevatedButton(
                       onPressed: () {
                         LocalStrage().toggleStockedTrend(ref, _data!.getId().toString());
                       },
@@ -54,8 +54,15 @@ class TrendPage extends SubPageContent {
                           .contains(_data?.getId().toString())
                           ? const Icon(Icons.bookmark_added)
                           : const Icon(Icons.bookmark_add_outlined),
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(
+                          side: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 1,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),

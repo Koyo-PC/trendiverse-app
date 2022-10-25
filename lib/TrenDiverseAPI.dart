@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
-import 'package:trendiverse/LocalStrage.dart';
 
 import 'data/TrendData.dart';
 import 'data/TrendSnapshot.dart';
@@ -18,6 +16,8 @@ class TrenDiverseAPI {
     return _instance;
   }
 
+  static const String serverIp = "138.2.55.39";
+
   // Load config from shared preferences
   // final DateFormat _dateFormat = DateFormat('yyyy-MM-ddTHH:mm:ss');
   final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'zz");
@@ -28,7 +28,7 @@ class TrenDiverseAPI {
       {Map<String, dynamic>? query}) async {
     var response = await http.get(
       Uri.http(
-        '${LocalStrage().getServerIp()}:$port',
+        '$serverIp:$port',
         location,
         query ?? {},
       ),
