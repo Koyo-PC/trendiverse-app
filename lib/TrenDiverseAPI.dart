@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
-import 'package:trendiverse/data/TrendData.dart';
-import 'package:trendiverse/data/TrendSnapshot.dart';
-import 'package:trendiverse/data/source/AISource.dart';
-import 'package:trendiverse/data/source/TwitterSource.dart';
+import 'package:trendiverse/LocalStrage.dart';
 
-import 'AppConfig.dart';
+import 'data/TrendData.dart';
+import 'data/TrendSnapshot.dart';
+import 'data/source/AISource.dart';
+import 'data/source/TwitterSource.dart';
 
 class TrenDiverseAPI {
   static final TrenDiverseAPI _instance = TrenDiverseAPI._internal();
@@ -26,10 +26,9 @@ class TrenDiverseAPI {
 
   Future<String> _requestAPIStr(int port, String location,
       {Map<String, dynamic>? query}) async {
-    final SharedPreferences config = await AppConfig().getConfig();
     var response = await http.get(
       Uri.http(
-        '${config.getString('server_ip')}:$port',
+        '${LocalStrage().getServerIp()}:$port',
         location,
         query ?? {},
       ),
@@ -122,62 +121,3 @@ class TrenDiverseAPI {
         .toList();
   }
 }
-
-// when you change this file, run this command to regenerate the code:
-// `$ flutter packages pub run build_runner build`
-
-// @JsonSerializable()
-// class CurrentTrendData {
-//   CurrentTrendData(this.id, this.hotness, this.name);
-//
-//   int id;
-//   int hotness;
-//   String name;
-//
-//   factory CurrentTrendData.fromJson(Map<String, dynamic> json) =>
-//       _$CurrentTrendDataFromJson(json);
-//
-//   Map<String, dynamic> toJson() => _$CurrentTrendDataToJson(this);
-// }
-
-// @JsonSerializable()
-// class TrendList {
-//   TrendList(this.google, this.twitter);
-//
-//   int id;
-//   int hotness;
-//   String name;
-//
-//   factory TrendList.fromJson(Map<String, dynamic> json) =>
-//       _$TrendListFromJson(json);
-//
-//   Map<String, dynamic> toJson() => _$TrendListToJson(this);
-// }
-/*
-@JsonSerializable()
-class APITrendInfo {
-
-  // String category;
-  // List<int> related;
-  APITrendData data;
-
-  APITrendInfo(this.category, this.related, this.data);
-
-  factory APITrendInfo.fromJson(Map<String, dynamic> json) =>
-      _$APITrendInfoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$APITrendInfoToJson(this);
-}
-*/
-// @JsonSerializable()
-// class APITrendData {
-//   APITrendData(this.date, this.hotness);
-//
-//   DateTime date;
-//   double hotness;
-//
-//   factory APITrendData.fromJson(Map<String, dynamic> json) =>
-//       _$APITrendDataFromJson(json);
-//
-//   Map<String, dynamic> toJson() => _$APITrendDataToJson(this);
-// }

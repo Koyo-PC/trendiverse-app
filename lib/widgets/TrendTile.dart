@@ -8,9 +8,8 @@ import '../page/TrendPage.dart';
 
 class TrendTile extends StatelessWidget {
   final int _id;
-  final Future<TrendData> _data;
 
-  const TrendTile(this._id, this._data, {Key? key}) : super(key: key);
+  const TrendTile(this._id, {Key? key}) : super(key: key);
 
   int getId() {
     return _id;
@@ -35,7 +34,7 @@ class TrendTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: FutureBuilder<TrendData>(
-          future: _data,
+          future: TrenDiverseAPI().getData(_id),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final data = snapshot.data!;

@@ -94,7 +94,7 @@ class HomePage extends ConsumerWidget {
                 scrollDirection: Axis.vertical,
                 crossAxisCount: 2,
                 children: trends.map((id) {
-                  return TrendTile(id, TrenDiverseAPI().getData(id));
+                  return TrendTile(id);
                 }).toList(),
               ),
             );

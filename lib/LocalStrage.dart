@@ -57,6 +57,11 @@ class LocalStrage {
 
   static final stockedProvider =
       ChangeNotifierProvider((ref) => StockedListNotifier());
+
+  String getServerIp() {
+    if(!prefs!.containsKey("server_ip")) prefs!.setString("server_ip", "138.2.55.39");
+    return prefs!.getString("server_ip")!;
+  }
 }
 
 class StockedListNotifier extends ChangeNotifier {
