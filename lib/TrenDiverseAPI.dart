@@ -36,6 +36,8 @@ class TrenDiverseAPI {
       ),
     );
     print(count++);
+    print(location);
+    print(query);
     return response.body;
   }
 
@@ -96,11 +98,16 @@ class TrenDiverseAPI {
     return cachedData[id];
   }
 
+  static Map<int, String> cachedName = {};
+
   Future<String> getName(int id) async {
+    if(cachedName.containsKey(id)) return Future.value(cachedName[id]);
     String result = await _requestAPIStr(8081, "/getNameById",
         query: {"id": id.toString()});
     // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();
-    return result.substring(1, result.length - 1);
+    var name = result.substring(1, result.length - 1);
+    cachedName[id] = name;
+    return name;
   }
 
   Future<List<TrendSnapshot>> getPredictData(int id) async {
