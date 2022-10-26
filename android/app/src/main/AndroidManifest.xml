@@ -2,7 +2,7 @@
     package="com.example.trendiverse">
    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="trendiverse"
+        android:label="TrenDiverse"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
