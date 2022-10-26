@@ -6,9 +6,11 @@ class TrendData {
   final int _id;
   final String _name;
   final List<TrendSnapshot> _historyData;
+  late final int? _sourceId;
 
-  TrendData(this._id, this._name, this._historyData);
-
+  TrendData(this._id, this._name, this._historyData, {int? sourceId}) {
+    _sourceId = sourceId;
+  }
 
   int getId() {
     return _id;
@@ -30,5 +32,9 @@ class TrendData {
   void addHistoryData(TrendSnapshot snapshot) {
     _historyData.add(snapshot);
     return;
+  }
+
+  int? getSourceId() {
+    return _sourceId != _id ? _sourceId : null;
   }
 }

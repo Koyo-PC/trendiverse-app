@@ -17,6 +17,7 @@ class TrendTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(_id == 0) return Container();
     return GestureDetector(
       onTap: () async {
         var data = await TrenDiverseAPI().getData(_id);

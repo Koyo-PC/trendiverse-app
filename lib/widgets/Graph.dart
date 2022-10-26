@@ -28,9 +28,9 @@ class Graph extends StatelessWidget {
             data: _data
                 .getHistoryData()
                 .where((element) => element.getSource() is TwitterSource)
-                .where((element) =>
-                    element.getTime().millisecondsSinceEpoch <
-                    DateTime.now().millisecondsSinceEpoch)
+                // .where((element) =>
+                //     element.getTime().millisecondsSinceEpoch <
+                //     DateTime.now().millisecondsSinceEpoch)
                 .toList()
               ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),
@@ -43,9 +43,9 @@ class Graph extends StatelessWidget {
             data: _data
                 .getHistoryData()
                 .where((element) => element.getSource() is AISource)
-                .where((element) =>
-                    element.getTime().millisecondsSinceEpoch >
-                    DateTime.now().millisecondsSinceEpoch)
+                // .where((element) =>
+                //     element.getTime().millisecondsSinceEpoch >
+                //     DateTime.now().millisecondsSinceEpoch)
                 .toList()
               ..sort((a, b) => a.getTime().compareTo(b.getTime())),
           ),

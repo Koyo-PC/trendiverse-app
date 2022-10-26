@@ -16,4 +16,9 @@ class TrendSnapshot {
   TrendSource getSource() {
     return _source;
   }
+
+  @override
+  String toString() {
+    return "{$_hotness@$_time by $_source}";
+  }
 }

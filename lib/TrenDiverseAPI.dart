@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:trendiverse/data/source/TwitterSource.dart';
 
 import 'data/TrendData.dart';
 import 'data/TrendSnapshot.dart';
 import 'data/source/AISource.dart';
-import 'data/source/TwitterSource.dart';
 
 class TrenDiverseAPI {
   static final TrenDiverseAPI _instance = TrenDiverseAPI._internal();
@@ -85,14 +85,18 @@ class TrenDiverseAPI {
             0) {
       return cachedData[id]!.value;
     }
-    Map<String, dynamic> result =
-        await _requestAPI(8081, "/getDataById", query: {"id": id.toString()});
-    List<TrendSnapshot> snapshots = (result["list"] as List).map((e) {
-      return TrendSnapshot(
-          _dateFormat.parse(e["date"]), e["hotness"], TwitterSource());
-    }).toList();
-    snapshots.addAll(await getPredictData(id));
-    TrendData data = TrendData(id, await getName(id), snapshots);
+    // Map<String, dynamic> result =
+    //     await _requestAPI(8081, "/getDataById", query: {"id": id.toString()});
+    // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) {
+    //   return TrendSnapshot(
+    //       _dateFormat.parse(e["date"]), e["hotness"], TwitterSource());
+    // }).toList();
+    var predictData = await getPredictData(id);
+    print(predictData.value);
+    // snapshots.addAll(predictData.value);
+    // TrendData data = TrendData(id, await getName(id), snapshots);
+    TrendData data = TrendData(id, await getName(id), predictData.value,
+        sourceId: predictData.key);
     cachedData[id] = MapEntry(DateTime.now(), data);
     return data;
   }
@@ -109,15 +113,33 @@ class TrenDiverseAPI {
     return name;
   }
 
-  Future<List<TrendSnapshot>> getPredictData(int id) async {
-    String result =
-        await _requestAPIStr(8800, "/", query: {"id": id.toString()});
+  static Map<int, MapEntry<DateTime, String>> cachedPredictedData = {};
+
+  Future<MapEntry<int, List<TrendSnapshot>>> getPredictData(int id) async {
+    String result;
+    if (cachedPredictedData.containsKey(id) &&
+        cachedPredictedData[id]!
+                .key
+                .difference(DateTime.now())
+                .compareTo(cacheLife) >
+            0) {
+      result = cachedPredictedData[id]!.value;
+    } else {
+      result = await _requestAPIStr(8800, "/", query: {"id": id.toString()});
+      cachedPredictedData[id] = MapEntry(DateTime.now(), result);
+    }
     DateFormat format = DateFormat("yyyy-MM-dd hh:mm:ss");
-    return ((jsonDecode(result) as Map)["data"] as List)
-        .map((e) => TrendSnapshot(
-            format.parse(e["date"]).subtract(const Duration(hours: 9)),
-            e["hotness"].toInt(),
-            AISource()))
-        .toList();
+    Map requestData = jsonDecode(result) as Map;
+    var data = MapEntry(
+        requestData["id"] as int,
+        (requestData["data"] as List).map((e) {
+          var date = format.parse(e["date"]).subtract(const Duration(hours: 9));
+          if (date.compareTo(DateTime.now()) == 1) {
+            return TrendSnapshot(date, e["hotness"].toInt(), TwitterSource());
+          } else {
+            return TrendSnapshot(date, e["hotness"].toInt(), AISource());
+          }
+        }).toList());
+    return data;
   }
 }

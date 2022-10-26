@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:trendiverse/page/template/SubPageContent.dart';
+import 'package:trendiverse/widgets/TrendTile.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../LocalStrage.dart';
@@ -66,6 +67,7 @@ class TrendPage extends SubPageContent {
                     );
                   },
                 ),
+                TrendTile(_data?.getSourceId() ?? 0),
                 SizedBox(
                   height: 600,
                   child: SingleChildScrollView(
