@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -29,7 +28,7 @@ class StockPage extends SubPageContent {
 }
 
 class _StockPageTile extends ConsumerWidget {
-  String id;
+  int id;
 
   _StockPageTile(this.id);
 
@@ -52,11 +51,10 @@ class _StockPageTile extends ConsumerWidget {
           // TODO: 前に出してくる
         },
         onTap: () async {
-          var data = await stockedTrends.data[id]!.getData();
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SubPage(TrendPage(data)),
+              builder: (context) => SubPage(TrendPage(id)),
             ),
           );
         },
@@ -94,7 +92,7 @@ class _StockPageContent extends ConsumerWidget {
             .watch(LocalStrage.stockedProvider)
             .data
             .values
-            .map((todo) => _StockPageTile(todo.getId().toString()))
+            .map((todo) => _StockPageTile(todo.getId()))
             .toList());
   }
 }

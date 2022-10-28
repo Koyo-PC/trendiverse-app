@@ -19,11 +19,7 @@ class TrenDiverseAPI {
 
   static const String serverIp = "138.2.55.39";
 
-  // Load config from shared preferences
-  // final DateFormat _dateFormat = DateFormat('yyyy-MM-ddTHH:mm:ss');
-  final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'zz");
-
-  static int count = 0;
+  // final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'zz");
 
   Future<String> _requestAPIStr(int port, String location,
       {Map<String, dynamic>? query}) async {
@@ -34,9 +30,6 @@ class TrenDiverseAPI {
         query ?? {},
       ),
     );
-    print(count++);
-    print(location);
-    print(query);
     return response.body;
   }
 
@@ -82,7 +75,7 @@ class TrenDiverseAPI {
   // hotness history of specific trend
   Future<TrendData> getData(int id) async {
     if (cachedData.containsKey(id) &&
-        cachedData[id]!.key.difference(DateTime.now()).compareTo(cacheLife) >
+        cachedData[id]!.key.difference(DateTime.now()).compareTo(cacheLife) <
             0) {
       return cachedData[id]!.value;
     }
@@ -93,7 +86,6 @@ class TrenDiverseAPI {
     //       _dateFormat.parse(e["date"]), e["hotness"], TwitterSource());
     // }).toList();
     var predictData = await getPredictData(id);
-    print(predictData.value);
     // snapshots.addAll(predictData.value);
     // TrendData data = TrendData(id, await getName(id), snapshots);
     TrendData data = TrendData(id, await getName(id), predictData.value,
@@ -105,10 +97,7 @@ class TrenDiverseAPI {
   static Map<int, String> cachedName = {};
 
   Future<String> getName(int id) async {
-    print("aaa");
-    print(cachedName[id]);
     if (cachedName.containsKey(id)) return cachedName[id]!;
-    print("bbb");
     String result = await _requestAPIStr(8081, "/getNameById",
         query: {"id": id.toString()});
     // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();
@@ -125,7 +114,7 @@ class TrenDiverseAPI {
         cachedPredictedData[id]!
                 .key
                 .difference(DateTime.now())
-                .compareTo(cacheLife) >
+                .compareTo(cacheLife) <
             0) {
       result = cachedPredictedData[id]!.value;
     } else {

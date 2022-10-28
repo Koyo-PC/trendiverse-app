@@ -21,14 +21,14 @@ class LocalStrage {
 
   SharedPreferences? prefs;
 
-  LinkedHashMap<String, StockedTrend> getStockedTrends() {
-    LinkedHashMap<String, StockedTrend> data = LinkedHashMap();
+  LinkedHashMap<int, StockedTrend> getStockedTrends() {
+    LinkedHashMap<int, StockedTrend> data = LinkedHashMap();
 
     if (!prefs!.containsKey("trends_stocked")) {
       prefs!.setString("trends_stocked", jsonEncode({}));
     }
 
-    Map<String, dynamic> loadedData = Map<String, dynamic>.from(
+    Map<int, dynamic> loadedData = Map<int, dynamic>.from(
         jsonDecode(LocalStrage().prefs!.getString("trends_stocked")!));
     loadedData.forEach((id, pos) {
       data[id] = StockedTrend(id)
@@ -38,12 +38,12 @@ class LocalStrage {
     return data;
   }
 
-  void setStockedTrends(LinkedHashMap<String, StockedTrend> data) {
+  void setStockedTrends(LinkedHashMap<int, StockedTrend> data) {
     prefs!.setString("trends_stocked",
         jsonEncode(data.map((key, value) => MapEntry(key, value.position))));
   }
 
-  void toggleStockedTrend(WidgetRef ref, String id) {
+  void toggleStockedTrend(WidgetRef ref, int id) {
     var stockedTrends = getStockedTrends();
     if (stockedTrends.containsKey(id)) {
       stockedTrends.remove(id);
@@ -65,7 +65,7 @@ class LocalStrage {
 }
 
 class StockedListNotifier extends ChangeNotifier {
-  LinkedHashMap<String, StockedTrend> data = LinkedHashMap();
+  LinkedHashMap<int, StockedTrend> data = LinkedHashMap();
 
   StockedListNotifier() {
     updateTrends();
@@ -75,12 +75,12 @@ class StockedListNotifier extends ChangeNotifier {
     data = LocalStrage().getStockedTrends();
   }
 
-  void update(LinkedHashMap<String, StockedTrend> newData) {
+  void update(LinkedHashMap<int, StockedTrend> newData) {
     data = newData;
     notifyListeners();
   }
 
-  void moveTrend(String id, Offset delta) {
+  void moveTrend(int id, Offset delta) {
     updateTrends();
 
     if (!data.containsKey(id)) return;
