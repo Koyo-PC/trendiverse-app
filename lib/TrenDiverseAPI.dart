@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -104,7 +105,10 @@ class TrenDiverseAPI {
   static Map<int, String> cachedName = {};
 
   Future<String> getName(int id) async {
-    if (cachedName.containsKey(id)) return Future.value(cachedName[id]);
+    print("aaa");
+    print(cachedName[id]);
+    if (cachedName.containsKey(id)) return cachedName[id]!;
+    print("bbb");
     String result = await _requestAPIStr(8081, "/getNameById",
         query: {"id": id.toString()});
     // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) { return TrendSnapshot(_dateFormat.parse(e["date"]), e["hotness"]);}).toList();

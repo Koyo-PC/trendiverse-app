@@ -21,7 +21,7 @@ class StockPage extends SubPageContent {
       minScale: 1.0,
       maxScale: 5.0,
       child: Container(
-        color: Colors.blue,
+        color: Theme.of(context).backgroundColor,
         child: const _StockPageContent(),
       ),
     );
@@ -61,7 +61,7 @@ class _StockPageTile extends ConsumerWidget {
           );
         },
         child: Container(
-          color: Colors.red,
+          color: Theme.of(context).cardColor,
           padding: const EdgeInsets.all(10),
           child: FutureBuilder(
             future: stockedTrends.data[id]!.getName(),
