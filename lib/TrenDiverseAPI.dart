@@ -135,4 +135,10 @@ class TrenDiverseAPI {
         }).toList());
     return data;
   }
+
+  Future<List<String>> getPopular(int id) async {
+    var result = await _requestAPIStr(8081, "/getPopularDataById", query: {"id": id.toString()});
+    Map data = jsonDecode(result) as Map;
+    return (data["list"] as List).cast<String>();
+  }
 }

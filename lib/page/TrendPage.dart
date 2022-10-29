@@ -86,29 +86,33 @@ class TrendPage extends SubPageContent {
                     return const CircularProgressIndicator();
                   },
                 ),
-                SizedBox(
-                  height: 600,
-                  child: SingleChildScrollView(
-                    child: SizedBox(
-                      height: 600,
-                      child:FutureBuilder<String>(
-                        future: TrenDiverseAPI().getName(_id),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final data = snapshot.data!;
-                            return WebView(
-                              initialUrl:
-                              "https://twitter.com/search?q=${Uri.encodeFull(data).replaceAll("#", "%23")}",
-                              javascriptMode: JavascriptMode.unrestricted,
-                              gestureRecognizers: {
-                                Factory(() => EagerGestureRecognizer())
-                              },
-                            );
-                          }
-                          return const CircularProgressIndicator();
-                        },
-                      ),
-                    ),
+                SingleChildScrollView(
+                  child: FutureBuilder<List<String>>(
+                    future: TrenDiverseAPI().getPopular(_id),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final data = snapshot.data!;
+                        return Column(
+                          children: data
+                              .map((id) => Container(
+                                    height: 500,
+                                    width: MediaQuery.of(context).size.width - 100,
+                                    margin: const EdgeInsets.fromLTRB(50, 10, 50, 0),
+                                    child: WebView(
+                                      initialUrl:
+                                          "https://twitter.com/i/web/status/$id",
+                                      javascriptMode:
+                                          JavascriptMode.unrestricted,
+                                      gestureRecognizers: {
+                                        Factory(() => EagerGestureRecognizer())
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        );
+                      }
+                      return const CircularProgressIndicator();
+                    },
                   ),
                 ),
               ],

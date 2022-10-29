@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 class Position {
   double x;
   double y;
@@ -15,5 +13,5 @@ class Position {
     return '{ x: $x, y: $y }';
   }
 
-  Map<String, dynamic> toJson() => {"x": x, "y": y};
+  dynamic toJson() => {"x": x, "y": y};
 }

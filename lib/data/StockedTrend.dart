@@ -32,6 +32,6 @@ class StockedTrend {
 
   @override
   String toString() {
-    return "{ id: $_id, name: $_name, data: $_data, position: $position }";
+    return "{ id: ${getId()}, position: $position }";
   }
 }

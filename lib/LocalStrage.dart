@@ -28,10 +28,10 @@ class LocalStrage {
       prefs!.setString("trends_stocked", jsonEncode({}));
     }
 
-    Map<int, dynamic> loadedData = Map<int, dynamic>.from(
+    Map<String, dynamic> loadedData = Map<String, dynamic>.from(
         jsonDecode(LocalStrage().prefs!.getString("trends_stocked")!));
     loadedData.forEach((id, pos) {
-      data[id] = StockedTrend(id)
+      data[int.parse(id)] = StockedTrend(int.parse(id))
         ..position = Position.fromJson(Map<String, dynamic>.from(pos));
     });
 
@@ -40,7 +40,7 @@ class LocalStrage {
 
   void setStockedTrends(LinkedHashMap<int, StockedTrend> data) {
     prefs!.setString("trends_stocked",
-        jsonEncode(data.map((key, value) => MapEntry(key, value.position))));
+        jsonEncode(data.map((key, value) => MapEntry(key.toString(), value.position))));
   }
 
   void toggleStockedTrend(WidgetRef ref, int id) {
@@ -49,6 +49,7 @@ class LocalStrage {
       stockedTrends.remove(id);
     } else {
       stockedTrends[id] = StockedTrend(id)..position = Position(0, 0);
+      print(stockedTrends[id]);
     }
     setStockedTrends(stockedTrends);
 
