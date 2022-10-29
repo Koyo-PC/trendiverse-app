@@ -20,8 +20,16 @@ class TrendData {
     return _name;
   }
 
-  List<TrendSnapshot> getHistoryData() {
-    return _historyData;
+  List<TrendSnapshot> getHistoryData({dataCount = -1}) {
+    if (dataCount < 1) return _historyData;
+    return _historyData
+        .where((element) =>
+            _historyData.indexOf(element) == 0 ||
+            _historyData.indexOf(element) %
+                    ((_historyData.length / dataCount).ceil()) ==
+                0 ||
+            _historyData.indexOf(element) == _historyData.length - 1)
+        .toList();
   }
 
   void clearHistoryData() {

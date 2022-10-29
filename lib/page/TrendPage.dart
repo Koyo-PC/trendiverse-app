@@ -29,7 +29,7 @@ class TrendPage extends SubPageContent {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Graph(_id, height: 300),
+          Graph(_id, height: 300, enableAction: true,),
           Container(
             margin: const EdgeInsets.all(15),
             child: Column(

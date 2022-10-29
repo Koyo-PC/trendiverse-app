@@ -45,6 +45,7 @@ dependencies:
   webview_flutter: ^3.0.4
   flutter_typeahead: ^4.1.1
   flutter_launcher_icons: ^0.10.0
+  syncfusion_flutter_charts: ^20.3.52
 
 dev_dependencies:
   flutter_test:

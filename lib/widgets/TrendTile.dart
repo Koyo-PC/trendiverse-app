@@ -34,7 +34,7 @@ class TrendTile extends StatelessWidget {
         ),
         child: Column(
           children: <Widget>[
-            Graph(_id),
+            Graph(_id, textColor: Colors.black,),
             FutureBuilder<String>(
               future: TrenDiverseAPI().getName(_id),
               builder: (context, snapshot) {
