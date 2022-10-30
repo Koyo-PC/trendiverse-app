@@ -94,7 +94,7 @@ class TrendPage extends SubPageContent {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => SubPage(
-                                      TrendPage(_ids..add(suggestion['id']),
+                                      TrendPage(_ids + [suggestion['id']],
                                           graphMode: GraphMode.relative),
                                     ),
                                   ),

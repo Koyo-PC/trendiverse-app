@@ -73,8 +73,8 @@ class Graph extends StatelessWidget {
                         (d) => LineSeries<TrendSnapshot, DateTime>(
                           dataSource: d
                               .getHistoryData(dataCount: 500)
-                              .where(
-                                  (element) => element.getSource() == TrendSource.ai)
+                              .where((element) =>
+                                  element.getSource() == TrendSource.ai)
                               .toList(),
                           xValueMapper: (TrendSnapshot snapshot, _) =>
                               snapshot.getTime(),
@@ -86,9 +86,13 @@ class Graph extends StatelessWidget {
                     ))
                   : (data.map(
                       (d) {
-                        var color = HSLColor.fromAHSL(1,
-                            (data.indexOf(d).toDouble() / data.length), 1, .75);
+                        var color = HSLColor.fromAHSL(
+                            1,
+                            360 * data.indexOf(d).toDouble() / data.length,
+                            1,
+                            .75);
                         return LineSeries<TrendSnapshot, double>(
+                          legendItemText: d.getName(),
                           dataSource: d
                               .getHistoryData(dataCount: 500)
                               .where((element) =>
@@ -101,9 +105,7 @@ class Graph extends StatelessWidget {
                                       .getHistoryData(dataCount: 1)[0]
                                       .getTime())
                                   .inSeconds /
-                              60.0 /
-                              60 /
-                              24,
+                              86400.0,
                           yValueMapper: (TrendSnapshot snapshot, _) =>
                               snapshot.getHotness(),
                           color: color.toColor(),
@@ -119,11 +121,11 @@ class Graph extends StatelessWidget {
                               1,
                               .75);
                           return LineSeries<TrendSnapshot, double>(
-                            legendItemText: d.getName(),
+                            legendItemText: d.getName() + "(予測)",
                             dataSource: d
                                 .getHistoryData(dataCount: 500)
                                 .where((element) =>
-                                    element.getSource()  == TrendSource.ai)
+                                    element.getSource() == TrendSource.ai)
                                 .toList(),
                             xValueMapper: (TrendSnapshot snapshot, _) =>
                                 snapshot
@@ -132,17 +134,17 @@ class Graph extends StatelessWidget {
                                         .getHistoryData(dataCount: 1)[0]
                                         .getTime())
                                     .inSeconds /
-                                60.0 /
-                                60 /
-                                24,
+                                86400.0,
                             yValueMapper: (TrendSnapshot snapshot, _) =>
                                 snapshot.getHotness(),
-                            color: color.toColor(),
+                            color: color.withLightness(0.25).toColor(),
                           );
                         },
                       ),
                     )),
-              legend: Legend(isVisible: mode == GraphMode.relative, position: LegendPosition.bottom),
+              legend: Legend(
+                  isVisible: mode == GraphMode.relative,
+                  position: LegendPosition.bottom),
               crosshairBehavior: CrosshairBehavior(enable: enableAction),
             ),
           );
