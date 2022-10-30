@@ -14,12 +14,14 @@ class Graph extends StatelessWidget {
   final Color textColor;
 
   final bool enableAction;
+  final GraphMode mode;
 
   const Graph(this._ids,
       {Key? key,
       this.height = 150,
       this.textColor = Colors.white,
-      this.enableAction = false})
+      this.enableAction = false,
+      this.mode = GraphMode.absolute})
       : super(key: key);
 
   @override
@@ -34,11 +36,15 @@ class Graph extends StatelessWidget {
           return SizedBox(
             height: height,
             child: SfCartesianChart(
-              primaryXAxis: DateTimeAxis(
-                labelStyle: TextStyle(
-                  color: textColor,
-                ),
-              ),
+              primaryXAxis: mode == GraphMode.absolute
+                  ? (DateTimeAxis(
+                      labelStyle: TextStyle(
+                      color: textColor,
+                    )))
+                  : (NumericAxis(
+                      labelStyle: TextStyle(
+                      color: textColor,
+                    ))),
               primaryYAxis: NumericAxis(
                 labelStyle: TextStyle(
                   color: textColor,
@@ -46,37 +52,98 @@ class Graph extends StatelessWidget {
               ),
               zoomPanBehavior: ZoomPanBehavior(
                   enablePinching: enableAction, zoomMode: ZoomMode.x),
-              series: data
-                  .map(
-                    (d) => LineSeries<TrendSnapshot, DateTime>(
-                      dataSource: d
-                          .getHistoryData(dataCount: 500)
-                          .where(
-                              (element) => element.getSource() is TwitterSource)
-                          .toList(),
-                      xValueMapper: (TrendSnapshot snapshot, _) =>
-                          snapshot.getTime(),
-                      yValueMapper: (TrendSnapshot snapshot, _) =>
-                          snapshot.getHotness(),
-                      color: Colors.blue,
-                    ),
-                  )
-                  .toList()
-                ..addAll(
-                  data.map(
-                    (d) => LineSeries<TrendSnapshot, DateTime>(
-                      dataSource: d
-                          .getHistoryData(dataCount: 500)
-                          .where((element) => element.getSource() is AISource)
-                          .toList(),
-                      xValueMapper: (TrendSnapshot snapshot, _) =>
-                          snapshot.getTime(),
-                      yValueMapper: (TrendSnapshot snapshot, _) =>
-                          snapshot.getHotness(),
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
+              series: mode == GraphMode.absolute
+                  ? (data
+                      .map(
+                        (d) => LineSeries<TrendSnapshot, DateTime>(
+                          dataSource: d
+                              .getHistoryData(dataCount: 500)
+                              .where((element) =>
+                                  element.getSource() is TwitterSource)
+                              .toList(),
+                          xValueMapper: (TrendSnapshot snapshot, _) =>
+                              snapshot.getTime(),
+                          yValueMapper: (TrendSnapshot snapshot, _) =>
+                              snapshot.getHotness(),
+                          color: Colors.blue,
+                        ),
+                      )
+                      .toList()
+                    ..addAll(
+                      data.map(
+                        (d) => LineSeries<TrendSnapshot, DateTime>(
+                          dataSource: d
+                              .getHistoryData(dataCount: 500)
+                              .where(
+                                  (element) => element.getSource() is AISource)
+                              .toList(),
+                          xValueMapper: (TrendSnapshot snapshot, _) =>
+                              snapshot.getTime(),
+                          yValueMapper: (TrendSnapshot snapshot, _) =>
+                              snapshot.getHotness(),
+                          color: Colors.red,
+                        ),
+                      ),
+                    ))
+                  : (data.map(
+                      (d) {
+                        var color = HSLColor.fromAHSL(1,
+                            (data.indexOf(d).toDouble() / data.length), 1, .75);
+                        return LineSeries<TrendSnapshot, double>(
+                          dataSource: d
+                              .getHistoryData(dataCount: 500)
+                              .where((element) =>
+                                  element.getSource() is TwitterSource)
+                              .toList(),
+                          xValueMapper: (TrendSnapshot snapshot, _) =>
+                              snapshot
+                                  .getTime()
+                                  .difference(d
+                                      .getHistoryData(dataCount: 1)[0]
+                                      .getTime())
+                                  .inSeconds /
+                              60.0 /
+                              60 /
+                              24,
+                          yValueMapper: (TrendSnapshot snapshot, _) =>
+                              snapshot.getHotness(),
+                          color: color.toColor(),
+                        );
+                      },
+                    ).toList()
+                    ..addAll(
+                      data.map(
+                        (d) {
+                          var color = HSLColor.fromAHSL(
+                              1,
+                              360 * data.indexOf(d).toDouble() / data.length,
+                              1,
+                              .75);
+                          return LineSeries<TrendSnapshot, double>(
+                            legendItemText: d.getName(),
+                            dataSource: d
+                                .getHistoryData(dataCount: 500)
+                                .where((element) =>
+                                    element.getSource() is AISource)
+                                .toList(),
+                            xValueMapper: (TrendSnapshot snapshot, _) =>
+                                snapshot
+                                    .getTime()
+                                    .difference(d
+                                        .getHistoryData(dataCount: 1)[0]
+                                        .getTime())
+                                    .inSeconds /
+                                60.0 /
+                                60 /
+                                24,
+                            yValueMapper: (TrendSnapshot snapshot, _) =>
+                                snapshot.getHotness(),
+                            color: color.toColor(),
+                          );
+                        },
+                      ),
+                    )),
+              legend: Legend(isVisible: mode == GraphMode.relative, position: LegendPosition.bottom),
               crosshairBehavior: CrosshairBehavior(enable: enableAction),
             ),
           );
@@ -86,3 +153,6 @@ class Graph extends StatelessWidget {
     );
   }
 }
+
+// absolute: 日付 relative: 経過時間
+enum GraphMode { absolute, relative }

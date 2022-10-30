@@ -46,6 +46,7 @@ dependencies:
   flutter_typeahead: ^4.1.1
   flutter_launcher_icons: ^0.10.0
   syncfusion_flutter_charts: ^20.3.52
+  hsluv: ^1.1.2
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../widgets/TrendSearch.dart';
 import 'StockPage.dart';
 import 'TrendPage.dart';
 import '../TrenDiverseAPI.dart';
@@ -24,43 +25,13 @@ class HomePage extends ConsumerWidget {
         title: Container(
           height: 38,
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: TypeAheadField(
-            textFieldConfiguration: const TextFieldConfiguration(
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.white,
-              ),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-              ),
-            ),
-            suggestionsCallback: (pattern) async {
-              var data = await TrenDiverseAPI().getAllData();
-              final result = <Map<String, dynamic>>[];
-              await Future.forEach(data, (Map<String, dynamic> item) async {
-                if ((item["name"] as String)
-                    .toLowerCase()
-                    .contains(pattern.toLowerCase())) {
-                  result.add(item);
-                }
-              });
-              return result;
-            },
-            itemBuilder: (context, suggestion) {
-              return ListTile(
-                tileColor: Theme.of(context).backgroundColor,
-                leading: const Icon(Icons.auto_graph),
-                title: Text((suggestion as Map)['name']),
+          child: TrendSearch(
+            (suggestion) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SubPage(TrendPage([suggestion['id']])),
+                ),
               );
-            },
-            onSuggestionSelected: (suggestion) {
-              TrenDiverseAPI().getData((suggestion as Map)['id']).then(
-                    (data) => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SubPage(TrendPage([data.getId()])),
-                      ),
-                    ),
-                  );
             },
           ),
         ),

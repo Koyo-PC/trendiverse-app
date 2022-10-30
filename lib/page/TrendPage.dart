@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:trendiverse/page/template/SubPageContent.dart';
+import 'package:trendiverse/widgets/TrendSearch.dart';
 import 'package:trendiverse/widgets/TrendTile.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -10,11 +11,13 @@ import '../LocalStrage.dart';
 import '../TrenDiverseAPI.dart';
 import '../data/TrendData.dart';
 import '../widgets/Graph.dart';
+import 'template/SubPage.dart';
 
 class TrendPage extends SubPageContent {
   final List<int> _ids;
+  final GraphMode graphMode;
 
-  TrendPage(this._ids);
+  TrendPage(this._ids, {this.graphMode = GraphMode.absolute});
 
   @override
   String getTitle() {
@@ -29,11 +32,7 @@ class TrendPage extends SubPageContent {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Graph(
-            _ids,
-            height: 300,
-            enableAction: true,
-          ),
+          Graph(_ids, height: 300, enableAction: true, mode: graphMode),
           Container(
             margin: const EdgeInsets.all(15),
             child: Column(
@@ -83,49 +82,79 @@ class TrendPage extends SubPageContent {
                     },
                   ),
                 ElevatedButton(
-                    onPressed: () => {}, child: const Text("他のトレンドと比較")),
-                if (_ids.length == 1) FutureBuilder<TrendData>(
-                  future: TrenDiverseAPI().getData(_ids[0]),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final data = snapshot.data!;
-                      return TrendTile(data.getSourceId() ?? 0);
-                    }
-                    return const CircularProgressIndicator();
+                  child: const Text("他のトレンドと比較"),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SimpleDialog(
+                          children: <Widget>[
+                            TrendSearch(
+                              (suggestion) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => SubPage(
+                                      TrendPage(_ids..add(suggestion['id']),
+                                          graphMode: GraphMode.relative),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            Container(
+                              height: 500,
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
-                // TODO ↓ 後で有効化...?
-                if (_ids.length == 1) SingleChildScrollView(
-                  child: FutureBuilder<List<String>>(
-                    future: TrenDiverseAPI().getPopular(_ids[0]),
+                if (_ids.length == 1)
+                  FutureBuilder<TrendData>(
+                    future: TrenDiverseAPI().getData(_ids[0]),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final data = snapshot.data!;
-                        return Column(
-                          children: data
-                              .map((id) => Container(
-                                    height: 500,
-                                    width:
-                                        MediaQuery.of(context).size.width - 100,
-                                    margin: const EdgeInsets.fromLTRB(
-                                        50, 10, 50, 0),
-                                    child: WebView(
-                                      initialUrl:
-                                          "https://twitter.com/i/web/status/$id",
-                                      javascriptMode:
-                                          JavascriptMode.unrestricted,
-                                      gestureRecognizers: {
-                                        Factory(() => EagerGestureRecognizer())
-                                      },
-                                    ),
-                                  ))
-                              .toList(),
-                        );
+                        return TrendTile(data.getSourceId() ?? 0);
                       }
                       return const CircularProgressIndicator();
                     },
                   ),
-                ),
+                // TODO ↓ 後で有効化...?
+                if (_ids.length == 1)
+                  SingleChildScrollView(
+                    child: FutureBuilder<List<String>>(
+                      future: TrenDiverseAPI().getPopular(_ids[0]),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data!;
+                          return Column(
+                            children: data
+                                .map((id) => Container(
+                                      height: 500,
+                                      width: MediaQuery.of(context).size.width -
+                                          100,
+                                      margin: const EdgeInsets.fromLTRB(
+                                          50, 10, 50, 0),
+                                      child: WebView(
+                                        initialUrl:
+                                            "https://twitter.com/i/web/status/$id",
+                                        javascriptMode:
+                                            JavascriptMode.unrestricted,
+                                        gestureRecognizers: {
+                                          Factory(
+                                              () => EagerGestureRecognizer())
+                                        },
+                                      ),
+                                    ))
+                                .toList(),
+                          );
+                        }
+                        return const CircularProgressIndicator();
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
