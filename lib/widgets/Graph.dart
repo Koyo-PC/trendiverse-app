@@ -42,8 +42,10 @@ class Graph extends StatelessWidget {
                     )))
                   : (NumericAxis(
                       labelStyle: TextStyle(
-                      color: textColor,
-                    ))),
+                        color: textColor,
+                      ),
+                      labelFormat: '{value}日',
+                    )),
               primaryYAxis: NumericAxis(
                 labelStyle: TextStyle(
                   color: textColor,
