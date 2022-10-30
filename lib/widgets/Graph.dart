@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:trendiverse/data/TrendSource.dart';
 
 import '../TrenDiverseAPI.dart';
 import '../data/TrendData.dart';
 import '../data/TrendSnapshot.dart';
-import '../data/source/AISource.dart';
-import '../data/source/TwitterSource.dart';
 
 class Graph extends StatelessWidget {
   final List<int> _ids;
@@ -59,7 +58,7 @@ class Graph extends StatelessWidget {
                           dataSource: d
                               .getHistoryData(dataCount: 500)
                               .where((element) =>
-                                  element.getSource() is TwitterSource)
+                                  element.getSource() == TrendSource.twitter)
                               .toList(),
                           xValueMapper: (TrendSnapshot snapshot, _) =>
                               snapshot.getTime(),
@@ -75,7 +74,7 @@ class Graph extends StatelessWidget {
                           dataSource: d
                               .getHistoryData(dataCount: 500)
                               .where(
-                                  (element) => element.getSource() is AISource)
+                                  (element) => element.getSource() == TrendSource.ai)
                               .toList(),
                           xValueMapper: (TrendSnapshot snapshot, _) =>
                               snapshot.getTime(),
@@ -93,7 +92,7 @@ class Graph extends StatelessWidget {
                           dataSource: d
                               .getHistoryData(dataCount: 500)
                               .where((element) =>
-                                  element.getSource() is TwitterSource)
+                                  element.getSource() == TrendSource.twitter)
                               .toList(),
                           xValueMapper: (TrendSnapshot snapshot, _) =>
                               snapshot
@@ -124,7 +123,7 @@ class Graph extends StatelessWidget {
                             dataSource: d
                                 .getHistoryData(dataCount: 500)
                                 .where((element) =>
-                                    element.getSource() is AISource)
+                                    element.getSource()  == TrendSource.ai)
                                 .toList(),
                             xValueMapper: (TrendSnapshot snapshot, _) =>
                                 snapshot

@@ -1,3 +1,4 @@
-abstract class TrendSource {
-  TrendSource();
+enum TrendSource {
+  ai,
+  twitter
 }

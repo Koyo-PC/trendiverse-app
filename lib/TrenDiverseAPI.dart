@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:trendiverse/data/source/TwitterSource.dart';
+import 'package:trendiverse/data/TrendSource.dart';
 
 import 'data/TrendData.dart';
 import 'data/TrendSnapshot.dart';
-import 'data/source/AISource.dart';
 
 class TrenDiverseAPI {
   static final TrenDiverseAPI _instance = TrenDiverseAPI._internal();
@@ -133,9 +132,9 @@ class TrenDiverseAPI {
         (requestData["data"] as List).map((e) {
           var date = format.parse(e["date"]);
           if (date.compareTo(DateTime.now()) == 1) {
-            return TrendSnapshot(date, e["hotness"].toInt(), AISource());
+            return TrendSnapshot(date, e["hotness"].toInt(), TrendSource.ai);
           } else {
-            return TrendSnapshot(date, e["hotness"].toInt(), TwitterSource());
+            return TrendSnapshot(date, e["hotness"].toInt(), TrendSource.twitter);
           }
         }).toList());
     return data;
