@@ -8,14 +8,14 @@ import '../data/source/AISource.dart';
 import '../data/source/TwitterSource.dart';
 
 class Graph extends StatelessWidget {
-  final int _id;
+  final List<int> _ids;
   final double height;
 
   final Color textColor;
 
   final bool enableAction;
 
-  const Graph(this._id,
+  const Graph(this._ids,
       {Key? key,
       this.height = 150,
       this.textColor = Colors.white,
@@ -24,8 +24,10 @@ class Graph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<TrendData>(
-      future: TrenDiverseAPI().getData(_id),
+    return FutureBuilder<List<TrendData>>(
+      future: Future.wait(
+        _ids.map((id) => TrenDiverseAPI().getData(id)).toList(),
+      ),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final data = snapshot.data!;
@@ -44,30 +46,37 @@ class Graph extends StatelessWidget {
               ),
               zoomPanBehavior: ZoomPanBehavior(
                   enablePinching: enableAction, zoomMode: ZoomMode.x),
-              series: <ChartSeries>[
-                LineSeries<TrendSnapshot, DateTime>(
-                  dataSource: data
-                      .getHistoryData(dataCount: 500)
-                      .where((element) => element.getSource() is TwitterSource)
-                      .toList(),
-                  xValueMapper: (TrendSnapshot snapshot, _) =>
-                      snapshot.getTime(),
-                  yValueMapper: (TrendSnapshot snapshot, _) =>
-                      snapshot.getHotness(),
-                  color: Colors.blue,
+              series: data
+                  .map(
+                    (d) => LineSeries<TrendSnapshot, DateTime>(
+                      dataSource: d
+                          .getHistoryData(dataCount: 500)
+                          .where(
+                              (element) => element.getSource() is TwitterSource)
+                          .toList(),
+                      xValueMapper: (TrendSnapshot snapshot, _) =>
+                          snapshot.getTime(),
+                      yValueMapper: (TrendSnapshot snapshot, _) =>
+                          snapshot.getHotness(),
+                      color: Colors.blue,
+                    ),
+                  )
+                  .toList()
+                ..addAll(
+                  data.map(
+                    (d) => LineSeries<TrendSnapshot, DateTime>(
+                      dataSource: d
+                          .getHistoryData(dataCount: 500)
+                          .where((element) => element.getSource() is AISource)
+                          .toList(),
+                      xValueMapper: (TrendSnapshot snapshot, _) =>
+                          snapshot.getTime(),
+                      yValueMapper: (TrendSnapshot snapshot, _) =>
+                          snapshot.getHotness(),
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
-                LineSeries<TrendSnapshot, DateTime>(
-                  dataSource: data
-                      .getHistoryData(dataCount: 500)
-                      .where((element) => element.getSource() is AISource)
-                      .toList(),
-                  xValueMapper: (TrendSnapshot snapshot, _) =>
-                      snapshot.getTime(),
-                  yValueMapper: (TrendSnapshot snapshot, _) =>
-                      snapshot.getHotness(),
-                  color: Colors.red,
-                )
-              ],
               crosshairBehavior: CrosshairBehavior(enable: enableAction),
             ),
           );

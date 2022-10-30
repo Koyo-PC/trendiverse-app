@@ -57,7 +57,7 @@ class HomePage extends ConsumerWidget {
               TrenDiverseAPI().getData((suggestion as Map)['id']).then(
                     (data) => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => SubPage(TrendPage(data.getId())),
+                        builder: (context) => SubPage(TrendPage([data.getId()])),
                       ),
                     ),
                   );

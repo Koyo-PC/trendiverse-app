@@ -22,7 +22,7 @@ class TrendTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SubPage(TrendPage(_id)),
+            builder: (context) => SubPage(TrendPage([_id])),
           ),
         );
       },
@@ -34,7 +34,7 @@ class TrendTile extends StatelessWidget {
         ),
         child: Column(
           children: <Widget>[
-            Graph(_id, textColor: Colors.black,),
+            Graph([_id], textColor: Colors.black,),
             FutureBuilder<String>(
               future: TrenDiverseAPI().getName(_id),
               builder: (context, snapshot) {
