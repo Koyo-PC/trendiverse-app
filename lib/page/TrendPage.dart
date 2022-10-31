@@ -15,9 +15,11 @@ import 'template/SubPage.dart';
 
 class TrendPage extends SubPageContent {
   final List<int> _ids;
-  final GraphMode graphMode;
+  late final StateProvider<GraphMode> graphModeProvider;
 
-  TrendPage(this._ids, {this.graphMode = GraphMode.absolute});
+  TrendPage(this._ids, {graphMode = GraphMode.absolute}) {
+    graphModeProvider = StateProvider((ref) => graphMode);
+  }
 
   @override
   String getTitle() {
@@ -32,7 +34,15 @@ class TrendPage extends SubPageContent {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Graph(_ids, height: 300, enableAction: true, mode: graphMode),
+          Consumer(
+            builder: (context, ref, child) {
+              final mode = ref.watch(graphModeProvider);
+              return Graph(_ids,
+                  height: 300,
+                  enableAction: true,
+                  mode: mode);
+            },
+          ),
           Container(
             margin: const EdgeInsets.all(15),
             child: Column(
@@ -110,6 +120,21 @@ class TrendPage extends SubPageContent {
                     );
                   },
                 ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    return ElevatedButton(
+                      child: const Text("グラフ表示切り替え"),
+                      onPressed: () {
+                        final state = ref.read(graphModeProvider);
+                        ref.read(graphModeProvider.notifier).state =
+                            state == GraphMode.relative
+                                ? GraphMode.absolute
+                                : GraphMode.relative;
+                      },
+                    );
+                  },
+                ),
+
                 if (_ids.length == 1)
                   FutureBuilder<TrendData>(
                     future: TrenDiverseAPI().getData(_ids[0]),
