@@ -50,7 +50,7 @@ class Graph extends StatelessWidget {
                       //     borderColor: Colors.red,
                       //   )
                       // ],
-                dateFormat: DateFormat("MM/dd\nHH:mm"),
+                      dateFormat: DateFormat("MM/dd\nHH:mm"),
                     )
                   : NumericAxis(
                       labelStyle: TextStyle(
@@ -162,7 +162,12 @@ class Graph extends StatelessWidget {
               crosshairBehavior: CrosshairBehavior(enable: enableAction),
             );
           }
-          return const CircularProgressIndicator();
+          return Container(
+            padding: EdgeInsets.all(20),
+            height: height,
+            width: height,
+            child: const CircularProgressIndicator(),
+          );
         },
       ),
     );

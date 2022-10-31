@@ -38,8 +38,16 @@ class TrenDiverseAPI {
     return json.decode(await _requestAPIStr(port, location, query: query));
   }
 
+  static MapEntry<DateTime, List<int>> cachedList = MapEntry(DateTime.fromMillisecondsSinceEpoch(0), []);
+
   // list of current trends
   Future<List<int>> getList() async {
+    if (cachedList.value.length > 1 &&
+        cachedList.key.difference(DateTime.now()).compareTo(cacheLife) <
+            0) {
+      return cachedList.value;
+    }
+
     Map<String, dynamic> result = await _requestAPI(8081, "/showTrend");
     // debugPrint('${result["list"] as List<Map<String, dynamic>>}');
     // List<CurrentTrendData> data = (result["list"] as List<Map<String, dynamic>>).map((element) {CurrentTrendData.fromJson(element)}).toList();
@@ -48,9 +56,11 @@ class TrenDiverseAPI {
     trendList.sort((a, b) {
       return (b["hotness"] as int).compareTo(a["hotness"] as int);
     });
-    return trendList.map((element) {
+    var list = trendList.map((element) {
       return element["id"] as int;
     }).toList();
+    cachedList = MapEntry(DateTime.now(), list);
+    return list;
   }
 
   static MapEntry<DateTime, List<Map<String, dynamic>>> cachedAllData = MapEntry(DateTime.fromMillisecondsSinceEpoch(0), []);
@@ -86,7 +96,7 @@ class TrenDiverseAPI {
         id,
         await getName(id),
         predictData.value
-            .where((element) => predictData.value.indexOf(element) % 10 == 0)
+            // .where((element) => predictData.value.indexOf(element) % 10 == 0)
             .toList(),
         sourceId: predictData.key);
     cachedData[id] = MapEntry(DateTime.now(), data);
