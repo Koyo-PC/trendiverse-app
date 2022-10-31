@@ -17,6 +17,7 @@ class TrenDiverseAPI {
   }
 
   static const String serverIp = "138.2.55.39";
+  static const Duration cacheLife = Duration(minutes: 5);
 
   // final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'zz");
 
@@ -52,24 +53,26 @@ class TrenDiverseAPI {
     }).toList();
   }
 
+  static MapEntry<DateTime, List<Map<String, dynamic>>> cachedAllData = MapEntry(DateTime.fromMillisecondsSinceEpoch(0), []);
+
   Future<List<Map<String, dynamic>>> getAllData() async {
+
+    if (cachedAllData.value.length > 1 &&
+        cachedAllData.key.difference(DateTime.now()).compareTo(cacheLife) <
+            0) {
+      return cachedAllData.value;
+    }
     Map<String, dynamic> result = await _requestAPI(8081, "/getList");
-    // debugPrint('${result["list"] as List<Map<String, dynamic>>}');
-    // List<CurrentTrendData> data = (result["list"] as List<Map<String, dynamic>>).map((element) {CurrentTrendData.fromJson(element)}).toList();
-    // return data;
     var data = <Map<String, dynamic>>[];
     for (int i = 0; i < (result["list"] as List).length; i++) {
       data.add(result["list"][i]);
     }
-    // for (var element in (result["list"] as List<Map<String, String>>)) {
-    //   data.add(element);
-    // }
     data.sort((a, b) => b["id"].compareTo(a["id"]));
+    cachedAllData = MapEntry(DateTime.now(), data);
     return data;
   }
 
   static Map<int, MapEntry<DateTime, TrendData>> cachedData = {};
-  static const Duration cacheLife = Duration(minutes: 5);
 
   // hotness history of specific trend
   Future<TrendData> getData(int id) async {
@@ -78,15 +81,7 @@ class TrenDiverseAPI {
             0) {
       return cachedData[id]!.value;
     }
-    // Map<String, dynamic> result =
-    //     await _requestAPI(8081, "/getDataById", query: {"id": id.toString()});
-    // List<TrendSnapshot> snapshots = (result["list"] as List).map((e) {
-    //   return TrendSnapshot(
-    //       _dateFormat.parse(e["date"]), e["hotness"], TwitterSource());
-    // }).toList();
     var predictData = await getPredictData(id);
-    // snapshots.addAll(predictData.value);
-    // TrendData data = TrendData(id, await getName(id), snapshots);
     TrendData data = TrendData(
         id,
         await getName(id),

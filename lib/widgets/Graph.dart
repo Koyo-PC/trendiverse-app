@@ -41,15 +41,15 @@ class Graph extends StatelessWidget {
                       labelStyle: TextStyle(
                         color: textColor,
                       ),
-                      plotBands: <PlotBand>[
-                        PlotBand(
-                          isVisible: true,
-                          start: DateTime.now(),
-                          end: DateTime.now(),
-                          borderWidth: 2,
-                          borderColor: Colors.red,
-                        )
-                      ],
+                      // plotBands: <PlotBand>[
+                      //   PlotBand(
+                      //     isVisible: true,
+                      //     start: DateTime.now(),
+                      //     end: DateTime.now(),
+                      //     borderWidth: 2,
+                      //     borderColor: Colors.red,
+                      //   )
+                      // ],
                 dateFormat: DateFormat("MM/dd\nHH:mm"),
                     )
                   : NumericAxis(
