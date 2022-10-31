@@ -44,6 +44,7 @@ class TrendPage extends SubPageContent {
                 enableAction: true,
                 mode: ref.watch(graphModeProvider),
                 logarithm: ref.watch(logarithmProvider),
+                legendVisible: true,
               );
             },
           ),

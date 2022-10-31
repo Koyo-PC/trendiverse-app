@@ -20,13 +20,16 @@ class Graph extends StatelessWidget {
 
   final bool logarithm;
 
+  final bool legendVisible;
+
   const Graph(this._ids,
       {Key? key,
       this.height = 150,
       this.textColor = Colors.white,
       this.enableAction = false,
       this.mode = GraphMode.absolute,
-      this.logarithm = false})
+      this.logarithm = false,
+      this.legendVisible = false})
       : super(key: key);
 
   @override
@@ -66,17 +69,17 @@ class Graph extends StatelessWidget {
                         labelFormat: '{value}日',
                       ),
                 primaryYAxis: NumericAxis(
-                  labelStyle: TextStyle(
-                    color: textColor,
-                  ),
-                  labelFormat: logarithm ? "10^{value}" : "{value}K"
-                ),
+                    labelStyle: TextStyle(
+                      color: textColor,
+                    ),
+                    labelFormat: logarithm ? "10^{value}" : "{value}K"),
                 zoomPanBehavior: ZoomPanBehavior(
                     enablePinching: enableAction, zoomMode: ZoomMode.x),
                 series: mode == GraphMode.absolute
                     ? (data
                         .map(
                           (d) => LineSeries<TrendSnapshot, DateTime>(
+                            legendItemText: d.getName(),
                             dataSource: d
                                 .getHistoryData(dataCount: 500)
                                 .where((element) =>
@@ -88,13 +91,14 @@ class Graph extends StatelessWidget {
                                 logarithm
                                     ? log(snapshot.getHotness()) * log10e
                                     : snapshot.getHotness() / 1000,
-                            color: Colors.blue,
+                            color: const HSLColor.fromAHSL(1, 0, 1, .5).toColor(),
                           ),
                         )
                         .toList()
                       ..addAll(
                         data.map(
                           (d) => LineSeries<TrendSnapshot, DateTime>(
+                            legendItemText: d.getName() + "(予測)",
                             dataSource: d
                                 .getHistoryData(dataCount: 500)
                                 .where((element) =>
@@ -104,9 +108,9 @@ class Graph extends StatelessWidget {
                                 snapshot.getTime(),
                             yValueMapper: (TrendSnapshot snapshot, _) =>
                                 logarithm
-                                    ? log (snapshot.getHotness()) * log10e
+                                    ? log(snapshot.getHotness()) * log10e
                                     : snapshot.getHotness() / 1000,
-                            color: Colors.red,
+                            color: const HSLColor.fromAHSL(1, 0, 1, 0.85).toColor(),
                           ),
                         ),
                       ))
@@ -173,7 +177,7 @@ class Graph extends StatelessWidget {
                         ),
                       )),
                 legend: Legend(
-                    isVisible: mode == GraphMode.relative,
+                    isVisible: legendVisible,
                     position: LegendPosition.bottom),
                 crosshairBehavior: CrosshairBehavior(enable: enableAction),
               );
