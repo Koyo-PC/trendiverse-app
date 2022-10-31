@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trendiverse/data/TrendSource.dart';
 
@@ -25,27 +26,38 @@ class Graph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<TrendData>>(
-      future: Future.wait(
-        _ids.map((id) => TrenDiverseAPI().getData(id)).toList(),
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
-          return SizedBox(
-            height: height,
-            child: SfCartesianChart(
+    return SizedBox(
+      height: height,
+      child: FutureBuilder<List<TrendData>>(
+        future: Future.wait(
+          _ids.map((id) => TrenDiverseAPI().getData(id)).toList(),
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final data = snapshot.data!;
+            return SfCartesianChart(
               primaryXAxis: mode == GraphMode.absolute
-                  ? (DateTimeAxis(
+                  ? DateTimeAxis(
                       labelStyle: TextStyle(
-                      color: textColor,
-                    )))
-                  : (NumericAxis(
+                        color: textColor,
+                      ),
+                      plotBands: <PlotBand>[
+                        PlotBand(
+                          isVisible: true,
+                          start: DateTime.now(),
+                          end: DateTime.now(),
+                          borderWidth: 2,
+                          borderColor: Colors.red,
+                        )
+                      ],
+                dateFormat: DateFormat("MM/dd\nHH:mm"),
+                    )
+                  : NumericAxis(
                       labelStyle: TextStyle(
                         color: textColor,
                       ),
                       labelFormat: '{value}日',
-                    )),
+                    ),
               primaryYAxis: NumericAxis(
                 labelStyle: TextStyle(
                   color: textColor,
@@ -148,11 +160,11 @@ class Graph extends StatelessWidget {
                   isVisible: mode == GraphMode.relative,
                   position: LegendPosition.bottom),
               crosshairBehavior: CrosshairBehavior(enable: enableAction),
-            ),
-          );
-        }
-        return const CircularProgressIndicator();
-      },
+            );
+          }
+          return const CircularProgressIndicator();
+        },
+      ),
     );
   }
 }
