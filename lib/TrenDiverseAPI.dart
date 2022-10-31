@@ -38,13 +38,13 @@ class TrenDiverseAPI {
     return json.decode(await _requestAPIStr(port, location, query: query));
   }
 
-  static MapEntry<DateTime, List<int>> cachedList = MapEntry(DateTime.fromMillisecondsSinceEpoch(0), []);
+  static MapEntry<DateTime, List<int>> cachedList =
+      MapEntry(DateTime.fromMillisecondsSinceEpoch(0), []);
 
   // list of current trends
   Future<List<int>> getList() async {
     if (cachedList.value.length > 1 &&
-        cachedList.key.difference(DateTime.now()).compareTo(cacheLife) <
-            0) {
+        cachedList.key.difference(DateTime.now()).compareTo(cacheLife) < 0) {
       return cachedList.value;
     }
 
@@ -63,13 +63,12 @@ class TrenDiverseAPI {
     return list;
   }
 
-  static MapEntry<DateTime, List<Map<String, dynamic>>> cachedAllData = MapEntry(DateTime.fromMillisecondsSinceEpoch(0), []);
+  static MapEntry<DateTime, List<Map<String, dynamic>>> cachedAllData =
+      MapEntry(DateTime.fromMillisecondsSinceEpoch(0), []);
 
   Future<List<Map<String, dynamic>>> getAllData() async {
-
     if (cachedAllData.value.length > 1 &&
-        cachedAllData.key.difference(DateTime.now()).compareTo(cacheLife) <
-            0) {
+        cachedAllData.key.difference(DateTime.now()).compareTo(cacheLife) < 0) {
       return cachedAllData.value;
     }
     Map<String, dynamic> result = await _requestAPI(8081, "/getList");
@@ -96,7 +95,10 @@ class TrenDiverseAPI {
         id,
         await getName(id),
         predictData.value
-            // .where((element) => predictData.value.indexOf(element) % 10 == 0)
+            .where((element) =>
+                predictData.value.indexOf(element) % 10 == 0 ||
+                predictData.value.indexOf(element) ==
+                    predictData.value.length - 1)
             .toList(),
         sourceId: predictData.key);
     cachedData[id] = MapEntry(DateTime.now(), data);
@@ -139,7 +141,8 @@ class TrenDiverseAPI {
           if (date.compareTo(DateTime.now()) == 1) {
             return TrendSnapshot(date, e["hotness"].toInt(), TrendSource.ai);
           } else {
-            return TrendSnapshot(date, e["hotness"].toInt(), TrendSource.twitter);
+            return TrendSnapshot(
+                date, e["hotness"].toInt(), TrendSource.twitter);
           }
         }).toList());
     return data;
