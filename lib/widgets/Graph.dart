@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -16,12 +18,15 @@ class Graph extends StatelessWidget {
   final bool enableAction;
   final GraphMode mode;
 
+  final bool logarithm;
+
   const Graph(this._ids,
       {Key? key,
       this.height = 150,
       this.textColor = Colors.white,
       this.enableAction = false,
-      this.mode = GraphMode.absolute})
+      this.mode = GraphMode.absolute,
+      this.logarithm = false})
       : super(key: key);
 
   @override
@@ -64,6 +69,7 @@ class Graph extends StatelessWidget {
                   labelStyle: TextStyle(
                     color: textColor,
                   ),
+                  labelFormat: logarithm ? "10^{value}" : "{value}K"
                 ),
                 zoomPanBehavior: ZoomPanBehavior(
                     enablePinching: enableAction, zoomMode: ZoomMode.x),
@@ -79,7 +85,9 @@ class Graph extends StatelessWidget {
                             xValueMapper: (TrendSnapshot snapshot, _) =>
                                 snapshot.getTime(),
                             yValueMapper: (TrendSnapshot snapshot, _) =>
-                                snapshot.getHotness(),
+                                logarithm
+                                    ? log(snapshot.getHotness()) * log10e
+                                    : snapshot.getHotness() / 1000,
                             color: Colors.blue,
                           ),
                         )
@@ -95,7 +103,9 @@ class Graph extends StatelessWidget {
                             xValueMapper: (TrendSnapshot snapshot, _) =>
                                 snapshot.getTime(),
                             yValueMapper: (TrendSnapshot snapshot, _) =>
-                                snapshot.getHotness(),
+                                logarithm
+                                    ? log (snapshot.getHotness()) * log10e
+                                    : snapshot.getHotness() / 1000,
                             color: Colors.red,
                           ),
                         ),
@@ -123,7 +133,9 @@ class Graph extends StatelessWidget {
                                     .inSeconds /
                                 86400.0,
                             yValueMapper: (TrendSnapshot snapshot, _) =>
-                                snapshot.getHotness(),
+                                logarithm
+                                    ? log(snapshot.getHotness()) * log10e
+                                    : snapshot.getHotness() / 1000,
                             color: color.toColor(),
                           );
                         },
@@ -152,7 +164,9 @@ class Graph extends StatelessWidget {
                                       .inSeconds /
                                   86400.0,
                               yValueMapper: (TrendSnapshot snapshot, _) =>
-                                  snapshot.getHotness(),
+                                  logarithm
+                                      ? log(snapshot.getHotness()) * log10e
+                                      : snapshot.getHotness() / 1000,
                               color: color.withLightness(0.25).toColor(),
                             );
                           },

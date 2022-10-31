@@ -16,9 +16,11 @@ import 'template/SubPage.dart';
 class TrendPage extends SubPageContent {
   final List<int> _ids;
   late final StateProvider<GraphMode> graphModeProvider;
+  late final StateProvider<bool> logarithmProvider;
 
   TrendPage(this._ids, {graphMode = GraphMode.absolute}) {
     graphModeProvider = StateProvider((ref) => graphMode);
+    logarithmProvider = StateProvider((ref) => false);
   }
 
   @override
@@ -36,11 +38,13 @@ class TrendPage extends SubPageContent {
         children: <Widget>[
           Consumer(
             builder: (context, ref, child) {
-              final mode = ref.watch(graphModeProvider);
-              return Graph(_ids,
-                  height: 300,
-                  enableAction: true,
-                  mode: mode);
+              return Graph(
+                _ids,
+                height: 300,
+                enableAction: true,
+                mode: ref.watch(graphModeProvider),
+                logarithm: ref.watch(logarithmProvider),
+              );
             },
           ),
           Container(
@@ -123,7 +127,7 @@ class TrendPage extends SubPageContent {
                 Consumer(
                   builder: (context, ref, child) {
                     return ElevatedButton(
-                      child: const Text("グラフ表示切り替え"),
+                      child: const Text("グラフ表示(絶対/相対)切り替え"),
                       onPressed: () {
                         final state = ref.read(graphModeProvider);
                         ref.read(graphModeProvider.notifier).state =
@@ -134,7 +138,18 @@ class TrendPage extends SubPageContent {
                     );
                   },
                 ),
-
+                Consumer(
+                  builder: (context, ref, child) {
+                    return ElevatedButton(
+                      child: const Text("対数切り替え"),
+                      onPressed: () {
+                        final state = ref.read(logarithmProvider);
+                        ref.read(logarithmProvider.notifier).state =
+                            state ? false : true;
+                      },
+                    );
+                  },
+                ),
                 if (_ids.length == 1)
                   FutureBuilder<TrendData>(
                     future: TrenDiverseAPI().getData(_ids[0]),
