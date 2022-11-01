@@ -97,6 +97,12 @@ class TrenDiverseAPI {
         predictData.value
             .where((element) =>
                 predictData.value.indexOf(element) % 10 == 0 ||
+                predictData.value
+                        .firstWhere((el) => el.getSource() == TrendSource.ai) ==
+                    element ||
+                predictData.value.lastWhere(
+                        (el) => el.getSource() == TrendSource.twitter) ==
+                    element ||
                 predictData.value.indexOf(element) ==
                     predictData.value.length - 1)
             .toList(),
@@ -137,7 +143,7 @@ class TrenDiverseAPI {
     var data = MapEntry(
         requestData["id"] as int,
         (requestData["data"] as List).map((e) {
-          var date = format.parse(e["date"]);
+          var date = format.parse(e["date"]).subtract(const Duration(hours: 9));
           if (date.compareTo(DateTime.now()) == 1) {
             return TrendSnapshot(date, e["hotness"].toInt(), TrendSource.ai);
           } else {
@@ -145,6 +151,10 @@ class TrenDiverseAPI {
                 date, e["hotness"].toInt(), TrendSource.twitter);
           }
         }).toList());
+    final firstAi = data.value
+        .firstWhere((element) => element.getSource() == TrendSource.ai);
+    data.value.add(TrendSnapshot(
+        firstAi.getTime(), firstAi.getHotness(), TrendSource.twitter));
     return data;
   }
 
