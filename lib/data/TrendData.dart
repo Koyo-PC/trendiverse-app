@@ -32,6 +32,10 @@ class TrendData {
         .toList();
   }
 
+  int getDividedCount() {
+    return _historyData.length;
+  }
+
   void clearHistoryData() {
     _historyData.clear();
     return;
