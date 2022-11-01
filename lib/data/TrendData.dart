@@ -5,7 +5,7 @@ import '../data/TrendSnapshot.dart';
 class TrendData {
   final int _id;
   final String _name;
-  final List<TrendSnapshot> _historyData;
+  final List<List<TrendSnapshot>> _historyData;
   late final int? _sourceId;
 
   TrendData(this._id, this._name, this._historyData, {int? sourceId}) {
@@ -20,25 +20,20 @@ class TrendData {
     return _name;
   }
 
-  List<TrendSnapshot> getHistoryData({dataCount = -1}) {
-    if (dataCount < 1) return _historyData;
-    return _historyData
+  List<TrendSnapshot> getHistoryData(int index, {dataCount = -1}) {
+    if (dataCount < 1) return _historyData[index];
+    return _historyData[index]
         .where((element) =>
-            _historyData.indexOf(element) == 0 ||
-            _historyData.indexOf(element) %
-                    ((_historyData.length / dataCount).ceil()) ==
+            _historyData[index].indexOf(element) == 0 ||
+            _historyData[index].indexOf(element) %
+                    ((_historyData[index].length / dataCount).ceil()) ==
                 0 ||
-            _historyData.indexOf(element) == _historyData.length - 1)
+            _historyData[index].indexOf(element) == _historyData[index].length - 1)
         .toList();
   }
 
   void clearHistoryData() {
     _historyData.clear();
-    return;
-  }
-
-  void addHistoryData(TrendSnapshot snapshot) {
-    _historyData.add(snapshot);
     return;
   }
 

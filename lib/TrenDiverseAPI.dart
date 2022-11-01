@@ -95,19 +95,23 @@ class TrenDiverseAPI {
         id,
         await getName(id),
         predictData.value
-            .where((element) =>
-                predictData.value.indexOf(element) % 10 == 0 ||
-                predictData.value
-                        .firstWhere((el) => el.getSource() == TrendSource.ai) ==
-                    element ||
-                predictData.value.lastWhere(
-                        (el) => el.getSource() == TrendSource.twitter) ==
-                    element ||
-                predictData.value.indexOf(element) ==
-                    predictData.value.length - 1)
+            .map((e) => e
+                .where((element) =>
+                    e.indexOf(element) % 10 == 0 ||
+                    (e.any((el) => el.getSource() == TrendSource.ai) &&
+                        e.firstWhere(
+                                (el) => el.getSource() == TrendSource.ai) ==
+                            element) ||
+                    (e.any((el) => el.getSource() == TrendSource.twitter) &&
+                        e.lastWhere((el) =>
+                                el.getSource() == TrendSource.twitter) ==
+                            element) ||
+                    e.indexOf(element) == e.length - 1)
+                .toList())
             .toList(),
         sourceId: predictData.key);
     cachedData[id] = MapEntry(DateTime.now(), data);
+    print("predictData.runtimeType");
     return data;
   }
 
@@ -125,7 +129,8 @@ class TrenDiverseAPI {
 
   static Map<int, MapEntry<DateTime, String>> cachedPredictedData = {};
 
-  Future<MapEntry<int, List<TrendSnapshot>>> getPredictData(int id) async {
+  Future<MapEntry<int, List<List<TrendSnapshot>>>> getPredictData(
+      int id) async {
     String result;
     if (cachedPredictedData.containsKey(id) &&
         cachedPredictedData[id]!
@@ -139,22 +144,40 @@ class TrenDiverseAPI {
       cachedPredictedData[id] = MapEntry(DateTime.now(), result);
     }
     DateFormat format = DateFormat("yyyy-MM-dd HH:mm:ss");
-    Map requestData = jsonDecode(result) as Map;
+    // requestData: Map<String, int | List<List<Map<String, String>>>>
+    Map requestData = jsonDecode(result.replaceAll("'", '"')) as Map;
     var data = MapEntry(
-        requestData["id"] as int,
-        (requestData["data"] as List).map((e) {
-          var date = format.parse(e["date"]).subtract(const Duration(hours: 9));
-          if (date.compareTo(DateTime.now()) == 1) {
-            return TrendSnapshot(date, e["hotness"].toInt(), TrendSource.ai);
-          } else {
-            return TrendSnapshot(
-                date, e["hotness"].toInt(), TrendSource.twitter);
-          }
-        }).toList());
-    final firstAi = data.value
-        .firstWhere((element) => element.getSource() == TrendSource.ai);
-    data.value.add(TrendSnapshot(
-        firstAi.getTime(), firstAi.getHotness(), TrendSource.twitter));
+      requestData["id"] as int,
+      (requestData["data"] as List).map((element) {
+        // element: List<Map<String, String>>
+        var dataSingle = (element as List)
+            .map(
+              // e: Map<String, String>
+              (e) {
+                var date =
+                    format.parse(e["date"]).subtract(const Duration(hours: 9));
+                if (date.compareTo(DateTime.now()) == 1) {
+                  return TrendSnapshot(date,
+                      double.parse(e["hotness"]!).toInt(), TrendSource.ai);
+                } else {
+                  return TrendSnapshot(date,
+                      double.parse(e["hotness"]!).toInt(), TrendSource.twitter);
+                }
+              },
+            )
+            .cast<TrendSnapshot>()
+            .toList();
+        if (dataSingle
+            .any((element) => element.getSource() == TrendSource.ai)) {
+          final firstAi = dataSingle
+              .firstWhere((element) => element.getSource() == TrendSource.ai);
+          dataSingle.add(TrendSnapshot(
+              firstAi.getTime(), firstAi.getHotness(), TrendSource.twitter));
+        }
+        return dataSingle;
+      }).toList(),
+    );
+
     return data;
   }
 

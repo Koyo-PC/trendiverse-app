@@ -81,7 +81,7 @@ class Graph extends StatelessWidget {
                           (d) => LineSeries<TrendSnapshot, DateTime>(
                             legendItemText: d.getName(),
                             dataSource: d
-                                .getHistoryData(dataCount: 500)
+                                .getHistoryData(0, dataCount: 500) // TODO 仮
                                 .where((element) =>
                                     element.getSource() == TrendSource.twitter)
                                 .toList(),
@@ -100,7 +100,7 @@ class Graph extends StatelessWidget {
                           (d) => LineSeries<TrendSnapshot, DateTime>(
                             legendItemText: d.getName() + "(予測)",
                             dataSource: d
-                                .getHistoryData(dataCount: 500)
+                                .getHistoryData(0, dataCount: 500) // TODO 仮
                                 .where((element) =>
                                     element.getSource() == TrendSource.ai)
                                 .toList(),
@@ -124,7 +124,7 @@ class Graph extends StatelessWidget {
                           return LineSeries<TrendSnapshot, double>(
                             legendItemText: d.getName(),
                             dataSource: d
-                                .getHistoryData(dataCount: 500)
+                                .getHistoryData(0, dataCount: 500) // TODO 仮
                                 .where((element) =>
                                     element.getSource() == TrendSource.twitter)
                                 .toList(),
@@ -132,7 +132,7 @@ class Graph extends StatelessWidget {
                                 snapshot
                                     .getTime()
                                     .difference(d
-                                        .getHistoryData(dataCount: 1)[0]
+                                        .getHistoryData(0, dataCount: 1)[0] // TODO 仮
                                         .getTime())
                                     .inSeconds /
                                 86400.0,
@@ -155,7 +155,7 @@ class Graph extends StatelessWidget {
                             return LineSeries<TrendSnapshot, double>(
                               legendItemText: d.getName() + "(予測)",
                               dataSource: d
-                                  .getHistoryData(dataCount: 500)
+                                  .getHistoryData(0, dataCount: 500) // TODO 仮
                                   .where((element) =>
                                       element.getSource() == TrendSource.ai)
                                   .toList(),
@@ -163,7 +163,7 @@ class Graph extends StatelessWidget {
                                   snapshot
                                       .getTime()
                                       .difference(d
-                                          .getHistoryData(dataCount: 1)[0]
+                                          .getHistoryData(0, dataCount: 1)[0] // TODO 仮
                                           .getTime())
                                       .inSeconds /
                                   86400.0,
