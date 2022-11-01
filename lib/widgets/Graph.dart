@@ -127,7 +127,7 @@ class Graph extends StatelessWidget {
         if (logarithm) {
           return log(snapshot.getHotness()) * log10e;
         } else {
-          snapshot.getHotness() / 1000;
+          return snapshot.getHotness() / 1000;
         }
       }
 
