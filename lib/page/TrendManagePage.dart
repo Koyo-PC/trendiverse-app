@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:trendiverse/TrenDiverseAPI.dart';
 
 import 'template/SubPageContent.dart';
 
 class TrendManagePage extends SubPageContent {
+  late final StateProvider<List<List<int>>> dataProvider;
+
+  TrendManagePage(List<List<int>> list) {
+    dataProvider = StateProvider((ref) => list);
+  }
+
   @override
   String getTitle() {
     return "比較トレンドの追加";
@@ -11,20 +18,16 @@ class TrendManagePage extends SubPageContent {
 
   @override
   Widget build(BuildContext context) {
-    StateProvider<List<List<String>>> list = StateProvider((ref) => [
-          ["#僕らは世界で歌い続ける_INI", "b"],
-          ["c"]
-        ]);
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       color: Theme.of(context).backgroundColor,
       child: Column(
         children: [
           Expanded(
             child: Consumer(
               builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                final data = ref.watch(list);
-                final dataNotifier = ref.read(list.notifier);
+                final data = ref.watch(dataProvider);
+                final dataNotifier = ref.read(dataProvider.notifier);
                 return ListView.separated(
                   itemCount: data.length + 1,
                   separatorBuilder: (context, index) {
@@ -40,7 +43,7 @@ class TrendManagePage extends SubPageContent {
                     );
                   },
                   itemBuilder: (context, index) {
-                    return DragTarget<String>(
+                    return DragTarget<int>(
                       builder: (context, candidateItems, rejectedItems) {
                         if (index >= data.length) {
                           // 追加欄
@@ -68,13 +71,21 @@ class TrendManagePage extends SubPageContent {
                                 margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                                 color: Colors.blue,
                                 child: Center(
-                                  child: Text(
-                                    e,
-                                    style: const TextStyle(fontSize: 20),
-                                  ),
+                                  child: FutureBuilder(
+                                      future: TrenDiverseAPI().getName(e),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                            snapshot.data.toString(),
+                                            style:
+                                                const TextStyle(fontSize: 20),
+                                          );
+                                        }
+                                        return const CircularProgressIndicator();
+                                      }),
                                 ),
                               );
-                              return Draggable<String>(
+                              return Draggable<int>(
                                 data: e,
                                 feedback: content,
                                 child: content,

@@ -14,7 +14,7 @@ import '../widgets/Graph.dart';
 import 'template/SubPage.dart';
 
 class TrendPage extends SubPageContent {
-  final List<int> _ids;
+  final List<List<int>> _ids;
   late final StateProvider<GraphMode> graphModeProvider;
   late final StateProvider<bool> logarithmProvider;
 
@@ -58,7 +58,7 @@ class TrendPage extends SubPageContent {
               children: <Widget>[
                 FutureBuilder<List<String>>(
                   future: Future.wait(
-                      _ids.map((id) => TrenDiverseAPI().getName(id))),
+                      _ids.map((id) => TrenDiverseAPI().getName(id[0]))),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final data = snapshot.data!;
@@ -82,7 +82,7 @@ class TrendPage extends SubPageContent {
                           ref.watch(LocalStrage.stockedProvider).data;
                       return ElevatedButton(
                         onPressed: () {
-                          LocalStrage().toggleStockedTrend(ref, _ids[0]);
+                          LocalStrage().toggleStockedTrend(ref, _ids[0][0]);
                         },
                         child: stockedTrends.keys.contains(_ids[0])
                             ? const Icon(Icons.bookmark_added)
@@ -105,7 +105,7 @@ class TrendPage extends SubPageContent {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SubPage(TrendManagePage()),
+                        builder: (context) => SubPage(TrendManagePage(_ids)),
                       ),
                     );
                     // showDialog(
@@ -215,7 +215,7 @@ class TrendPage extends SubPageContent {
                 ),
                 if (_ids.length == 1)
                   FutureBuilder<TrendData>(
-                    future: TrenDiverseAPI().getData(_ids[0]),
+                    future: TrenDiverseAPI().getData(_ids[0][0]),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final data = snapshot.data!;
@@ -228,7 +228,7 @@ class TrendPage extends SubPageContent {
                 if (_ids.length == 1)
                   SingleChildScrollView(
                     child: FutureBuilder<List<String>>(
-                      future: TrenDiverseAPI().getPopular(_ids[0]),
+                      future: TrenDiverseAPI().getPopular(_ids[0][0]),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           final data = snapshot.data!;

@@ -54,7 +54,7 @@ class _StockPageTile extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SubPage(TrendPage([id])),
+              builder: (context) => SubPage(TrendPage([[id]])),
             ),
           );
         },

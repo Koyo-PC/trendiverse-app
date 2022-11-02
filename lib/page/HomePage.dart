@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:trendiverse/page/TrendManagePage.dart';
 
 import '../widgets/TrendSearch.dart';
+import 'StockPage.dart';
 import 'TrendPage.dart';
 import '../TrenDiverseAPI.dart';
 import '../widgets/TrendTile.dart';
@@ -43,8 +43,8 @@ class HomePage extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              // builder: (context) => SubPage(StockPage()),
-              builder: (context) => SubPage(TrendManagePage()),
+              builder: (context) => SubPage(StockPage()),
+              // builder: (context) => SubPage(TrendManagePage()),
             ),
           )
         },

@@ -10,7 +10,7 @@ import '../data/TrendData.dart';
 import '../data/TrendSnapshot.dart';
 
 class Graph extends StatelessWidget {
-  final List<int> _ids;
+  final List<List<int>> _ids;
   final double height;
 
   final Color textColor;
@@ -38,13 +38,25 @@ class Graph extends StatelessWidget {
       ignoring: !enableAction,
       child: SizedBox(
         height: height,
-        child: FutureBuilder<List<TrendData>>(
+        child: FutureBuilder<List<List<TrendData>>>(
           future: Future.wait(
-            _ids.map((id) => TrenDiverseAPI().getData(id)).toList(),
+            _ids
+                .map(
+                  (groupedIds) => Future.wait(
+                    groupedIds
+                        .map(
+                          (id) => TrenDiverseAPI().getData(id),
+                        )
+                        .toList(),
+                  ),
+                )
+                .toList(),
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final data = snapshot.data!;
+              final data = snapshot.data!
+                  .map((groupedIds) => TrendData.merged(groupedIds))
+                  .toList();
               return SfCartesianChart(
                 // X軸
                 primaryXAxis: /*mode == GraphMode.absolute
