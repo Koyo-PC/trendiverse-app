@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:trendiverse/page/TrendManagePage.dart';
 import 'package:trendiverse/page/template/SubPageContent.dart';
-import 'package:trendiverse/widgets/TrendSearch.dart';
 import 'package:trendiverse/widgets/TrendTile.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -18,9 +18,12 @@ class TrendPage extends SubPageContent {
   late final StateProvider<GraphMode> graphModeProvider;
   late final StateProvider<bool> logarithmProvider;
 
+  late final StateProvider<String> searchQueryProvider;
+
   TrendPage(this._ids, {graphMode = GraphMode.absolute}) {
     graphModeProvider = StateProvider((ref) => graphMode);
     logarithmProvider = StateProvider((ref) => false);
+    searchQueryProvider = StateProvider((ref) => "Twitter");
   }
 
   @override
@@ -99,30 +102,89 @@ class TrendPage extends SubPageContent {
                 ElevatedButton(
                   child: const Text("他のトレンドと比較"),
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SimpleDialog(
-                          children: <Widget>[
-                            TrendSearch(
-                              (suggestion) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => SubPage(
-                                      TrendPage(_ids + [suggestion['id']],
-                                          graphMode: GraphMode.relative),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            Container(
-                              height: 500,
-                            ),
-                          ],
-                        );
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SubPage(TrendManagePage()),
+                      ),
                     );
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (context) {
+                    //     return SimpleDialog(
+                    //       children: <Widget>[
+                    //         Consumer(builder: (context, ref, child) {
+                    //           final queryNotifier =
+                    //               ref.read(searchQueryProvider.notifier);
+                    //           return TextField(
+                    //             onChanged: (clicked) {
+                    //               queryNotifier.state = clicked;
+                    //             },
+                    //             style: const TextStyle(
+                    //               fontSize: 18.0,
+                    //               color: Colors.white,
+                    //             ),
+                    //             decoration: const InputDecoration(
+                    //               border: OutlineInputBorder(),
+                    //             ),
+                    //           );
+                    //           // return Container(
+                    //           //   width: 100,
+                    //           //   height: 100,
+                    //           //   color: Colors.red,
+                    //           // );
+                    //         }),
+                    //         Consumer(builder: (context, ref, child) {
+                    //           final query =
+                    //               ref.watch(searchQueryProvider).toLowerCase();
+                    //           // return Container(
+                    //           //   width: 100,
+                    //           //   height: 100,
+                    //           //   color: Colors.blue,
+                    //           // );
+                    //           return FutureBuilder(
+                    //             future: TrenDiverseAPI().getAllData(),
+                    //             builder: (context,
+                    //                 AsyncSnapshot<List<Map<String, dynamic>>>
+                    //                     snapshot) {
+                    //               print(snapshot);
+                    //               if (snapshot.hasData) {
+                    //                 final matched = snapshot.data!
+                    //                     .where((element) =>
+                    //                         query.isEmpty ||
+                    //                         (element["name"] as String)
+                    //                             .toLowerCase()
+                    //                             .contains(query))
+                    //                     .toList();
+                    //                 print(matched.length);
+                    //                 return Container(
+                    //                   height: 200,
+                    //                     child: ListView.builder(
+                    //                   itemCount: matched.length,
+                    //                   itemBuilder: (context, index) {
+                    //                     print(matched);
+                    //                     return Container(
+                    //                         height: 100, child: Text(
+                    //                         matched.elementAt(index)["name"]));
+                    //                   },
+                    //                 ));
+                    //                 return Container(
+                    //                   width: 100,
+                    //                   height: 100,
+                    //                   color: Colors.blue,
+                    //                 );
+                    //               }
+                    //               return const CircularProgressIndicator();
+                    //             },
+                    //           );
+                    //         }),
+                    //         Container(
+                    //           height: 200,
+                    //         ),
+                    //       ],
+                    //     );
+                    //   },
+                    // );
                   },
                 ),
                 Consumer(

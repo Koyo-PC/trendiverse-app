@@ -139,7 +139,7 @@ class Graph extends StatelessWidget {
     }
 
     yValueMapper(TrendSnapshot snapshot, _) {
-      if(snapshot.getHotness() == 0) return null;
+      if (snapshot.getHotness() == 0) return null;
       if (logarithm) {
         return log(snapshot.getHotness()) * log10e;
       } else {
