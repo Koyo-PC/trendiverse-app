@@ -197,9 +197,9 @@ class TrendPage extends SubPageContent {
                                 .map((id) => Container(
                                       height: 500,
                                       width: MediaQuery.of(context).size.width -
-                                          100,
+                                          20,
                                       margin: const EdgeInsets.fromLTRB(
-                                          50, 10, 50, 0),
+                                          10, 20, 10, 0),
                                       child: WebView(
                                         initialUrl:
                                             "https://twitter.com/i/web/status/$id",
