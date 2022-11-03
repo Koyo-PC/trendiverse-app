@@ -16,19 +16,12 @@ class TrenDiverseApp extends HookConsumerWidget {
   const TrenDiverseApp({Key? key}) : super(key: key);
   static const locale = Locale("ja", "JP");
 
-  // 移動?
-  static final StateProvider<Brightness> contentProvider = StateProvider((ref) => Brightness.dark);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'TrenDiverse',
       theme: ThemeData(
-        brightness: ref.watch(contentProvider),
-        primaryColor: const Color.fromRGBO(90, 82, 131, 1),
-        backgroundColor: const Color.fromRGBO(42, 28, 52, 1),
-        canvasColor: const Color.fromRGBO(244, 242, 255, 1),
-        unselectedWidgetColor: const Color.fromRGBO(139, 130, 159, 1),
+        brightness: Brightness.dark,
       ),
       locale: locale,
       localizationsDelegates: const [

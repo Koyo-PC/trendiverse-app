@@ -7,6 +7,7 @@ import 'package:trendiverse/page/template/SubPageContent.dart';
 import 'package:trendiverse/widgets/TrendTile.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../AppColor.dart';
 import '../LocalStrage.dart';
 import '../TrenDiverseAPI.dart';
 import '../data/TrendData.dart';
@@ -68,7 +69,7 @@ class TrendPage extends SubPageContent {
                           height: 1.5,
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
-                          color: Theme.of(context).canvasColor,
+                          color: AppColor.white,
                         ),
                       );
                     }
@@ -92,7 +93,7 @@ class TrendPage extends SubPageContent {
                         style: ElevatedButton.styleFrom(
                           shape: CircleBorder(
                             side: BorderSide(
-                              color: Theme.of(context).primaryColor,
+                              color: AppColor.main,
                               width: 1,
                               style: BorderStyle.solid,
                             ),

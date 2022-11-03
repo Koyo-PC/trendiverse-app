@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trendiverse/TrenDiverseAPI.dart';
 import 'package:trendiverse/page/template/SubPage.dart';
 
+import '../AppColor.dart';
 import 'Graph.dart';
 import '../page/TrendPage.dart';
 
@@ -29,7 +30,7 @@ class TrendTile extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(5.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
+          color: AppColor.white,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -45,7 +46,7 @@ class TrendTile extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Theme.of(context).primaryColor,
+                      color: AppColor.main,
                     ),
                   );
                 }

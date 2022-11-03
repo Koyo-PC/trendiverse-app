@@ -5,6 +5,7 @@ import 'package:trendiverse/page/TrendPage.dart';
 import 'package:trendiverse/page/template/SubPage.dart';
 import 'package:trendiverse/widgets/TrendSearch.dart';
 
+import '../AppColor.dart';
 import 'template/SubPageContent.dart';
 
 class TrendManagePage extends SubPageContent {
@@ -23,7 +24,7 @@ class TrendManagePage extends SubPageContent {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      color: Theme.of(context).backgroundColor,
+      color: AppColor.black,
       child: Column(
         children: [
           Expanded(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:trendiverse/AppColor.dart';
 
 import '../widgets/TrendSearch.dart';
 import 'StockPage.dart';
@@ -36,9 +37,9 @@ class HomePage extends ConsumerWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: AppColor.main,
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: AppColor.black,
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
           Navigator.of(context).push(
@@ -50,7 +51,7 @@ class HomePage extends ConsumerWidget {
           )
         },
         child: const Icon(Icons.bookmark),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: AppColor.main,
         foregroundColor: Colors.white,
       ),
       body: FutureBuilder<List<int>>(

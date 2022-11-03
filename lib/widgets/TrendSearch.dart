@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../AppColor.dart';
 import '../TrenDiverseAPI.dart';
 
 class TrendSearch extends StatelessWidget {
@@ -36,7 +37,7 @@ class TrendSearch extends StatelessWidget {
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
-          tileColor: Theme.of(context).backgroundColor,
+          tileColor: AppColor.black,
           leading: const Icon(Icons.auto_graph),
           title: Text((suggestion as Map)['name']),
         );

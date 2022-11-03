@@ -5,6 +5,7 @@ import 'package:trendiverse/LocalStrage.dart';
 import 'package:trendiverse/page/template/SubPage.dart';
 import 'package:trendiverse/page/template/SubPageContent.dart';
 
+import '../AppColor.dart';
 import 'TrendPage.dart';
 
 class StockPage extends SubPageContent {
@@ -20,7 +21,7 @@ class StockPage extends SubPageContent {
       minScale: 1.0,
       maxScale: 5.0,
       child: Container(
-        color: Theme.of(context).backgroundColor,
+        color: AppColor.black,
         child: const _StockPageContent(),
       ),
     );
@@ -59,7 +60,7 @@ class _StockPageTile extends ConsumerWidget {
           );
         },
         child: Container(
-          color: Theme.of(context).cardColor,
+          color: AppColor.shadow,
           padding: const EdgeInsets.all(10),
           child: FutureBuilder(
             future: stockedTrends.data[id]!.getName(),

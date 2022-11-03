@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../AppColor.dart';
 import 'SubPageContent.dart';
 
 class SubPage extends StatelessWidget {
@@ -12,13 +13,13 @@ class SubPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(content.getTitle()),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: AppColor.main,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(context),
         ),
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: AppColor.black,
       body: content.build(context),
     );
   }
