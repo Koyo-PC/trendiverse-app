@@ -76,143 +76,181 @@ class TrendPage extends SubPageContent {
                     return const CircularProgressIndicator();
                   },
                 ),
-                if (_ids.length == 1)
-                  Consumer(
-                    builder: (context, ref, child) {
-                      var stockedTrends =
-                          ref.watch(LocalStrage.stockedProvider).data;
-                      return ElevatedButton(
-                        onPressed: () {
-                          LocalStrage().toggleStockedTrend(ref, _ids[0][0]);
-                        },
-                        child: stockedTrends.keys.contains(_ids[0][0])
-                            ? const Icon(Icons.bookmark_added)
-                            : const Icon(Icons.bookmark_add_outlined),
-                        style: ElevatedButton.styleFrom(
-                          shape: const CircleBorder(
-                            side: BorderSide(
-                              color: AppColor.main,
-                              width: 1,
-                              style: BorderStyle.solid,
+                Row(
+                  children: [
+                    // Stock
+                    if (_ids.length == 1)
+                      Consumer(
+                        builder: (context, ref, child) {
+                          var stockedTrends =
+                              ref.watch(LocalStrage.stockedProvider).data;
+                          return ElevatedButton(
+                            onPressed: () {
+                              LocalStrage().toggleStockedTrend(ref, _ids[0][0]);
+                            },
+                            child: stockedTrends.keys.contains(_ids[0][0])
+                                ? const Icon(Icons.bookmark_added)
+                                : const Icon(Icons.bookmark_add_outlined),
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(
+                                side: BorderSide(
+                                  color: AppColor.main,
+                                  width: 1,
+                                  style: BorderStyle.solid,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ElevatedButton(
-                  child: const Text("他のトレンドと比較"),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        settings: const RouteSettings(name: "/trendManage"),
-                        builder: (context) => SubPage(TrendManagePage(_ids)),
+                          );
+                        },
                       ),
-                    );
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return SimpleDialog(
-                    //       children: <Widget>[
-                    //         Consumer(builder: (context, ref, child) {
-                    //           final queryNotifier =
-                    //               ref.read(searchQueryProvider.notifier);
-                    //           return TextField(
-                    //             onChanged: (clicked) {
-                    //               queryNotifier.state = clicked;
-                    //             },
-                    //             style: const TextStyle(
-                    //               fontSize: 18.0,
-                    //               color: Colors.white,
-                    //             ),
-                    //             decoration: const InputDecoration(
-                    //               border: OutlineInputBorder(),
-                    //             ),
-                    //           );
-                    //           // return Container(
-                    //           //   width: 100,
-                    //           //   height: 100,
-                    //           //   color: Colors.red,
-                    //           // );
-                    //         }),
-                    //         Consumer(builder: (context, ref, child) {
-                    //           final query =
-                    //               ref.watch(searchQueryProvider).toLowerCase();
-                    //           // return Container(
-                    //           //   width: 100,
-                    //           //   height: 100,
-                    //           //   color: Colors.blue,
-                    //           // );
-                    //           return FutureBuilder(
-                    //             future: TrenDiverseAPI().getAllData(),
-                    //             builder: (context,
-                    //                 AsyncSnapshot<List<Map<String, dynamic>>>
-                    //                     snapshot) {
-                    //               print(snapshot);
-                    //               if (snapshot.hasData) {
-                    //                 final matched = snapshot.data!
-                    //                     .where((element) =>
-                    //                         query.isEmpty ||
-                    //                         (element["name"] as String)
-                    //                             .toLowerCase()
-                    //                             .contains(query))
-                    //                     .toList();
-                    //                 print(matched.length);
-                    //                 return Container(
-                    //                   height: 200,
-                    //                     child: ListView.builder(
-                    //                   itemCount: matched.length,
-                    //                   itemBuilder: (context, index) {
-                    //                     print(matched);
-                    //                     return Container(
-                    //                         height: 100, child: Text(
-                    //                         matched.elementAt(index)["name"]));
-                    //                   },
-                    //                 ));
-                    //                 return Container(
-                    //                   width: 100,
-                    //                   height: 100,
-                    //                   color: Colors.blue,
-                    //                 );
-                    //               }
-                    //               return const CircularProgressIndicator();
-                    //             },
-                    //           );
-                    //         }),
-                    //         Container(
-                    //           height: 200,
-                    //         ),
-                    //       ],
-                    //     );
-                    //   },
-                    // );
-                  },
-                ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    return ElevatedButton(
-                      child: const Text("グラフ表示(絶対/相対)切り替え"),
+                    // Compare
+                    ElevatedButton(
+                      child: const Text("他のトレンドと比較"),
+                      style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ))),
                       onPressed: () {
-                        final state = ref.read(graphModeProvider);
-                        ref.read(graphModeProvider.notifier).state =
-                            state == GraphMode.relative
-                                ? GraphMode.absolute
-                                : GraphMode.relative;
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            settings: const RouteSettings(name: "/trendManage"),
+                            builder: (context) =>
+                                SubPage(TrendManagePage(_ids)),
+                          ),
+                        );
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return SimpleDialog(
+                        //       children: <Widget>[
+                        //         Consumer(builder: (context, ref, child) {
+                        //           final queryNotifier =
+                        //               ref.read(searchQueryProvider.notifier);
+                        //           return TextField(
+                        //             onChanged: (clicked) {
+                        //               queryNotifier.state = clicked;
+                        //             },
+                        //             style: const TextStyle(
+                        //               fontSize: 18.0,
+                        //               color: Colors.white,
+                        //             ),
+                        //             decoration: const InputDecoration(
+                        //               border: OutlineInputBorder(),
+                        //             ),
+                        //           );
+                        //           // return Container(
+                        //           //   width: 100,
+                        //           //   height: 100,
+                        //           //   color: Colors.red,
+                        //           // );
+                        //         }),
+                        //         Consumer(builder: (context, ref, child) {
+                        //           final query =
+                        //               ref.watch(searchQueryProvider).toLowerCase();
+                        //           // return Container(
+                        //           //   width: 100,
+                        //           //   height: 100,
+                        //           //   color: Colors.blue,
+                        //           // );
+                        //           return FutureBuilder(
+                        //             future: TrenDiverseAPI().getAllData(),
+                        //             builder: (context,
+                        //                 AsyncSnapshot<List<Map<String, dynamic>>>
+                        //                     snapshot) {
+                        //               print(snapshot);
+                        //               if (snapshot.hasData) {
+                        //                 final matched = snapshot.data!
+                        //                     .where((element) =>
+                        //                         query.isEmpty ||
+                        //                         (element["name"] as String)
+                        //                             .toLowerCase()
+                        //                             .contains(query))
+                        //                     .toList();
+                        //                 print(matched.length);
+                        //                 return Container(
+                        //                   height: 200,
+                        //                     child: ListView.builder(
+                        //                   itemCount: matched.length,
+                        //                   itemBuilder: (context, index) {
+                        //                     print(matched);
+                        //                     return Container(
+                        //                         height: 100, child: Text(
+                        //                         matched.elementAt(index)["name"]));
+                        //                   },
+                        //                 ));
+                        //                 return Container(
+                        //                   width: 100,
+                        //                   height: 100,
+                        //                   color: Colors.blue,
+                        //                 );
+                        //               }
+                        //               return const CircularProgressIndicator();
+                        //             },
+                        //           );
+                        //         }),
+                        //         Container(
+                        //           height: 200,
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        // );
                       },
-                    );
-                  },
+                    ),
+                  ],
                 ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    return ElevatedButton(
-                      child: const Text("対数切り替え"),
-                      onPressed: () {
-                        final state = ref.read(logarithmProvider);
-                        ref.read(logarithmProvider.notifier).state =
-                            state ? false : true;
-                      },
-                    );
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            final mode = ref.watch(graphModeProvider);
+                            return ElevatedButton(
+                              child: const Text("発生日時をそろえる"),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateColor.resolveWith(
+                                    (states) => mode == GraphMode.absolute
+                                        ? Colors.white24
+                                        : Colors.blue),
+                              ),
+                              onPressed: () {
+                                ref.read(graphModeProvider.notifier).state =
+                                    mode == GraphMode.relative
+                                        ? GraphMode.absolute
+                                        : GraphMode.relative;
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            final log = ref.watch(logarithmProvider);
+                            return ElevatedButton(
+                              child: const Text("対数切り替え"),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateColor.resolveWith(
+                                    (states) =>
+                                        !log ? Colors.white24 : Colors.blue),
+                              ),
+                              onPressed: () {
+                                ref.read(logarithmProvider.notifier).state =
+                                    log ? false : true;
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 if (_ids.length == 1)
                   FutureBuilder<TrendData>(
