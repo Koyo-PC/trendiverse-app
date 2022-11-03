@@ -29,7 +29,7 @@ class HomePage extends ConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   settings: const RouteSettings(name: "/trend"),
-                  builder: (context) => SubPage(TrendPage([suggestion['id']])),
+                  builder: (context) => SubPage(TrendPage([[suggestion['id']]])),
                 ),
               );
             },
