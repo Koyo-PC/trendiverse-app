@@ -1,8 +1,11 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/src/chart/axis/multi_level_labels.dart';
+import 'package:syncfusion_flutter_core/src/slider_controller.dart';
 import 'package:trendiverse/data/TrendSource.dart';
 
 import '../TrenDiverseAPI.dart';
@@ -59,22 +62,25 @@ class Graph extends StatelessWidget {
                   .toList();
               return SfCartesianChart(
                 // X軸
-                primaryXAxis: /*mode == GraphMode.absolute
+                primaryXAxis: mode == GraphMode.absolute
                     // 絶対表示(日付)の時
-                    ? */
-                    DateTimeAxis(
-                  labelStyle: TextStyle(
-                    color: textColor,
-                  ),
-                  dateFormat: mode == GraphMode.absolute ? DateFormat("MM/dd\nHH:mm") : DateFormat("d日目H時間"),
-                )
-                /*: NumericAxis(
+                    ? DateTimeAxis(
+                        labelStyle: TextStyle(
+                          color: textColor,
+                        ),
+
+                        // dateFormat: mode == GraphMode.absolute
+                        //     ? DateFormat("MM/dd\nHH:mm")
+                    dateFormat: DateFormat("MM/dd\nHH:mm")
+                        //     : DateFormat("d日目H時間"),
+                  // labelFormat: '{value}日',
+                      )
+                    : NumericAxis(
                         labelStyle: TextStyle(
                           color: textColor,
                         ),
                         labelFormat: '{value}日',
-                      )*/
-                ,
+                      ),
                 // Y軸
                 primaryYAxis: NumericAxis(
                     labelStyle: TextStyle(
@@ -106,7 +112,7 @@ class Graph extends StatelessWidget {
   }
 
   // location: 0~1
-  List<LineSeries<TrendSnapshot, DateTime>> buildTrendSeries(
+  List<LineSeries<TrendSnapshot, dynamic>> buildTrendSeries(
       TrendData data, double location) {
     // final List<LineSeries> series = [];
     final LineSeries twitterSeries;
@@ -146,16 +152,12 @@ class Graph extends StatelessWidget {
       aiDataList.addAll(aiDividedDataList);
     }
 
-    xValueMapper(TrendSnapshot snapshot, _) {
+    dynamic xValueMapper(TrendSnapshot snapshot, _) {
       if (mode == GraphMode.absolute) {
-        return snapshot.getTime();
+        return DateOrDuration.fromDate(snapshot.getTime());
       } else {
-        return DateTime.fromMillisecondsSinceEpoch(snapshot
-                .getTime()
-                .difference(trendStartTime)
-                .inMilliseconds - 1000 * 60 * 60 * 9 /*.inSeconds /
-              86400.0*/
-            );
+        return
+            snapshot.getTime().difference(trendStartTime).inSeconds.toDouble() / 60 / 60 / 24;
       }
     }
 
@@ -168,14 +170,14 @@ class Graph extends StatelessWidget {
       }
     }
 
-    twitterSeries = LineSeries<TrendSnapshot, DateTime>(
+    twitterSeries = LineSeries<TrendSnapshot, dynamic>(
       legendItemText: data.getName(),
       dataSource: twitterDataList,
       xValueMapper: xValueMapper,
       yValueMapper: yValueMapper,
       color: HSLColor.fromAHSL(1, location, 1, .5).toColor(),
     );
-    aiSeries = LineSeries<TrendSnapshot, DateTime>(
+    aiSeries = LineSeries<TrendSnapshot, dynamic>(
       legendItemText: data.getName() + "(予測)",
       dataSource: aiDataList,
       xValueMapper: xValueMapper,
@@ -199,6 +201,28 @@ class Graph extends StatelessWidget {
     }
     return series;
   }
+}
+
+class DateOrDuration {
+  int _milliseconds;
+
+  DateOrDuration(this._milliseconds);
+
+  factory DateOrDuration.fromDate(DateTime d) =>
+      DateOrDuration(d.millisecondsSinceEpoch);
+
+  factory DateOrDuration.fromDuration(Duration d) =>
+      DateOrDuration(d.inMilliseconds);
+
+  DateTime getDateTime() {
+    return DateTime.fromMillisecondsSinceEpoch(_milliseconds);
+  }
+
+  Duration getDuration() {
+    return Duration(milliseconds: _milliseconds);
+  }
+  
+  get millisecondsSinceEpoch => _milliseconds;
 }
 
 // absolute: 日付 relative: 経過時間
