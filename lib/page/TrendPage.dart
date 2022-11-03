@@ -19,12 +19,10 @@ class TrendPage extends SubPageContent {
   late final StateProvider<GraphMode> graphModeProvider;
   late final StateProvider<bool> logarithmProvider;
 
-  late final StateProvider<String> searchQueryProvider;
 
   TrendPage(this._ids, {graphMode = GraphMode.absolute}) {
     graphModeProvider = StateProvider((ref) => graphMode);
     logarithmProvider = StateProvider((ref) => false);
-    searchQueryProvider = StateProvider((ref) => "Twitter");
   }
 
   @override
@@ -120,83 +118,6 @@ class TrendPage extends SubPageContent {
                                 SubPage(TrendManagePage(_ids)),
                           ),
                         );
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return SimpleDialog(
-                        //       children: <Widget>[
-                        //         Consumer(builder: (context, ref, child) {
-                        //           final queryNotifier =
-                        //               ref.read(searchQueryProvider.notifier);
-                        //           return TextField(
-                        //             onChanged: (clicked) {
-                        //               queryNotifier.state = clicked;
-                        //             },
-                        //             style: const TextStyle(
-                        //               fontSize: 18.0,
-                        //               color: Colors.white,
-                        //             ),
-                        //             decoration: const InputDecoration(
-                        //               border: OutlineInputBorder(),
-                        //             ),
-                        //           );
-                        //           // return Container(
-                        //           //   width: 100,
-                        //           //   height: 100,
-                        //           //   color: Colors.red,
-                        //           // );
-                        //         }),
-                        //         Consumer(builder: (context, ref, child) {
-                        //           final query =
-                        //               ref.watch(searchQueryProvider).toLowerCase();
-                        //           // return Container(
-                        //           //   width: 100,
-                        //           //   height: 100,
-                        //           //   color: Colors.blue,
-                        //           // );
-                        //           return FutureBuilder(
-                        //             future: TrenDiverseAPI().getAllData(),
-                        //             builder: (context,
-                        //                 AsyncSnapshot<List<Map<String, dynamic>>>
-                        //                     snapshot) {
-                        //               print(snapshot);
-                        //               if (snapshot.hasData) {
-                        //                 final matched = snapshot.data!
-                        //                     .where((element) =>
-                        //                         query.isEmpty ||
-                        //                         (element["name"] as String)
-                        //                             .toLowerCase()
-                        //                             .contains(query))
-                        //                     .toList();
-                        //                 print(matched.length);
-                        //                 return Container(
-                        //                   height: 200,
-                        //                     child: ListView.builder(
-                        //                   itemCount: matched.length,
-                        //                   itemBuilder: (context, index) {
-                        //                     print(matched);
-                        //                     return Container(
-                        //                         height: 100, child: Text(
-                        //                         matched.elementAt(index)["name"]));
-                        //                   },
-                        //                 ));
-                        //                 return Container(
-                        //                   width: 100,
-                        //                   height: 100,
-                        //                   color: Colors.blue,
-                        //                 );
-                        //               }
-                        //               return const CircularProgressIndicator();
-                        //             },
-                        //           );
-                        //         }),
-                        //         Container(
-                        //           height: 200,
-                        //         ),
-                        //       ],
-                        //     );
-                        //   },
-                        // );
                       },
                     ),
                   ],

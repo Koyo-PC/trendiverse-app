@@ -22,22 +22,50 @@ class HomePage extends ConsumerWidget {
     var trendList = ref.watch(trendListProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Container(
-          height: 38,
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: TrendSearch(
-            (suggestion) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  settings: const RouteSettings(name: "/trend"),
-                  builder: (context) => SubPage(TrendPage([
-                    [suggestion['id']]
-                  ])),
-                ),
-              );
-            },
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) {
+                return SimpleDialog(
+                  title: TrendSearch(
+                    (suggestion) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          settings: const RouteSettings(name: "/trend"),
+                          builder: (context) => SubPage(TrendPage([
+                            [suggestion['id']]
+                          ])),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ), //追加
           ),
-        ),
+        ],
+        // title: Container(
+        //   height: 38,
+        //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        //   child: Stack(
+        //     children: [
+        //       TrendSearch(
+        //         (suggestion) {
+        //           Navigator.of(context).push(
+        //             MaterialPageRoute(
+        //               settings: const RouteSettings(name: "/trend"),
+        //               builder: (context) => SubPage(TrendPage([
+        //                 [suggestion['id']]
+        //               ])),
+        //             ),
+        //           );
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
         centerTitle: true,
         backgroundColor: AppColor.main,
       ),
