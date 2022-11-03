@@ -185,7 +185,7 @@ class TrenDiverseAPI {
     var result = await _requestAPIStr(8081, "/getPopularDataById",
         query: {"id": id.toString()});
     Map data = jsonDecode(result) as Map;
-    return (data["list"] as List).cast<String>();
+    return (data["list"] as List).cast<String>().where((element) => !element.endsWith("00")).toList();
   }
 
   // Future<List<String>> getOldTrend(DateTime time) async {
