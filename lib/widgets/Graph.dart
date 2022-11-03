@@ -101,7 +101,8 @@ class Graph extends StatelessWidget {
     );
   }
 
-  List<LineSeries<TrendSnapshot, DateTime>> buildTrendSeries(TrendData data) {
+  // location: 0~1
+  List<LineSeries<TrendSnapshot, DateTime>> buildTrendSeries(TrendData data, double location) {
     // final List<LineSeries> series = [];
     final LineSeries twitterSeries;
     final LineSeries aiSeries;
@@ -164,14 +165,14 @@ class Graph extends StatelessWidget {
       dataSource: twitterDataList,
       xValueMapper: xValueMapper,
       yValueMapper: yValueMapper,
-      color: const HSLColor.fromAHSL(1, 0, 1, .5).toColor(),
+      color: HSLColor.fromAHSL(1, location, 1, .5).toColor(),
     );
     aiSeries = LineSeries<TrendSnapshot, DateTime>(
       legendItemText: data.getName() + "(予測)",
       dataSource: aiDataList,
       xValueMapper: xValueMapper,
       yValueMapper: yValueMapper,
-      color: const HSLColor.fromAHSL(1, 0, 1, .85).toColor(),
+      color: HSLColor.fromAHSL(1, location, 1, .85).toColor(),
     );
     return [twitterSeries, aiSeries].cast();
   }
@@ -179,7 +180,8 @@ class Graph extends StatelessWidget {
   List<LineSeries> buildAllTrendSeries(List<TrendData> data) {
     List<LineSeries> series = [];
     for (var element in data) {
-      buildTrendSeries(element).forEach((element) {
+      print(data.indexOf(element).toDouble().toString() + " " + data.length.toString());
+      buildTrendSeries(element, data.indexOf(element).toDouble() / data.length * 360).forEach((element) {
         series.add(element);
       });
     }
