@@ -52,7 +52,7 @@ class TrendSearch extends StatelessWidget {
                         .toList();
                     return SizedBox(
                       width: double.maxFinite,
-                      height: 300,
+                      height: 250,
                       child: ListView.builder(
                         itemCount: matched.length,
                         itemBuilder: (context, index) => GestureDetector(
