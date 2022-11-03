@@ -65,7 +65,7 @@ class TrendPage extends SubPageContent {
                       final data = snapshot.data!;
                       return Text(
                         data.join(", "),
-                        style: TextStyle(
+                        style: const TextStyle(
                           height: 1.5,
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
@@ -81,8 +81,6 @@ class TrendPage extends SubPageContent {
                     builder: (context, ref, child) {
                       var stockedTrends =
                           ref.watch(LocalStrage.stockedProvider).data;
-                      print("duiahiad update");
-                      print(stockedTrends.keys);
                       return ElevatedButton(
                         onPressed: () {
                           LocalStrage().toggleStockedTrend(ref, _ids[0][0]);
@@ -91,7 +89,7 @@ class TrendPage extends SubPageContent {
                             ? const Icon(Icons.bookmark_added)
                             : const Icon(Icons.bookmark_add_outlined),
                         style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(
+                          shape: const CircleBorder(
                             side: BorderSide(
                               color: AppColor.main,
                               width: 1,

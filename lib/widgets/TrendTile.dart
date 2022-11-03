@@ -23,37 +23,57 @@ class TrendTile extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             settings: const RouteSettings(name: "/trend"),
-            builder: (context) => SubPage(TrendPage([[_id]])),
+            builder: (context) => SubPage(TrendPage([
+              [_id]
+            ])),
           ),
         );
       },
       child: Container(
-        margin: const EdgeInsets.all(5.0),
+        margin: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: AppColor.white,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Column(
-          children: <Widget>[
-            Graph([[_id]], textColor: Colors.black,),
-            FutureBuilder<String>(
-              future: TrenDiverseAPI().getName(_id),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final data = snapshot.data!;
-                  return Text(
-                    data,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: AppColor.main,
-                    ),
-                  );
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
-          ],
+        child: SizedBox(
+          height: 200,
+          child: Column(
+            children: <Widget>[
+              Graph(
+                [
+                  [_id]
+                ],
+                textColor: Colors.black,
+              ),
+              Container(
+                color: AppColor.black,
+                height: 1,
+                margin: const EdgeInsets.only(bottom: 5),
+              ),
+              Expanded(
+                child: Center(
+                  child: FutureBuilder<String>(
+                    future: TrenDiverseAPI().getName(_id),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final data = snapshot.data!;
+                        return Text(
+                          data,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppColor.main,
+                          ),
+                        );
+                      }
+                      return const CircularProgressIndicator();
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

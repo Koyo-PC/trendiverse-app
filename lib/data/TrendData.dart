@@ -50,7 +50,6 @@ class TrendData {
       } else {
         final List<TrendSnapshot> lastData = result[result.length - 1];
         final lastSnapshot = lastData[lastData.length - 1];
-        print(data.key.difference(lastSnapshot.getTime()).inMinutes);
         // 1.1 * Day
         if (data.key
                 .difference(lastSnapshot.getTime())

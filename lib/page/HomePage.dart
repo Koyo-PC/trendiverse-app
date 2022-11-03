@@ -30,7 +30,9 @@ class HomePage extends ConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   settings: const RouteSettings(name: "/trend"),
-                  builder: (context) => SubPage(TrendPage([[suggestion['id']]])),
+                  builder: (context) => SubPage(TrendPage([
+                    [suggestion['id']]
+                  ])),
                 ),
               );
             },
@@ -63,9 +65,10 @@ class HomePage extends ConsumerWidget {
               onRefresh: () =>
                   trendListController.state = TrenDiverseAPI().getList(),
               child: GridView.count(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(10.0),
                 scrollDirection: Axis.vertical,
                 crossAxisCount: 2,
+                childAspectRatio: 0.85,
                 children: trends.map((id) {
                   return TrendTile(id);
                 }).toList(),

@@ -1,11 +1,8 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/src/chart/axis/multi_level_labels.dart';
-import 'package:syncfusion_flutter_core/src/slider_controller.dart';
 import 'package:trendiverse/data/TrendSource.dart';
 
 import '../TrenDiverseAPI.dart';
@@ -190,9 +187,6 @@ class Graph extends StatelessWidget {
   List<LineSeries> buildAllTrendSeries(List<TrendData> data) {
     List<LineSeries> series = [];
     for (var element in data) {
-      print(data.indexOf(element).toDouble().toString() +
-          " " +
-          data.length.toString());
       buildTrendSeries(
               element, data.indexOf(element).toDouble() / data.length * 360)
           .forEach((element) {
