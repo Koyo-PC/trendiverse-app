@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -7,9 +8,14 @@ import './page/HomePage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: TrenDiverseApp()));
-  // 設定ファイルを読んでおく
-  LocalStrage();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(const ProviderScope(child: TrenDiverseApp()));
+    // 設定ファイルを読んでおく
+    LocalStrage();
+  });
 }
 
 class TrenDiverseApp extends HookConsumerWidget {
@@ -34,7 +40,7 @@ class TrenDiverseApp extends HookConsumerWidget {
       ],
       // home: HomePage(),
       initialRoute: '/home',
-      routes: <String, WidgetBuilder> {
+      routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => HomePage(),
       },
     );
