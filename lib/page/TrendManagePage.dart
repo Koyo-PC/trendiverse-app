@@ -59,7 +59,6 @@ class TrendManagePage extends SubPageContent {
                                   return SimpleDialog(
                                     title: TrendSearch(
                                       (suggestion) {
-                                        print(suggestion);
                                         data.add([suggestion["id"]]);
                                         Navigator.pop(context);
                                         dataNotifier.state = data.toList();

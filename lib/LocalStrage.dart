@@ -49,7 +49,6 @@ class LocalStrage {
       stockedTrends.remove(id);
     } else {
       stockedTrends[id] = StockedTrend(id)..position = Position(0, 0);
-      print(stockedTrends[id]);
     }
     setStockedTrends(stockedTrends);
 

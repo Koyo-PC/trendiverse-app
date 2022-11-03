@@ -102,7 +102,8 @@ class Graph extends StatelessWidget {
   }
 
   // location: 0~1
-  List<LineSeries<TrendSnapshot, DateTime>> buildTrendSeries(TrendData data, double location) {
+  List<LineSeries<TrendSnapshot, DateTime>> buildTrendSeries(
+      TrendData data, double location) {
     // final List<LineSeries> series = [];
     final LineSeries twitterSeries;
     final LineSeries aiSeries;
@@ -122,8 +123,10 @@ class Graph extends StatelessWidget {
         }
       }
       if (twitterDividedDataList.isNotEmpty && aiDividedDataList.isNotEmpty) {
-        twitterDividedDataList.add(TrendSnapshot(aiDividedDataList[0].getTime(),
-            aiDividedDataList[0].getHotness(), TrendSource.twitter));
+        twitterDividedDataList.add(TrendSnapshot(
+            aiDividedDataList[0].getTime()/*.subtract(const Duration(seconds: 30))*/,
+            aiDividedDataList[0].getHotness(),
+            TrendSource.twitter));
       } else if (twitterDividedDataList.isNotEmpty) {
         final lastTwitterData =
             twitterDividedDataList[twitterDividedDataList.length - 1];
@@ -180,12 +183,15 @@ class Graph extends StatelessWidget {
   List<LineSeries> buildAllTrendSeries(List<TrendData> data) {
     List<LineSeries> series = [];
     for (var element in data) {
-      print(data.indexOf(element).toDouble().toString() + " " + data.length.toString());
-      buildTrendSeries(element, data.indexOf(element).toDouble() / data.length * 360).forEach((element) {
+      print(data.indexOf(element).toDouble().toString() +
+          " " +
+          data.length.toString());
+      buildTrendSeries(
+              element, data.indexOf(element).toDouble() / data.length * 360)
+          .forEach((element) {
         series.add(element);
       });
     }
-    print(series[0].dataSource);
     return series;
   }
 }

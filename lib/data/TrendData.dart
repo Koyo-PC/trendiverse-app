@@ -13,7 +13,6 @@ class TrendData {
     _sourceId = sourceId;
   }
 
-  // dataでなくidでもらってくる方がいいのかな〜？
   factory TrendData.merged(List<TrendData> dataList) {
     final id = dataList[0].getId();
     final name = dataList[0].getName();
@@ -24,6 +23,12 @@ class TrendData {
           dividedIndex++) {
         singleData.getHistoryData(dividedIndex).forEach((snapshot) {
           if (historyData.containsKey(snapshot.getTime())) {
+            if (singleData
+                    .getHistoryData(dividedIndex)
+                    .lastWhere(
+                        (element) => element.getSource() == TrendSource.twitter)
+                    .getTime() ==
+                snapshot.getTime()) return; // TODO 意味がわからん #24
             historyData[snapshot.getTime()] = MapEntry(
                 (historyData[snapshot.getTime()]!.key + snapshot.getHotness()),
                 historyData[snapshot.getTime()]!.value);
@@ -45,8 +50,7 @@ class TrendData {
       } else {
         final List<TrendSnapshot> lastData = result[result.length - 1];
         final lastSnapshot = lastData[lastData.length - 1];
-        print(data.key
-            .difference(lastSnapshot.getTime()).inMinutes);
+        print(data.key.difference(lastSnapshot.getTime()).inMinutes);
         // 1.1 * Day
         if (data.key
                 .difference(lastSnapshot.getTime())
