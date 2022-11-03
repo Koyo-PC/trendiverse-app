@@ -96,7 +96,7 @@ class HomePage extends ConsumerWidget {
                 padding: const EdgeInsets.all(10.0),
                 scrollDirection: Axis.vertical,
                 crossAxisCount: 2,
-                childAspectRatio: 0.85,
+                childAspectRatio: 0.8,
                 children: trends.map((id) {
                   return TrendTile(id);
                 }).toList(),

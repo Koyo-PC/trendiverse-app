@@ -95,19 +95,19 @@ class TrenDiverseAPI {
         id,
         await getName(id),
         predictData.value
-            // .map((e) => e
-            //     .where((element) =>
-            //         e.indexOf(element) % 10 == 0 ||
-            //         (e.any((el) => el.getSource() == TrendSource.ai) &&
-            //             e.firstWhere(
-            //                     (el) => el.getSource() == TrendSource.ai) ==
-            //                 element) ||
-            //         (e.any((el) => el.getSource() == TrendSource.twitter) &&
-            //             e.lastWhere((el) =>
-            //                     el.getSource() == TrendSource.twitter) ==
-            //                 element) ||
-            //         e.indexOf(element) == e.length - 1)
-            //     .toList())
+            .map((e) => e
+                .where((element) =>
+                    e.indexOf(element) % 10 == 0 ||
+                    (e.any((el) => el.getSource() == TrendSource.ai) &&
+                        e.firstWhere(
+                                (el) => el.getSource() == TrendSource.ai) ==
+                            element) ||
+                    (e.any((el) => el.getSource() == TrendSource.twitter) &&
+                        e.lastWhere((el) =>
+                                el.getSource() == TrendSource.twitter) ==
+                            element) ||
+                    e.indexOf(element) == e.length - 1)
+                .toList())
             .toList(),
         sourceId: predictData.key);
     cachedData[id] = MapEntry(DateTime.now(), data);

@@ -148,6 +148,33 @@ class Graph extends StatelessWidget {
       }
       twitterDataList.addAll(twitterDividedDataList);
       aiDataList.addAll(aiDividedDataList);
+      //
+      // // margin
+      // if (twitterDataList.isNotEmpty) {
+      //   final twitterRange = twitterDataList.last
+      //       .getTime()
+      //       .difference(twitterDataList.first.getTime());
+      //   final twitterMargin =
+      //       Duration(seconds: (twitterRange.inSeconds * 0.1).toInt());
+      //   twitterDataList.add(TrendSnapshot(
+      //       twitterDataList.first.getTime().subtract(twitterMargin),
+      //       0,
+      //       TrendSource.twitter));
+      //   twitterDataList.add(TrendSnapshot(
+      //       twitterDataList.last.getTime().add(twitterMargin),
+      //       0,
+      //       TrendSource.twitter));
+      // }
+      //
+      // if (aiDataList.isNotEmpty) {
+      //   final aiRange =
+      //       aiDataList.last.getTime().difference(aiDataList.first.getTime());
+      //   final aiMargin = Duration(seconds: (aiRange.inSeconds * 0.1).toInt());
+      //   aiDataList.add(TrendSnapshot(
+      //       aiDataList.first.getTime().subtract(aiMargin), 0, TrendSource.ai));
+      //   aiDataList.add(TrendSnapshot(
+      //       aiDataList.last.getTime().add(aiMargin), 0, TrendSource.ai));
+      // }
     }
 
     dynamic xValueMapper(TrendSnapshot snapshot, _) {
