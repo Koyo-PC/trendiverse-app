@@ -60,8 +60,11 @@ class _StockPageTile extends ConsumerWidget {
           );
         },
         child: Container(
-          color: AppColor.shadow,
           padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AppColor.shadow,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: FutureBuilder(
             future: stockedTrends.data[id]!.getName(),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
