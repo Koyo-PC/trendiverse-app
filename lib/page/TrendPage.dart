@@ -80,11 +80,13 @@ class TrendPage extends SubPageContent {
                     builder: (context, ref, child) {
                       var stockedTrends =
                           ref.watch(LocalStrage.stockedProvider).data;
+                      print("duiahiad update");
+                      print(stockedTrends.keys);
                       return ElevatedButton(
                         onPressed: () {
                           LocalStrage().toggleStockedTrend(ref, _ids[0][0]);
                         },
-                        child: stockedTrends.keys.contains(_ids[0])
+                        child: stockedTrends.keys.contains(_ids[0][0])
                             ? const Icon(Icons.bookmark_added)
                             : const Icon(Icons.bookmark_add_outlined),
                         style: ElevatedButton.styleFrom(
