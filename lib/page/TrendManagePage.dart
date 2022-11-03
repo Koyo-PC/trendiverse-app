@@ -50,6 +50,30 @@ class TrendManagePage extends SubPageContent {
                     return DragTarget<int>(
                       builder: (context, candidateItems, rejectedItems) {
                         if (index == data.length) {
+                          // 削除欄
+                          return Container(
+                            width: double.infinity,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.red.withAlpha(64),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.red.withAlpha(64),
+                                  spreadRadius: 1.0,
+                                  blurRadius: 10.0,
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white54,
+                                size: 50,
+                              ),
+                            ),
+                          );
+                        }
+                        if (index == data.length + 1) {
                           // 追加欄
                           return MaterialButton(
                             onPressed: () {
@@ -70,37 +94,38 @@ class TrendManagePage extends SubPageContent {
                               );
                             },
                             child: Container(
-                              width: double.infinity,
-                              height: 50,
-                              color: Colors.yellow,
+                              width: 150,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius:
+                                    BorderRadius.circular(100), // infinity
+                              ),
                               child: const Center(
                                 child: Icon(
                                   Icons.add,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                           );
                         }
-                        if (index == data.length + 1) {
-                          // 削除欄
-                          return Container(
-                            width: double.infinity,
-                            height: 200,
-                            color: Colors.red,
-                          );
-                        }
                         // 普通の欄
                         return SizedBox(
                           width: double.infinity,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
                           child: Row(
                             children: data[index].map((e) {
                               final content = Container(
                                 // width: 100,
-                                height: 50,
+                                height: 40,
                                 padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                color: Colors.blue,
+                                margin: const EdgeInsets.fromLTRB( 10, 5, 10, 5),
+                                decoration: BoxDecoration(
+                                  color: AppColor.shadow,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                                 child: Center(
                                   child: FutureBuilder(
                                       future: TrenDiverseAPI().getName(e),
@@ -109,7 +134,7 @@ class TrendManagePage extends SubPageContent {
                                           return Text(
                                             snapshot.data.toString(),
                                             style:
-                                                const TextStyle(fontSize: 20),
+                                                const TextStyle(fontSize: 15),
                                           );
                                         }
                                         return const CircularProgressIndicator();
@@ -125,6 +150,7 @@ class TrendManagePage extends SubPageContent {
                               );
                             }).toList(),
                           ),
+                          ),
                         );
                       },
                       onAccept: (item) {
@@ -132,13 +158,13 @@ class TrendManagePage extends SubPageContent {
                           innerList.remove(item);
                         }
                         if (index == data.length) {
-                          // 追加欄へのドラッグの時
-                          data.add([item]);
-                        } else if (index == data.length + 1) {
                           // 削除欄へのドラッグの時
                           for (var element in data) {
                             element.remove(item);
                           }
+                        } else if (index == data.length + 1) {
+                          // 追加欄へのドラッグの時
+                          data.add([item]);
                         } else {
                           // 他の欄へのドラッグの時
                           data[index].add(item);
@@ -155,24 +181,31 @@ class TrendManagePage extends SubPageContent {
           ),
           Align(
             alignment: FractionalOffset.bottomCenter,
-            child: Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) =>
-                  MaterialButton(
-                onPressed: () => {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      settings: const RouteSettings(name: "/trend"),
-                      builder: (context) => SubPage(
-                        TrendPage(
-                          ref.read(dataProvider),
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Consumer(
+                builder: (BuildContext context, WidgetRef ref, Widget? child) =>
+                    ElevatedButton(
+                  onPressed: () => {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        settings: const RouteSettings(name: "/trend"),
+                        builder: (context) => SubPage(
+                          TrendPage(
+                            ref.read(dataProvider),
+                          ),
                         ),
                       ),
+                      ModalRoute.withName("/home"),
+                    )
+                  },
+                  child: const SizedBox(
+                    width: 200,
+                    child: Center(
+                      child: Text('比較する'),
                     ),
-                    ModalRoute.withName("/home"),
-                  )
-                },
-                child: const Text('決定'),
-                color: Colors.red,
+                  ),
+                ),
               ),
             ),
           ),
