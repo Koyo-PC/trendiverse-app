@@ -76,7 +76,7 @@ class Graph extends StatelessWidget {
                         labelStyle: TextStyle(
                           color: textColor,
                         ),
-                        labelFormat: '{value}日',
+                        labelFormat: '{value}時間',
                         title: AxisTitle(text: "経過時間"),
                       ),
                 // Y軸
@@ -160,8 +160,7 @@ class Graph extends StatelessWidget {
                 .inSeconds
                 .toDouble() /
             60 /
-            60 /
-            24;
+            60;
       }
     }
 
