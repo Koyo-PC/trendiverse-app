@@ -68,15 +68,16 @@ class Graph extends StatelessWidget {
 
                         // dateFormat: mode == GraphMode.absolute
                         //     ? DateFormat("MM/dd\nHH:mm")
-                    dateFormat: DateFormat("MM/dd\nHH:mm")
+                        dateFormat: DateFormat("MM/dd\nHH:mm")
                         //     : DateFormat("d日目H時間"),
-                  // labelFormat: '{value}日',
-                      )
+                        // labelFormat: '{value}日',
+                        )
                     : NumericAxis(
                         labelStyle: TextStyle(
                           color: textColor,
                         ),
                         labelFormat: '{value}日',
+                        title: AxisTitle(text: "経過時間"),
                       ),
                 // Y軸
                 primaryYAxis: NumericAxis(
@@ -153,8 +154,14 @@ class Graph extends StatelessWidget {
       if (mode == GraphMode.absolute) {
         return DateOrDuration.fromDate(snapshot.getTime());
       } else {
-        return
-            snapshot.getTime().difference(trendStartTime).inSeconds.toDouble() / 60 / 60 / 24;
+        return snapshot
+                .getTime()
+                .difference(trendStartTime)
+                .inSeconds
+                .toDouble() /
+            60 /
+            60 /
+            24;
       }
     }
 
@@ -215,7 +222,7 @@ class DateOrDuration {
   Duration getDuration() {
     return Duration(milliseconds: _milliseconds);
   }
-  
+
   get millisecondsSinceEpoch => _milliseconds;
 }
 
