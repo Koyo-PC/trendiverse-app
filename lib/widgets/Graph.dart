@@ -86,7 +86,36 @@ class Graph extends StatelessWidget {
                 series: buildAllTrendSeries(data),
                 legend: Legend(
                     isVisible: legendVisible, position: LegendPosition.bottom),
-                crosshairBehavior: CrosshairBehavior(enable: enableAction),
+                crosshairBehavior: CrosshairBehavior(
+                    enable: enableAction,
+                    activationMode: ActivationMode.singleTap,
+                    // shouldAlwaysShow: true
+                ),
+                // trackballBehavior: TrackballBehavior(
+                //   enable: true,
+                //   activationMode: ActivationMode.singleTap,
+                //   shouldAlwaysShow: true,
+                //   builder: (context, details) {
+                //     return Container(
+                //       height: 50,
+                //       width: 150,
+                //       decoration: const BoxDecoration(
+                //         color: Color.fromRGBO(0, 8, 22, 0.75),
+                //         borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                //       ),
+                //       child: FutureBuilder(
+                //         future: TrenDiverseAPI().getOldTrend(details.point!.x),
+                //         builder: (BuildContext context,
+                //             AsyncSnapshot<List<String>> snapshot) {
+                //           if (snapshot.hasData) {
+                //             return Text(snapshot.data!.join("\n"));
+                //           }
+                //           return const Text("Loading");
+                //         },
+                //       ),
+                //     );
+                //   },
+                // ),
               );
             }
             return Container(
@@ -124,7 +153,8 @@ class Graph extends StatelessWidget {
       }
       if (twitterDividedDataList.isNotEmpty && aiDividedDataList.isNotEmpty) {
         twitterDividedDataList.add(TrendSnapshot(
-            aiDividedDataList[0].getTime()/*.subtract(const Duration(seconds: 30))*/,
+            aiDividedDataList[0]
+                .getTime() /*.subtract(const Duration(seconds: 30))*/,
             aiDividedDataList[0].getHotness(),
             TrendSource.twitter));
       } else if (twitterDividedDataList.isNotEmpty) {

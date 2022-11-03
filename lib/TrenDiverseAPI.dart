@@ -187,4 +187,18 @@ class TrenDiverseAPI {
     Map data = jsonDecode(result) as Map;
     return (data["list"] as List).cast<String>();
   }
+
+  // Future<List<String>> getOldTrend(DateTime time) async {
+  //   DateFormat format = DateFormat("yyyy-MM-dd");
+  //   print(format.format(time));
+  //   var result = await _requestAPIStr(8081, "/showTrend",
+  //       query: {"date": format.format(time)});
+  //   print(result);
+  //   print(jsonDecode(result));
+  //   print(jsonDecode(result).runtimeType);
+  //   print(Map<String,dynamic>.from(jsonDecode(result)));
+  //   Map data = Map<String,dynamic>.from(jsonDecode(result));
+  //   print((data["list"] as List).cast<String>());
+  //   return (data["list"] as List).cast<String>();
+  // }
 }
