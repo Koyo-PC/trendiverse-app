@@ -51,9 +51,9 @@ class _StockPageTile extends ConsumerWidget {
           // TODO: 前に出してくる
         },
         onTap: () async {
-          Navigator.push(
-            context,
+          Navigator.of(context).push(
             MaterialPageRoute(
+              settings: const RouteSettings(name: "/trend"),
               builder: (context) => SubPage(TrendPage([[id]])),
             ),
           );

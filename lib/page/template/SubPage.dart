@@ -15,7 +15,7 @@ class SubPage extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context).pop(context),
         ),
       ),
       backgroundColor: Theme.of(context).backgroundColor,

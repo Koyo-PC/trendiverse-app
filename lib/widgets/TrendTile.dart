@@ -19,9 +19,9 @@ class TrendTile extends StatelessWidget {
     if (_id == 0) return Container();
     return GestureDetector(
       onTap: () async {
-        Navigator.push(
-          context,
+        Navigator.of(context).push(
           MaterialPageRoute(
+            settings: const RouteSettings(name: "/trend"),
             builder: (context) => SubPage(TrendPage([[_id]])),
           ),
         );

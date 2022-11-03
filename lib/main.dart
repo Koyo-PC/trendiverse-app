@@ -39,7 +39,11 @@ class TrenDiverseApp extends HookConsumerWidget {
       supportedLocales: const [
         locale,
       ],
-      home: HomePage(),
+      // home: HomePage(),
+      initialRoute: '/home',
+      routes: <String, WidgetBuilder> {
+        '/home': (BuildContext context) => HomePage(),
+      },
     );
   }
 }

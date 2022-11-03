@@ -102,9 +102,9 @@ class TrendPage extends SubPageContent {
                 ElevatedButton(
                   child: const Text("他のトレンドと比較"),
                   onPressed: () {
-                    Navigator.push(
-                      context,
+                    Navigator.of(context).push(
                       MaterialPageRoute(
+                        settings: const RouteSettings(name: "/trendManage"),
                         builder: (context) => SubPage(TrendManagePage(_ids)),
                       ),
                     );

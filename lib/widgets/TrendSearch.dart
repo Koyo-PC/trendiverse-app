@@ -3,10 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../TrenDiverseAPI.dart';
-import '../page/TrendPage.dart';
-import '../page/template/SubPage.dart';
 
 class TrendSearch extends StatelessWidget {
+  // {id: int, name: String}
   final void Function(Map<String, dynamic>) onclick;
 
   const TrendSearch(this.onclick, {Key? key}) : super(key: key);

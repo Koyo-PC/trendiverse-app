@@ -28,6 +28,7 @@ class HomePage extends ConsumerWidget {
             (suggestion) {
               Navigator.of(context).push(
                 MaterialPageRoute(
+                  settings: const RouteSettings(name: "/trend"),
                   builder: (context) => SubPage(TrendPage([suggestion['id']])),
                 ),
               );
@@ -40,9 +41,9 @@ class HomePage extends ConsumerWidget {
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          Navigator.push(
-            context,
+          Navigator.of(context).push(
             MaterialPageRoute(
+              settings: const RouteSettings(name: "/stock"),
               builder: (context) => SubPage(StockPage()),
               // builder: (context) => SubPage(TrendManagePage()),
             ),

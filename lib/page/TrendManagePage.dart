@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:trendiverse/TrenDiverseAPI.dart';
+import 'package:trendiverse/page/TrendPage.dart';
+import 'package:trendiverse/page/template/SubPage.dart';
+import 'package:trendiverse/widgets/TrendSearch.dart';
 
 import 'template/SubPageContent.dart';
 
@@ -47,14 +50,34 @@ class TrendManagePage extends SubPageContent {
                       builder: (context, candidateItems, rejectedItems) {
                         if (index >= data.length) {
                           // 追加欄
-                          return Container(
-                            width: double.infinity,
-                            height: 50,
-                            color: Colors.yellow,
-                            child: const Center(
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.black,
+                          return MaterialButton(
+                            onPressed: () {
+                              // 検索
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return SimpleDialog(
+                                    title: TrendSearch(
+                                      (suggestion) {
+                                        print(suggestion);
+                                        data.add([suggestion["id"]]);
+                                        Navigator.pop(context);
+                                        dataNotifier.state = data.toList();
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              color: Colors.yellow,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           );
@@ -115,6 +138,29 @@ class TrendManagePage extends SubPageContent {
                   },
                 );
               },
+            ),
+          ),
+          Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: Consumer(
+              builder: (BuildContext context, WidgetRef ref, Widget? child) =>
+                  MaterialButton(
+                onPressed: () => {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      settings: const RouteSettings(name: "/trend"),
+                      builder: (context) => SubPage(
+                        TrendPage(
+                          ref.read(dataProvider),
+                        ),
+                      ),
+                    ),
+                    ModalRoute.withName("/home"),
+                  )
+                },
+                child: const Text('決定'),
+                color: Colors.red,
+              ),
             ),
           ),
         ],
