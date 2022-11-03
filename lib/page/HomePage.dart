@@ -46,6 +46,16 @@ class HomePage extends ConsumerWidget {
             ), //追加
           ),
         ],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              "assets/icon/icon_reverse.png",
+              height: 64,
+            ),
+          ],
+        ),
         // title: Container(
         //   height: 38,
         //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
