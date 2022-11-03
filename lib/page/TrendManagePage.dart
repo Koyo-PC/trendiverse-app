@@ -32,7 +32,7 @@ class TrendManagePage extends SubPageContent {
                 final data = ref.watch(dataProvider);
                 final dataNotifier = ref.read(dataProvider.notifier);
                 return ListView.separated(
-                  itemCount: data.length + 1,
+                  itemCount: data.length + 2,
                   separatorBuilder: (context, index) {
                     return SizedBox(
                       height: 12.0,
@@ -48,7 +48,7 @@ class TrendManagePage extends SubPageContent {
                   itemBuilder: (context, index) {
                     return DragTarget<int>(
                       builder: (context, candidateItems, rejectedItems) {
-                        if (index >= data.length) {
+                        if (index == data.length) {
                           // 追加欄
                           return MaterialButton(
                             onPressed: () {
@@ -79,6 +79,14 @@ class TrendManagePage extends SubPageContent {
                                 ),
                               ),
                             ),
+                          );
+                        }
+                        if (index == data.length + 1) {
+                          // 削除欄
+                          return Container(
+                            width: double.infinity,
+                            height: 200,
+                            color: Colors.red,
                           );
                         }
                         // 普通の欄
@@ -122,9 +130,14 @@ class TrendManagePage extends SubPageContent {
                         for (var innerList in data) {
                           innerList.remove(item);
                         }
-                        if (index >= data.length) {
+                        if (index == data.length) {
                           // 追加欄へのドラッグの時
                           data.add([item]);
+                        } else if (index == data.length + 1) {
+                          // 削除欄へのドラッグの時
+                          for (var element in data) {
+                            element.remove(item);
+                          }
                         } else {
                           // 他の欄へのドラッグの時
                           data[index].add(item);
