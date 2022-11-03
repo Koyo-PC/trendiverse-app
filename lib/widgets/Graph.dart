@@ -197,7 +197,7 @@ class Graph extends StatelessWidget {
       buildTrendSeries(
               element, data.indexOf(element).toDouble() / data.length * 360)
           .forEach((element) {
-        series.add(element);
+        if (element.dataSource.isNotEmpty) series.add(element);
       });
     }
     return series;
