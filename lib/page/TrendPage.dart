@@ -103,24 +103,25 @@ class TrendPage extends SubPageContent {
                         },
                       ),
                     // Compare
-                    if(!compare) ElevatedButton(
-                      child: const Text("他のトレンドと比較"),
-                      style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ))),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            settings: const RouteSettings(name: "/trendManage"),
-                            builder: (context) =>
-                                SubPage(TrendManagePage(_ids)),
-                          ),
-                        );
-                      },
-                    ),
+                    if (!compare)
+                      ElevatedButton(
+                        child: const Text("他のトレンドと比較"),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ))),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              settings:
+                                  const RouteSettings(name: "/trendManage"),
+                              builder: (context) =>
+                                  SubPage(TrendManagePage(_ids)),
+                            ),
+                          );
+                        },
+                      ),
                   ],
                 ),
                 Row(
@@ -132,7 +133,9 @@ class TrendPage extends SubPageContent {
                           builder: (context, ref, child) {
                             final mode = ref.watch(graphModeProvider);
                             return ElevatedButton(
-                              child: const Text("発生日時をそろえる"),
+                              child: !compare
+                                  ? const Text("経過時間で表示")
+                                  : const Text("発生日時を揃える"),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateColor.resolveWith(
                                     (states) => mode == GraphMode.absolute
