@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:trendiverse/TrenDiverseAPI.dart';
+
 import '../data/TrendSnapshot.dart';
 import 'TrendSource.dart';
 
@@ -13,62 +15,112 @@ class TrendData {
     _sourceId = sourceId;
   }
 
-  factory TrendData.merged(List<TrendData> dataList) {
-    final id = dataList[0].getId();
-    final name = dataList[0].getName();
-    final Map<DateTime, MapEntry<int, TrendSource>> historyData = {};
-    for (var singleData in dataList) {
+  static Future<TrendData> merged(List<int> idList) async {
+    List<TrendData> dataList = [];
+    for (var id in idList) {
+      dataList.add(await TrenDiverseAPI().getData(id));
+    }
+
+    // 合成トレンドの開始/終了を求める
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(0);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(0);
+    dataList.forEach((trendData) {
       for (int dividedIndex = 0;
-          dividedIndex < singleData.getDividedCount();
+          dividedIndex < trendData.getDividedCount();
           dividedIndex++) {
-        singleData.getHistoryData(dividedIndex).forEach((snapshot) {
-          if (historyData.containsKey(snapshot.getTime())) {
-            if (singleData
-                    .getHistoryData(dividedIndex)
-                    .lastWhere(
-                        (element) => element.getSource() == TrendSource.twitter)
-                    .getTime() ==
-                snapshot.getTime()) return; // TODO 意味がわからん #24
-            historyData[snapshot.getTime()] = MapEntry(
-                (historyData[snapshot.getTime()]!.key + snapshot.getHotness()),
-                historyData[snapshot.getTime()]!.value);
-          } else {
-            historyData[snapshot.getTime()] =
-                MapEntry(snapshot.getHotness(), snapshot.getSource());
-          }
+        var dividedData = trendData.getHistoryData(dividedIndex);
+        dividedData.forEach((trendSnapshot) {
+          DateTime thisStart = trendSnapshot.getTime();
+          DateTime thisEnd = trendSnapshot.getTime();
+          if (start.millisecondsSinceEpoch == 0 || thisStart.isBefore(start))
+            start = thisStart;
+          print("thisEnd = " + thisEnd.toString());
+          print("end.millisecondsSinceEpoch = " +
+              (end.millisecondsSinceEpoch).toString());
+          if (end.millisecondsSinceEpoch == 0 || thisEnd.isAfter(end))
+            end = thisEnd;
+          print("end.millisecondsSinceEpoch = " +
+              (end.millisecondsSinceEpoch).toString());
         });
       }
+    });
+    print("End: " + end.toString());
+    Duration length = end.difference(start);
+    Duration delta = const Duration(minutes: 5);
+
+    DateTime indexToDate(int index) {
+      return start.add(Duration(minutes: delta.inMinutes * index));
     }
-    final List<List<TrendSnapshot>> result = [];
-    for (int historyIndex = 0;
-        historyIndex < historyData.length;
-        historyIndex++) {
-      final MapEntry<DateTime, MapEntry<int, TrendSource>> data =
-          historyData.entries.elementAt(historyIndex);
-      if (result.isEmpty) {
-        result.add([TrendSnapshot(data.key, data.value.key, data.value.value)]);
+
+    int dateToIndex(DateTime date) {
+      return date.difference(start).inMinutes ~/ delta.inMinutes;
+    }
+
+    // 作業用データ
+    // [
+    //   {
+    //     key: int // count 平均算出のため データの個数
+    //     value: int // sum hotnessの合計
+    //   }
+    // ]
+    List<MapEntry<int, int>> mergedData = List.filled(
+      length.inMinutes ~/ delta.inMinutes + 2,
+      const MapEntry(0, 0),
+      growable: true,
+    );
+
+    // 代入
+    dataList.forEach((trendData) {
+      for (int dividedIndex = 0;
+          dividedIndex < trendData.getDividedCount();
+          dividedIndex++) {
+        List<TrendSnapshot> dividedData =
+            trendData.getHistoryData(dividedIndex);
+        dividedData.forEach((trendSnapshot) {
+          print(dateToIndex(trendSnapshot.getTime()));
+          print("end = " + end.toString());
+          print("trendSnapshot.getTime() = " +
+              trendSnapshot.getTime().toString());
+          MapEntry<int, int> originalData =
+              mergedData[dateToIndex(trendSnapshot.getTime())];
+          MapEntry<int, int> updatedData = MapEntry(originalData.key + 1,
+              originalData.value + trendSnapshot.getHotness());
+          mergedData[dateToIndex(trendSnapshot.getTime())] = updatedData;
+        });
+      }
+    });
+
+    // divide
+    List<List<TrendSnapshot>> dividedData = [[]];
+    for (int mergedDataIndex = 0;
+        mergedDataIndex < mergedData.length;
+        mergedDataIndex++) {
+      var dataFrame = mergedData[mergedDataIndex];
+      // count = 0 なら null追加 + 次のリストへ
+      if (dataFrame.key == 0) {
+        // 2回以上連続して0の場合
+        if (dividedData.last.isEmpty) continue;
+        dividedData.last.add(TrendSnapshot(
+          indexToDate(mergedDataIndex),
+          0,
+          TrendSource.twitter,
+        ));
+        // TODO ↑ trendSourceあとで考える
+        dividedData.add([]);
       } else {
-        final List<TrendSnapshot> lastData = result[result.length - 1];
-        final lastSnapshot = lastData[lastData.length - 1];
-        // 1.1 * Day
-        if (data.key
-                .difference(lastSnapshot.getTime())
-                .compareTo(const Duration(days: 1, hours: 2, minutes: 24)) <
-            0) {
-          // 普通
-          result[result.length - 1]
-              .add(TrendSnapshot(data.key, data.value.key, data.value.value));
-        } else {
-          // 間が空いている
-          result[result.length - 1]
-              .add(TrendSnapshot(data.key, 0, data.value.value));
-          result
-              .add([TrendSnapshot(data.key, data.value.key, data.value.value)]);
-        }
+        dividedData.last.add(TrendSnapshot(
+          indexToDate(mergedDataIndex),
+          dataFrame.value ~/ dataFrame.key,
+          TrendSource.twitter,
+          // 平均
+        ));
       }
     }
 
-    return TrendData(id, name, result);
+    return TrendData(
+        dataList.first.getId(), dataList.first.getName(), dividedData);
+
+    // TODO
   }
 
   int getId() {

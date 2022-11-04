@@ -54,48 +54,61 @@ class Graph extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final data = snapshot.data!
-                  .map((groupedIds) => TrendData.merged(groupedIds))
-                  .toList();
-              return SfCartesianChart(
-                // X軸
-                primaryXAxis: mode == GraphMode.absolute
-                    // 絶対表示(日付)の時
-                    ? DateTimeAxis(
-                        labelStyle: TextStyle(
-                          color: textColor,
-                        ),
+              return FutureBuilder(
+                  future: Future.wait(snapshot.data!
+                      .map((groupedIds) async => await TrendData.merged(
+                          groupedIds.map((e) => e.getId()).toList()))
+                      .toList()),
+                  builder: (_, dataSnapshot) {
+                    print(dataSnapshot);
+                    if (dataSnapshot.hasData) {
+                      final List<TrendData> data =
+                          dataSnapshot.data as List<TrendData>;
+                      print(data.runtimeType);
+                      return SfCartesianChart(
+                        // X軸
+                        primaryXAxis: mode == GraphMode.absolute
+                            // 絶対表示(日付)の時
+                            ? DateTimeAxis(
+                                labelStyle: TextStyle(
+                                  color: textColor,
+                                ),
 
-                        // dateFormat: mode == GraphMode.absolute
-                        //     ? DateFormat("MM/dd\nHH:mm")
-                        dateFormat: DateFormat("MM/dd\nHH:mm")
-                        //     : DateFormat("d日目H時間"),
-                        // labelFormat: '{value}日',
-                        )
-                    : NumericAxis(
-                        labelStyle: TextStyle(
-                          color: textColor,
+                                // dateFormat: mode == GraphMode.absolute
+                                //     ? DateFormat("MM/dd\nHH:mm")
+                                dateFormat: DateFormat("MM/dd\nHH:mm")
+                                //     : DateFormat("d日目H時間"),
+                                // labelFormat: '{value}日',
+                                )
+                            : NumericAxis(
+                                labelStyle: TextStyle(
+                                  color: textColor,
+                                ),
+                                labelFormat: '{value}時間',
+                                title: AxisTitle(text: "経過時間"),
+                              ),
+                        // Y軸
+                        primaryYAxis: NumericAxis(
+                            labelStyle: TextStyle(
+                              color: textColor,
+                            ),
+                            labelFormat: logarithm ? "10^{value}" : "{value}K"),
+                        zoomPanBehavior: ZoomPanBehavior(
+                            enablePinching: enableAction, zoomMode: ZoomMode.x),
+                        series: buildAllTrendSeries(data),
+                        legend: Legend(
+                            isVisible: legendVisible,
+                            position: LegendPosition.bottom),
+                        crosshairBehavior: CrosshairBehavior(
+                          enable: enableAction,
+                          activationMode: ActivationMode.singleTap,
+                          // shouldAlwaysShow: true
                         ),
-                        labelFormat: '{value}時間',
-                        title: AxisTitle(text: "経過時間"),
-                      ),
-                // Y軸
-                primaryYAxis: NumericAxis(
-                    labelStyle: TextStyle(
-                      color: textColor,
-                    ),
-                    labelFormat: logarithm ? "10^{value}" : "{value}K"),
-                zoomPanBehavior: ZoomPanBehavior(
-                    enablePinching: enableAction, zoomMode: ZoomMode.x),
-                series: buildAllTrendSeries(data),
-                legend: Legend(
-                    isVisible: legendVisible, position: LegendPosition.bottom),
-                crosshairBehavior: CrosshairBehavior(
-                  enable: enableAction,
-                  activationMode: ActivationMode.singleTap,
-                  // shouldAlwaysShow: true
-                ),
-              );
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  });
             }
             return Container(
               padding: const EdgeInsets.all(20),
