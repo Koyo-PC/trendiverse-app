@@ -115,41 +115,48 @@ class TrendManagePage extends SubPageContent {
                           width: double.infinity,
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: data[index].map((e) {
-                              final content = Container(
-                                // width: 100,
-                                height: 40,
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.fromLTRB( 10, 5, 10, 5),
-                                decoration: BoxDecoration(
-                                  color: AppColor.shadow,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Center(
-                                  child: FutureBuilder(
-                                      future: TrenDiverseAPI().getName(e),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          return Text(
-                                            snapshot.data.toString(),
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          );
-                                        }
-                                        return const CircularProgressIndicator();
-                                      }),
-                                ),
-                              );
-                              return Draggable<int>(
-                                data: e,
-                                feedback: content,
-                                child: content,
-                                childWhenDragging:
-                                    Opacity(opacity: 0.5, child: content),
-                              );
-                            }).toList(),
-                          ),
+                            child: Row(
+                              children: data[index].map(
+                                (e) {
+                                  final content = Container(
+                                    // width: 100,
+                                    height: 40,
+                                    padding: const EdgeInsets.all(10),
+                                    margin:
+                                        const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                    decoration: BoxDecoration(
+                                      color: AppColor.shadow,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: FutureBuilder(
+                                        future: TrenDiverseAPI().getName(e),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Text(
+                                              snapshot.data.toString(),
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                              ),
+                                            );
+                                          }
+                                          return const CircularProgressIndicator();
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                  return Draggable<int>(
+                                    data: e,
+                                    feedback: content,
+                                    child: content,
+                                    childWhenDragging:
+                                        Opacity(opacity: 0.5, child: content),
+                                  );
+                                },
+                              ).toList(),
+                            ),
                           ),
                         );
                       },
@@ -191,10 +198,7 @@ class TrendManagePage extends SubPageContent {
                       MaterialPageRoute(
                         settings: const RouteSettings(name: "/trendCompare"),
                         builder: (context) => SubPage(
-                          TrendPage(
-                            ref.read(dataProvider),
-                            compare: true
-                          ),
+                          TrendPage(ref.read(dataProvider), compare: true),
                         ),
                       ),
                     )
