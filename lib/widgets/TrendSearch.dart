@@ -7,10 +7,12 @@ import '../TrenDiverseAPI.dart';
 class TrendSearch extends StatelessWidget {
   // {id: int, name: String}
   final void Function(Map<String, dynamic>) onclick;
+  final List<int> excludeId;
 
   late final StateProvider<String> searchQueryProvider;
 
-  TrendSearch(this.onclick, {Key? key}) : super(key: key) {
+  TrendSearch(this.onclick, {this.excludeId = const [], Key? key})
+      : super(key: key) {
     searchQueryProvider = StateProvider((ref) => "");
   }
 
@@ -44,11 +46,14 @@ class TrendSearch extends StatelessWidget {
                     AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                   if (snapshot.hasData) {
                     final matched = snapshot.data!
-                        .where((element) =>
-                            query.isEmpty ||
-                            (element["name"] as String)
-                                .toLowerCase()
-                                .contains(query))
+                        .where(
+                          (element) =>
+                              query.isEmpty ||
+                              (element["name"] as String)
+                                      .toLowerCase()
+                                      .contains(query) &&
+                                  !excludeId.contains(element["id"]),
+                        )
                         .toList();
                     return SizedBox(
                       width: double.maxFinite,

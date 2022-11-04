@@ -88,6 +88,7 @@ class TrendManagePage extends SubPageContent {
                                         Navigator.pop(context);
                                         dataNotifier.state = data.toList();
                                       },
+                                      excludeId: data.expand((x) => x).toList(),
                                     ),
                                   );
                                 },
