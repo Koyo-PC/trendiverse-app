@@ -167,13 +167,13 @@ class TrenDiverseAPI {
             )
             .cast<TrendSnapshot>()
             .toList();
-        if (dataSingle
-            .any((element) => element.getSource() == TrendSource.ai)) {
-          final firstAi = dataSingle
-              .firstWhere((element) => element.getSource() == TrendSource.ai);
-          dataSingle.add(TrendSnapshot(
-              firstAi.getTime(), firstAi.getHotness(), TrendSource.twitter));
-        }
+        // if (dataSingle
+        //     .any((element) => element.getSource() == TrendSource.ai)) {
+        //   final firstAi = dataSingle
+        //       .firstWhere((element) => element.getSource() == TrendSource.ai);
+        //   dataSingle.add(TrendSnapshot(
+        //       firstAi.getTime(), firstAi.getHotness(), TrendSource.twitter));
+        // }
         return dataSingle;
       }).toList(),
     );
