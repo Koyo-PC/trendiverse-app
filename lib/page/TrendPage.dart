@@ -19,15 +19,16 @@ class TrendPage extends SubPageContent {
   late final StateProvider<GraphMode> graphModeProvider;
   late final StateProvider<bool> logarithmProvider;
 
+  final bool compare;
 
-  TrendPage(this._ids, {graphMode = GraphMode.absolute}) {
+  TrendPage(this._ids, {graphMode = GraphMode.absolute, this.compare = false}) {
     graphModeProvider = StateProvider((ref) => graphMode);
     logarithmProvider = StateProvider((ref) => false);
   }
 
   @override
   String getTitle() {
-    return "トレンド詳細";
+    return !compare ? "トレンド詳細" : "トレンド詳細 - 比較";
   }
 
   @override
@@ -102,7 +103,7 @@ class TrendPage extends SubPageContent {
                         },
                       ),
                     // Compare
-                    ElevatedButton(
+                    if(!compare) ElevatedButton(
                       child: const Text("他のトレンドと比較"),
                       style: ButtonStyle(
                           shape:

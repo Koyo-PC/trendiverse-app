@@ -187,16 +187,16 @@ class TrendManagePage extends SubPageContent {
                 builder: (BuildContext context, WidgetRef ref, Widget? child) =>
                     ElevatedButton(
                   onPressed: () => {
-                    Navigator.of(context).pushAndRemoveUntil(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
-                        settings: const RouteSettings(name: "/trend"),
+                        settings: const RouteSettings(name: "/trendCompare"),
                         builder: (context) => SubPage(
                           TrendPage(
                             ref.read(dataProvider),
+                            compare: true
                           ),
                         ),
                       ),
-                      ModalRoute.withName("/home"),
                     )
                   },
                   child: const SizedBox(
