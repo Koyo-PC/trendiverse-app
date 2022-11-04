@@ -63,11 +63,11 @@ class TrendPage extends SubPageContent {
                     if (snapshot.hasData) {
                       final data = snapshot.data!;
                       return Text(
-                        data.join(", "),
-                        style: const TextStyle(
+                        data.join("\n"),
+                        style: TextStyle(
                           height: 1.5,
                           fontWeight: FontWeight.bold,
-                          fontSize: 40,
+                          fontSize: !compare ? 40 : 30,
                           color: AppColor.white,
                         ),
                       );
