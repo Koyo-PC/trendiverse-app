@@ -144,14 +144,12 @@ class Graph extends StatelessWidget {
       if (twitterDividedDataList.isNotEmpty && aiDividedDataList.isNotEmpty) {
         twitterDividedDataList.add(TrendSnapshot(
             aiDividedDataList[0]
-                .getTime() /*.subtract(const Duration(seconds: 30))*/,
+                .getTime(),
             aiDividedDataList[0].getHotness(),
             TrendSource.twitter));
       } else if (twitterDividedDataList.isNotEmpty) {
-        final lastTwitterData =
-            twitterDividedDataList[twitterDividedDataList.length - 1];
         twitterDividedDataList.add(TrendSnapshot(
-            lastTwitterData.getTime().add(const Duration(minutes: 1)),
+            twitterDividedDataList.last.getTime().add(const Duration(minutes: 1)),
             0,
             TrendSource.twitter));
       } else if (aiDividedDataList.isNotEmpty) {
@@ -159,33 +157,6 @@ class Graph extends StatelessWidget {
       }
       twitterDataList.addAll(twitterDividedDataList);
       aiDataList.addAll(aiDividedDataList);
-      //
-      // // margin
-      // if (twitterDataList.isNotEmpty) {
-      //   final twitterRange = twitterDataList.last
-      //       .getTime()
-      //       .difference(twitterDataList.first.getTime());
-      //   final twitterMargin =
-      //       Duration(seconds: (twitterRange.inSeconds * 0.1).toInt());
-      //   twitterDataList.add(TrendSnapshot(
-      //       twitterDataList.first.getTime().subtract(twitterMargin),
-      //       0,
-      //       TrendSource.twitter));
-      //   twitterDataList.add(TrendSnapshot(
-      //       twitterDataList.last.getTime().add(twitterMargin),
-      //       0,
-      //       TrendSource.twitter));
-      // }
-      //
-      // if (aiDataList.isNotEmpty) {
-      //   final aiRange =
-      //       aiDataList.last.getTime().difference(aiDataList.first.getTime());
-      //   final aiMargin = Duration(seconds: (aiRange.inSeconds * 0.1).toInt());
-      //   aiDataList.add(TrendSnapshot(
-      //       aiDataList.first.getTime().subtract(aiMargin), 0, TrendSource.ai));
-      //   aiDataList.add(TrendSnapshot(
-      //       aiDataList.last.getTime().add(aiMargin), 0, TrendSource.ai));
-      // }
     }
 
     dynamic xValueMapper(TrendSnapshot snapshot, _) {
@@ -237,6 +208,8 @@ class Graph extends StatelessWidget {
         if (seriesElement.dataSource.length > 1) series.add(seriesElement);
       });
     }
+    print(data[0].getName());
+    print(series[0].dataSource.cast<TrendSnapshot>().where((element) => element.getSource() == TrendSource.ai).length);
     return series;
   }
 }

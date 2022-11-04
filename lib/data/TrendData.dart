@@ -96,6 +96,7 @@ class TrendData {
       if (dataFrame.item1 == 0) {
         // 2回以上連続して0の場合
         if (dividedData.last.isEmpty) continue;
+
         dividedData.last.add(TrendSnapshot(
           indexToDate(mergedDataIndex),
           0,
@@ -104,10 +105,10 @@ class TrendData {
         dividedData.add([]);
       } else {
         dividedData.last.add(TrendSnapshot(
+          // 平均
           indexToDate(mergedDataIndex),
           dataFrame.item2 ~/ dataFrame.item1,
           dataFrame.item3,
-          // 平均
         ));
       }
 
@@ -117,14 +118,25 @@ class TrendData {
                       .elementAt(dividedData.last.length - 2)
                       .getSource() ==
                   TrendSource.twitter &&
+              dividedData.last
+                      .elementAt(dividedData.last.length - 2)
+                      .getTime()
+                      .millisecond ==
+                  0 &&
               dividedData.last.last.getSource() == TrendSource.ai)) {
-        dividedData.last.add(TrendSnapshot(dividedData.last.last.getTime(),
-            dividedData.last.last.getHotness(), TrendSource.twitter));
+        dividedData.last.add(TrendSnapshot(
+            dividedData.last.last
+                .getTime()
+                .subtract(const Duration(milliseconds: 1)),
+            dividedData.last.last.getHotness(),
+            TrendSource.twitter));
       }
     }
 
     return TrendData(
-        dataList.first.getId(), dataList.map((trendData) => trendData.getName()).join("+"), dividedData);
+        dataList.first.getId(),
+        dataList.map((trendData) => trendData.getName()).join("+"),
+        dividedData);
 
     // TODO
   }

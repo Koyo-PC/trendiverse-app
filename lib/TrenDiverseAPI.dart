@@ -156,7 +156,7 @@ class TrenDiverseAPI {
               (e) {
                 var date =
                     format.parse(e["date"]).subtract(const Duration(hours: 9));
-                if (date.compareTo(DateTime.now()) == 1) {
+                if (date.isAfter(DateTime.now())) {
                   return TrendSnapshot(date,
                       double.parse(e["hotness"]!).toInt(), TrendSource.ai);
                 } else {
@@ -185,20 +185,23 @@ class TrenDiverseAPI {
     var result = await _requestAPIStr(8081, "/getPopularDataById",
         query: {"id": id.toString()});
     Map data = jsonDecode(result) as Map;
-    return (data["list"] as List).cast<String>().where((element) => !element.endsWith("00")).toList();
+    return (data["list"] as List)
+        .cast<String>()
+        .where((element) => !element.endsWith("00"))
+        .toList();
   }
 
-  // Future<List<String>> getOldTrend(DateTime time) async {
-  //   DateFormat format = DateFormat("yyyy-MM-dd");
-  //   print(format.format(time));
-  //   var result = await _requestAPIStr(8081, "/showTrend",
-  //       query: {"date": format.format(time)});
-  //   print(result);
-  //   print(jsonDecode(result));
-  //   print(jsonDecode(result).runtimeType);
-  //   print(Map<String,dynamic>.from(jsonDecode(result)));
-  //   Map data = Map<String,dynamic>.from(jsonDecode(result));
-  //   print((data["list"] as List).cast<String>());
-  //   return (data["list"] as List).cast<String>();
-  // }
+// Future<List<String>> getOldTrend(DateTime time) async {
+//   DateFormat format = DateFormat("yyyy-MM-dd");
+//   print(format.format(time));
+//   var result = await _requestAPIStr(8081, "/showTrend",
+//       query: {"date": format.format(time)});
+//   print(result);
+//   print(jsonDecode(result));
+//   print(jsonDecode(result).runtimeType);
+//   print(Map<String,dynamic>.from(jsonDecode(result)));
+//   Map data = Map<String,dynamic>.from(jsonDecode(result));
+//   print((data["list"] as List).cast<String>());
+//   return (data["list"] as List).cast<String>();
+// }
 }
