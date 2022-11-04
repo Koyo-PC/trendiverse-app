@@ -25,27 +25,23 @@ class TrendData {
     // 合成トレンドの開始/終了を求める
     DateTime start = DateTime.fromMillisecondsSinceEpoch(0);
     DateTime end = DateTime.fromMillisecondsSinceEpoch(0);
-    dataList.forEach((trendData) {
+    for (var trendData in dataList) {
       for (int dividedIndex = 0;
           dividedIndex < trendData.getDividedCount();
           dividedIndex++) {
         var dividedData = trendData.getHistoryData(dividedIndex);
-        dividedData.forEach((trendSnapshot) {
+        for (var trendSnapshot in dividedData) {
           DateTime thisStart = trendSnapshot.getTime();
           DateTime thisEnd = trendSnapshot.getTime();
-          if (start.millisecondsSinceEpoch == 0 || thisStart.isBefore(start))
+          if (start.millisecondsSinceEpoch == 0 || thisStart.isBefore(start)) {
             start = thisStart;
-          print("thisEnd = " + thisEnd.toString());
-          print("end.millisecondsSinceEpoch = " +
-              (end.millisecondsSinceEpoch).toString());
-          if (end.millisecondsSinceEpoch == 0 || thisEnd.isAfter(end))
+          }
+          if (end.millisecondsSinceEpoch == 0 || thisEnd.isAfter(end)) {
             end = thisEnd;
-          print("end.millisecondsSinceEpoch = " +
-              (end.millisecondsSinceEpoch).toString());
-        });
+          }
+        }
       }
-    });
-    print("End: " + end.toString());
+    }
     Duration length = end.difference(start);
     Duration delta = const Duration(minutes: 5);
 
@@ -72,17 +68,13 @@ class TrendData {
     );
 
     // 代入
-    dataList.forEach((trendData) {
+    for (var trendData in dataList) {
       for (int dividedIndex = 0;
           dividedIndex < trendData.getDividedCount();
           dividedIndex++) {
         List<TrendSnapshot> dividedData =
             trendData.getHistoryData(dividedIndex);
-        dividedData.forEach((trendSnapshot) {
-          print(dateToIndex(trendSnapshot.getTime()));
-          print("end = " + end.toString());
-          print("trendSnapshot.getTime() = " +
-              trendSnapshot.getTime().toString());
+        for (var trendSnapshot in dividedData) {
           Tuple3<int, int, TrendSource> originalData =
               mergedData[dateToIndex(trendSnapshot.getTime())];
           Tuple3<int, int, TrendSource> updatedData = Tuple3(
@@ -90,9 +82,9 @@ class TrendData {
               originalData.item2 + trendSnapshot.getHotness(),
               trendSnapshot.getSource());
           mergedData[dateToIndex(trendSnapshot.getTime())] = updatedData;
-        });
+        }
       }
-    });
+    }
 
     // divide
     List<List<TrendSnapshot>> dividedData = [[]];
