@@ -124,7 +124,7 @@ class TrendData {
     }
 
     return TrendData(
-        dataList.first.getId(), dataList.first.getName(), dividedData);
+        dataList.first.getId(), dataList.map((trendData) => trendData.getName()).join("+"), dividedData);
 
     // TODO
   }
