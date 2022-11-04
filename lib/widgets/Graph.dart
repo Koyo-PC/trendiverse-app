@@ -60,11 +60,9 @@ class Graph extends StatelessWidget {
                           groupedIds.map((e) => e.getId()).toList()))
                       .toList()),
                   builder: (_, dataSnapshot) {
-                    print(dataSnapshot);
                     if (dataSnapshot.hasData) {
                       final List<TrendData> data =
                           dataSnapshot.data as List<TrendData>;
-                      print(data.runtimeType);
                       return SfCartesianChart(
                         // X軸
                         primaryXAxis: mode == GraphMode.absolute
@@ -235,8 +233,8 @@ class Graph extends StatelessWidget {
     for (var element in data) {
       buildTrendSeries(
               element, data.indexOf(element).toDouble() / data.length * 360)
-          .forEach((element) {
-        if (element.dataSource.isNotEmpty) series.add(element);
+          .forEach((seriesElement) {
+        if (seriesElement.dataSource.length > 1) series.add(seriesElement);
       });
     }
     return series;
