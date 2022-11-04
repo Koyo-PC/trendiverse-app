@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:trendiverse/TrenDiverseAPI.dart';
+import 'package:tuple/tuple.dart';
 
 import '../data/TrendSnapshot.dart';
 import 'TrendSource.dart';
@@ -59,13 +60,14 @@ class TrendData {
     // 作業用データ
     // [
     //   {
-    //     key: int // count 平均算出のため データの個数
-    //     value: int // sum hotnessの合計
+    //     item1: int // count 平均算出のため データの個数
+    //     item2: int // sum hotnessの合計
+    //     item3: TrendSource // source twitter/ai
     //   }
     // ]
-    List<MapEntry<int, int>> mergedData = List.filled(
+    List<Tuple3<int, int, TrendSource>> mergedData = List.filled(
       length.inMinutes ~/ delta.inMinutes + 2,
-      const MapEntry(0, 0),
+      const Tuple3(0, 0, TrendSource.twitter),
       growable: true,
     );
 
@@ -81,10 +83,12 @@ class TrendData {
           print("end = " + end.toString());
           print("trendSnapshot.getTime() = " +
               trendSnapshot.getTime().toString());
-          MapEntry<int, int> originalData =
+          Tuple3<int, int, TrendSource> originalData =
               mergedData[dateToIndex(trendSnapshot.getTime())];
-          MapEntry<int, int> updatedData = MapEntry(originalData.key + 1,
-              originalData.value + trendSnapshot.getHotness());
+          Tuple3<int, int, TrendSource> updatedData = Tuple3(
+              originalData.item1 + 1,
+              originalData.item2 + trendSnapshot.getHotness(),
+              trendSnapshot.getSource());
           mergedData[dateToIndex(trendSnapshot.getTime())] = updatedData;
         });
       }
@@ -97,7 +101,7 @@ class TrendData {
         mergedDataIndex++) {
       var dataFrame = mergedData[mergedDataIndex];
       // count = 0 なら null追加 + 次のリストへ
-      if (dataFrame.key == 0) {
+      if (dataFrame.item1 == 0) {
         // 2回以上連続して0の場合
         if (dividedData.last.isEmpty) continue;
         dividedData.last.add(TrendSnapshot(
@@ -105,15 +109,25 @@ class TrendData {
           0,
           TrendSource.twitter,
         ));
-        // TODO ↑ trendSourceあとで考える
         dividedData.add([]);
       } else {
         dividedData.last.add(TrendSnapshot(
           indexToDate(mergedDataIndex),
-          dataFrame.value ~/ dataFrame.key,
-          TrendSource.twitter,
+          dataFrame.item2 ~/ dataFrame.item1,
+          dataFrame.item3,
           // 平均
         ));
+      }
+
+      // グラフを繋げる(issue #19)
+      if (dividedData.last.length >= 2 &&
+          (dividedData.last
+                      .elementAt(dividedData.last.length - 2)
+                      .getSource() ==
+                  TrendSource.twitter &&
+              dividedData.last.last.getSource() == TrendSource.ai)) {
+        dividedData.last.add(TrendSnapshot(dividedData.last.last.getTime(),
+            dividedData.last.last.getHotness(), TrendSource.twitter));
       }
     }
 
