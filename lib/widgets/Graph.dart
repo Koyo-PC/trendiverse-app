@@ -54,9 +54,9 @@ class Graph extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              // final data = snapshot.data!
-              //     .map((groupedIds) => TrendData.merged(groupedIds))
-              //     .toList();
+              final data = snapshot.data!
+                  .map((groupedIds) => TrendData.merged(groupedIds))
+                  .toList();
               return SfCartesianChart(
                 // X軸
                 primaryXAxis: mode == GraphMode.absolute
@@ -87,7 +87,7 @@ class Graph extends StatelessWidget {
                     labelFormat: logarithm ? "10^{value}" : "{value}K"),
                 zoomPanBehavior: ZoomPanBehavior(
                     enablePinching: enableAction, zoomMode: ZoomMode.x),
-                series: buildAllTrendSeries(snapshot.data!),
+                series: buildAllTrendSeries(data),
                 legend: Legend(
                     isVisible: legendVisible, position: LegendPosition.bottom),
                 crosshairBehavior: CrosshairBehavior(
@@ -109,9 +109,9 @@ class Graph extends StatelessWidget {
     );
   }
 
-  // colorHue: 0~1 色指定に利用
+  // location: 0~1
   List<LineSeries<TrendSnapshot, dynamic>> buildTrendSeries(
-      TrendData data, double colorHue) {
+      TrendData data, double location) {
     // final List<LineSeries> series = [];
     final LineSeries twitterSeries;
     final LineSeries aiSeries;
@@ -205,28 +205,26 @@ class Graph extends StatelessWidget {
       dataSource: twitterDataList,
       xValueMapper: xValueMapper,
       yValueMapper: yValueMapper,
-      color: HSLColor.fromAHSL(1, colorHue, 1, .5).toColor(),
+      color: HSLColor.fromAHSL(1, location, 1, .5).toColor(),
     );
     aiSeries = LineSeries<TrendSnapshot, dynamic>(
       legendItemText: data.getName() + "(予測)",
       dataSource: aiDataList,
       xValueMapper: xValueMapper,
       yValueMapper: yValueMapper,
-      color: HSLColor.fromAHSL(1, colorHue, 1, .85).toColor(),
+      color: HSLColor.fromAHSL(1, location, 1, .85).toColor(),
     );
     return [twitterSeries, aiSeries].cast();
   }
 
-  List<LineSeries> buildAllTrendSeries(List<List<TrendData>> data) {
+  List<LineSeries> buildAllTrendSeries(List<TrendData> data) {
     List<LineSeries> series = [];
-    for (var sameColorTrends in data) {
-      var colorHue = data.indexOf(sameColorTrends).toDouble() / data.length * 360;
-      for (var trend in sameColorTrends) {
-        buildTrendSeries(trend, colorHue)
-            .forEach((element) {
-          if (element.dataSource.isNotEmpty) series.add(element);
-        });
-      }
+    for (var element in data) {
+      buildTrendSeries(
+              element, data.indexOf(element).toDouble() / data.length * 360)
+          .forEach((element) {
+        if (element.dataSource.isNotEmpty) series.add(element);
+      });
     }
     return series;
   }
