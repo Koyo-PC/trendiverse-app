@@ -1,16 +1,36 @@
-# trendiverse
+![trendiverse logo](https://user-images.githubusercontent.com/64856587/200881161-adc0199c-b9b5-4f76-b8c6-5981bdbc631e.png)
 
-A new Flutter project.
+# TrenDiverse
 
-## Getting Started
+**トレンド予測・分析のための革新的なスマートフォンアプリ**
 
-This project is a starting point for a Flutter application.
+*パソコン甲子園2022 モバイル部門にて、チーム「sprouts」として作成したアプリケーションです。<br>
+ベストデザイン賞およびバンタン賞を受賞しました。(参考→[プレゼンの様子](https://youtu.be/tmhLiQvS4M4?t=2995))*
 
-A few resources to get you started if this is your first Flutter project:
+*このアプリケーションは現状のまま提供され、一切のサポートは提供されません。バグや仕様変更、サーバーの停止などによりサービスを利用できなくなる恐れもあります。ご了承ください。*
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## 推奨動作環境
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Android 12
+- iOS 16
+
+## 使用方法
+
+### ホーム画面
+
+現在のTwitterトレンドをタイル状に表示しています。
+これからのトレンドの流行の展望を確認したり、他のトレンドと推移を比較したりすることができます。
+また、画面上部の検索ボタンから過去のトレンドを閲覧することが、画面右下のフローティングボタンからストックページへの移動が可能です。
+
+### トレンド詳細画面
+
+各トレンドについて細かい情報を閲覧できます。
+画面上部のグラフは拡大・縮小が可能です。
+ブックマークボタンでそのトレンドをスタックに保存し、後から見返すことができます。
+「他のトレンドと比較」を用いて複数のトレンドを色分けして比較することも可能です。
+
+### ストック画面
+
+ストックしたトレンドを画面上で自由に並べることができます。
+一般的なブックマーク機能とは異なり、1次元のリストではなく2次元のフリーレイアウトとなっています。
+これにより、ストックをすると過去のストックが下へ移動し忘れてしまうということが発生しません。
